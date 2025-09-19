@@ -99,6 +99,7 @@ class CostsplitterApp {
         CostsplitterApp.updateProgressFromResult(result);
         CostsplitterApp.setProgressToSummaryMode('Processing Complete');
         this.displayResults(result);
+        this.triggerSuccessCelebration();
       } else {
         this.handleProcessingError(result);
       }
@@ -230,6 +231,67 @@ class CostsplitterApp {
 
     // Activity breakdown
     CostsplitterApp.displayActivities(result.report.summary.activities);
+  }
+
+  triggerSuccessCelebration() {
+    // Add celebration class to upload section
+    this.uploadSection.classList.add('success-celebration');
+
+    // Add celebration class to progress steps
+    const progressSteps = document.getElementById('progressSteps');
+    if (progressSteps) {
+      progressSteps.classList.add('success');
+    }
+
+    // Add celebration to results section
+    this.resultsSection.classList.add('celebrating');
+
+    // Create confetti effect
+    CostsplitterApp.createConfetti();
+
+    // Stagger animation for summary items
+    const summaryItems = document.querySelectorAll('.summary-item');
+    summaryItems.forEach((item, index) => {
+      item.style.setProperty('--item-index', index);
+    });
+
+    const summaryGrid = document.querySelector('.summary-grid');
+    if (summaryGrid) {
+      summaryGrid.classList.add('celebrating');
+    }
+
+    // Clean up animations after completion
+    setTimeout(() => {
+      this.uploadSection.classList.remove('success-celebration');
+      this.resultsSection.classList.remove('celebrating');
+      if (summaryGrid) {
+        summaryGrid.classList.remove('celebrating');
+      }
+      if (progressSteps) {
+        progressSteps.classList.remove('success');
+      }
+    }, 3000);
+  }
+
+  static createConfetti() {
+    const confettiContainer = document.createElement('div');
+    confettiContainer.className = 'confetti-container';
+    document.body.appendChild(confettiContainer);
+
+    // Create 50 confetti pieces
+    for (let i = 0; i < 50; i += 1) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti-piece';
+      confetti.style.left = `${Math.random() * 100}%`;
+      confetti.style.animationDelay = `${Math.random() * 3}s`;
+      confetti.style.animationDuration = `${3 + Math.random() * 2}s`;
+      confettiContainer.appendChild(confetti);
+    }
+
+    // Remove confetti after animation
+    setTimeout(() => {
+      document.body.removeChild(confettiContainer);
+    }, 6000);
   }
 
   static displaySummary(summary) {
