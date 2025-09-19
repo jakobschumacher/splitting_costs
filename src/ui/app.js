@@ -99,7 +99,6 @@ class CostsplitterApp {
         CostsplitterApp.updateProgressFromResult(result);
         CostsplitterApp.setProgressToSummaryMode('Processing Complete');
         this.displayResults(result);
-        this.triggerSuccessCelebration();
       } else {
         this.handleProcessingError(result);
       }
@@ -216,8 +215,6 @@ class CostsplitterApp {
   }
 
   displayResults(result) {
-    // Keep upload section visible, just show results below
-    this.uploadSection.classList.add('has-results');
     this.resultsSection.classList.remove('hidden');
 
     // Summary
@@ -233,88 +230,25 @@ class CostsplitterApp {
     CostsplitterApp.displayActivities(result.report.summary.activities);
   }
 
-  triggerSuccessCelebration() {
-    // Add celebration class to upload section
-    this.uploadSection.classList.add('success-celebration');
-
-    // Add celebration class to progress steps
-    const progressSteps = document.getElementById('progressSteps');
-    if (progressSteps) {
-      progressSteps.classList.add('success');
-    }
-
-    // Add celebration to results section
-    this.resultsSection.classList.add('celebrating');
-
-    // Create confetti effect
-    CostsplitterApp.createConfetti();
-
-    // Stagger animation for summary items
-    const summaryItems = document.querySelectorAll('.summary-item');
-    summaryItems.forEach((item, index) => {
-      item.style.setProperty('--item-index', index);
-    });
-
-    const summaryGrid = document.querySelector('.summary-grid');
-    if (summaryGrid) {
-      summaryGrid.classList.add('celebrating');
-    }
-
-    // Clean up animations after completion
-    setTimeout(() => {
-      this.uploadSection.classList.remove('success-celebration');
-      this.resultsSection.classList.remove('celebrating');
-      if (summaryGrid) {
-        summaryGrid.classList.remove('celebrating');
-      }
-      if (progressSteps) {
-        progressSteps.classList.remove('success');
-      }
-    }, 3000);
-  }
-
-  static createConfetti() {
-    const confettiContainer = document.createElement('div');
-    confettiContainer.className = 'confetti-container';
-    document.body.appendChild(confettiContainer);
-
-    // Create 50 confetti pieces
-    for (let i = 0; i < 50; i += 1) {
-      const confetti = document.createElement('div');
-      confetti.className = 'confetti-piece';
-      confetti.style.left = `${Math.random() * 100}%`;
-      confetti.style.animationDelay = `${Math.random() * 3}s`;
-      confetti.style.animationDuration = `${3 + Math.random() * 2}s`;
-      confettiContainer.appendChild(confetti);
-    }
-
-    // Remove confetti after animation
-    setTimeout(() => {
-      document.body.removeChild(confettiContainer);
-    }, 6000);
-  }
-
   static displaySummary(summary) {
     const summaryEl = document.getElementById('summaryContent');
     summaryEl.innerHTML = `
-      <div class="summary-grid">
-        <div class="summary-item">
-          <span class="label">Participants:</span>
-          <span class="value">${summary.totalParticipants}</span>
-        </div>
-        <div class="summary-item">
-          <span class="label">Total Paid:</span>
-          <span class="value">€${summary.totalPaid.toFixed(2)}</span>
-        </div>
-        <div class="summary-item">
-          <span class="label">Total Owed:</span>
-          <span class="value">€${summary.totalOwed.toFixed(2)}</span>
-        </div>
-        <div class="summary-item">
-          <span class="label">Balance Check:</span>
-          <span class="value ${summary.balanceCheck ? 'success' : 'error'}">
-            ${summary.balanceCheck ? '✓ Balanced' : '✗ Unbalanced'}
-          </span>
+      <div class="summary-card">
+        <div class="summary-label">Participants</div>
+        <div class="summary-value">${summary.totalParticipants}</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Total Paid</div>
+        <div class="summary-value text-green">€${summary.totalPaid.toFixed(2)}</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Total Owed</div>
+        <div class="summary-value" style="color: #3b82f6;">€${summary.totalOwed.toFixed(2)}</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Balance Check</div>
+        <div class="summary-value ${summary.balanceCheck ? 'text-green' : 'text-red'}">
+          ${summary.balanceCheck ? '✓ Balanced' : '✗ Unbalanced'}
         </div>
       </div>
     `;
@@ -323,30 +257,33 @@ class CostsplitterApp {
   static displayInstructions(instructions) {
     const instructionsEl = document.getElementById('instructionsContent');
     if (instructions.length === 0) {
-      const noTransactionsText = '✅ No payments needed - everyone is settled!';
-      instructionsEl.innerHTML = `<p class="no-transactions">${noTransactionsText}</p>`;
+      instructionsEl.innerHTML = '<p class="text-green" style="font-weight: 500;">'
+        + '✅ No payments needed - everyone is settled!</p>';
       return;
     }
 
     instructionsEl.innerHTML = `
-      <ul class="instructions-list">
+      <ul style="list-style: none; padding: 0;">
         ${instructions.map((instruction) => (
-    `<li class="instruction-item">${instruction}</li>`
+    `<li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start;">
+              <span style="color: #3b82f6; margin-right: 0.5rem;">•</span>
+              <span>${instruction}</span>
+            </li>`
   )).join('')}
       </ul>
     `;
   }
 
   static getObligationClass(netObligation) {
-    if (netObligation < 0) return 'credit';
-    if (netObligation > 0) return 'debit';
-    return 'neutral';
+    if (netObligation < 0) return 'text-green';
+    if (netObligation > 0) return 'text-red';
+    return 'text-gray';
   }
 
   static displayPaymentMatrix(paymentMatrix) {
     const matrixEl = document.getElementById('matrixContent');
     matrixEl.innerHTML = `
-      <table class="payment-table">
+      <table class="table">
         <thead>
           <tr>
             <th>Name</th>
@@ -358,10 +295,11 @@ class CostsplitterApp {
         <tbody>
           ${paymentMatrix.map((p) => `
             <tr>
-              <td>${p.element}</td>
+              <td style="font-weight: 500;">${p.element}</td>
               <td>€${p.shouldPay.toFixed(2)}</td>
               <td>€${p.alreadyPaid.toFixed(2)}</td>
-              <td class="${CostsplitterApp.getObligationClass(p.netObligation)}">
+              <td class="${CostsplitterApp.getObligationClass(p.netObligation)}"
+                   style="font-weight: 500;">
                 €${p.netObligation.toFixed(2)}
               </td>
             </tr>
@@ -373,18 +311,17 @@ class CostsplitterApp {
 
   static displayActivities(activities) {
     const activitiesEl = document.getElementById('activitiesContent');
-    activitiesEl.innerHTML = `
-      <div class="activities-grid">
-        ${activities.map((activity) => `
-          <div class="activity-card">
-            <h4>${activity.name}</h4>
-            <p>Total Paid: €${activity.totalPaid.toFixed(2)}</p>
-            <p>Total Shares: ${activity.totalShares}</p>
-            <p>Cost per Unit: €${activity.costPerUnit.toFixed(2)}</p>
-          </div>
-        `).join('')}
+    // eslint-disable-next-line max-len
+    activitiesEl.innerHTML = activities.map((activity) => `
+      <div class="activity-card">
+        <h4 style="font-weight: 500; margin-bottom: 0.5rem;">${activity.name}</h4>
+        <div style="font-size: 0.875rem; color: #6b7280;">
+          <p style="margin-bottom: 0.25rem;">Total Paid: <span style="font-weight: 500;">€${activity.totalPaid.toFixed(2)}</span></p>
+          <p style="margin-bottom: 0.25rem;">Total Shares: <span style="font-weight: 500;">${activity.totalShares}</span></p>
+          <p>Cost per Unit: <span style="font-weight: 500;">€${activity.costPerUnit.toFixed(2)}</span></p>
+        </div>
       </div>
-    `;
+    `).join('');
   }
 
   displayError(error) {
@@ -558,7 +495,6 @@ class CostsplitterApp {
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
-    this.uploadSection.classList.remove('has-results');
     this.resultsSection.classList.add('hidden');
     CostsplitterApp.showProgress(false);
     this.clearErrors();
