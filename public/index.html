@@ -13,8 +13,8 @@
             <div style="position: relative;">
                 <h1 style="margin: 0 0 0.5rem 0;">Costsplitter</h1>
                 <div style="position: absolute; top: 0; right: 0; display: flex; gap: 0.5rem;">
+                    <button id="resetButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">↻</button>
                     <button id="helpButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">?</button>
-                    <button id="resetButton" class="btn btn-secondary" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;">Reset</button>
                 </div>
             </div>
             <p>Fair cost division for group travel</p>
@@ -41,10 +41,6 @@
                         <div style="font-size: 4rem; margin-bottom: 1rem; color: #059669;">✓</div>
                         <h3 style="color: #059669; margin-bottom: 0.5rem;">File uploaded successfully!</h3>
                         <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0;">Ready to process <span id="uploadedFileNameBottom"></span></p>
-                        <div style="background: #ffffff; padding: 0.75rem; border-radius: 0.375rem; border: 1px solid #d1fae5; margin: 1rem 0; font-size: 0.875rem;">
-                            <p style="margin: 0; color: #374151;"><strong>File:</strong> <span id="uploadedFileName"></span></p>
-                            <p style="margin: 0.25rem 0 0 0; color: #6b7280;"><strong>Size:</strong> <span id="uploadedFileSize"></span></p>
-                        </div>
                     </div>
                     <div id="csvHelp" class="hidden" style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.375rem; border: 1px solid #bbf7d0; text-align: left;">
                         <h4 style="margin-top: 0; color: #047857;">CSV File Format</h4>

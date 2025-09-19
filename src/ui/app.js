@@ -80,12 +80,7 @@ class CostsplitterApp {
 
   updateFileDisplay() {
     if (this.selectedFile) {
-      // Update file info display
-      
       // Update the file info in the upload area
-      document.getElementById('uploadedFileName').textContent = this.selectedFile.name;
-      const sizeText = `${(this.selectedFile.size / 1024).toFixed(1)} KB`;
-      document.getElementById('uploadedFileSize').textContent = sizeText;
       document.getElementById('uploadedFileNameBottom').textContent = this.selectedFile.name;
 
       // Switch upload area to success state
@@ -243,6 +238,12 @@ class CostsplitterApp {
     // Move to step 3
     this.showStep(3);
 
+    // Check for warnings and display them
+    if (result.calculation && result.calculation.warning) {
+      this.displayWarning(result.calculation.warning);
+      return;
+    }
+
     // Summary
     CostsplitterApp.displaySummary(result.report.summary);
 
@@ -349,6 +350,37 @@ class CostsplitterApp {
         </div>
       </div>
     `).join('');
+  }
+
+  displayWarning(warningMessage) {
+    const summaryEl = document.getElementById('summaryContent');
+    const instructionsEl = document.getElementById('instructionsContent');
+    const matrixEl = document.getElementById('matrixContent');
+    const activitiesEl = document.getElementById('activitiesContent');
+
+    // Clear existing content
+    summaryEl.innerHTML = '';
+    matrixEl.innerHTML = '';
+    activitiesEl.innerHTML = '';
+
+    // Display warning message
+    instructionsEl.innerHTML = `
+      <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; align-items: flex-start;">
+          <span style="color: #d97706; font-size: 1.5rem; margin-right: 0.75rem;">⚠️</span>
+          <div>
+            <h4 style="margin: 0 0 0.5rem 0; color: #92400e; font-size: 1rem;">Configuration Issue Detected</h4>
+            <p style="margin: 0; color: #92400e; line-height: 1.5;">${warningMessage}</p>
+            <div style="margin-top: 1rem;">
+              <button onclick="document.getElementById('paymentMode').value='individual'; document.getElementById('paymentMode').dispatchEvent(new Event('change'));"
+                      style="background: #f59e0b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.875rem;">
+                Switch to Individual Mode
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   displayError(error) {

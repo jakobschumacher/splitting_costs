@@ -131,6 +131,22 @@ export const calculatePaymentObligations = (data, payBy = 'individual') => {
     };
   }
 
+  // Check if group mode is selected but no group data exists
+  if (payBy === 'group') {
+    const hasGroupData = data.some(row => row.group && row.group.trim() !== '');
+    if (!hasGroupData) {
+      return {
+        paymentMatrix: [],
+        summary: {
+          totalPaid: 0,
+          totalShould: 0,
+          activities: {},
+        },
+        warning: 'Group mode selected but no group data found. All participants appear to be individuals. Consider switching to Individual mode for proper calculation.',
+      };
+    }
+  }
+
   const weightedData = calculateWeightedShares(data);
   const costPerUnit = calculateCostPerUnit(weightedData);
 
