@@ -84,6 +84,22 @@ curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/b
 - Original R package: `/home/jakob/Dokumente/03_Projekte/2024_10_08_Grouptraveller/costsplitter`
 - See `claude.md` for detailed analysis and implementation notes
 
+## 🌐 Live Demo
+Try the application online: [https://jakobschumacher.github.io/costsplitter/](https://jakobschumacher.github.io/costsplitter/)
+
+## 🚀 Deployment
+This application is automatically deployed to GitHub Pages using GitHub Actions. When you push to the master branch:
+
+1. **Tests** are run to ensure code quality
+2. **Build** creates an optimized production bundle
+3. **Deploy** uploads to GitHub Pages
+
+### Manual Deployment
+```bash
+npm run build:github  # Build for GitHub Pages
+# Commit and push to trigger deployment
+```
+
 ## 📋 Project Info
 - **Type**: JavaScript Web Application
 - **Container**: js-Costsplitter

@@ -11,6 +11,7 @@ export default {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
     clean: true,
+    publicPath: process.env.NODE_ENV === 'production' ? '/costsplitter/' : '/',
   },
   plugins: [
     new HtmlWebpackPlugin({
