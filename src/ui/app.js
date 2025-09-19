@@ -513,15 +513,18 @@ class CostsplitterApp {
     this.step2.classList.add('hidden');
     this.step3.classList.add('hidden');
 
-    // Show the requested step
+    // Show the requested step and any previous completed steps
     switch (stepNumber) {
       case 1:
         this.step1.classList.remove('hidden');
         break;
       case 2:
+        this.step1.classList.remove('hidden'); // Keep step 1 visible
         this.step2.classList.remove('hidden');
         break;
       case 3:
+        this.step1.classList.remove('hidden'); // Keep step 1 visible
+        this.step2.classList.remove('hidden'); // Keep step 2 visible
         this.step3.classList.remove('hidden');
         break;
       default:
