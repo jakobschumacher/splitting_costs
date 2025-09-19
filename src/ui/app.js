@@ -218,7 +218,8 @@ class CostsplitterApp {
   }
 
   displayResults(result) {
-    this.resultsSection.classList.remove('hidden');
+    // Move to step 3
+    this.showStep(3);
 
     // Summary
     CostsplitterApp.displaySummary(result.report.summary);
