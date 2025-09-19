@@ -343,3 +343,43 @@ button:disabled {
     white-space: nowrap;
   }
 }
+
+/* Progress Steps */
+.progress-steps {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.step {
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  border-left: 4px solid #bdc3c7;
+  color: #7f8c8d;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+}
+
+.step.active {
+  background: #e3f2fd;
+  border-left-color: #2196f3;
+  color: #1976d2;
+  transform: translateX(5px);
+}
+
+.step.completed {
+  background: #e8f5e8;
+  border-left-color: #4caf50;
+  color: #2e7d32;
+}
+
+.step.error {
+  background: #ffebee;
+  border-left-color: #f44336;
+  color: #c62828;
+}

@@ -47,7 +47,15 @@
         <!-- Loading Display -->
         <div id="loadingDisplay" class="loading-display hidden">
             <div class="spinner"></div>
-            <p>Processing your file...</p>
+            <p id="loadingText">Processing your file...</p>
+            <div id="progressSteps" class="progress-steps">
+                <div class="step" data-step="parsing">📄 Parsing CSV</div>
+                <div class="step" data-step="security">🔒 Security Check</div>
+                <div class="step" data-step="validation">✅ Data Validation</div>
+                <div class="step" data-step="transformation">🔄 Data Transformation</div>
+                <div class="step" data-step="calculation">🧮 Calculating Payments</div>
+                <div class="step" data-step="reporting">📊 Generating Report</div>
+            </div>
         </div>
 
         <!-- Results Section -->

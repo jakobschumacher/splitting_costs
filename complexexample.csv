@@ -1,6 +1,0 @@
- name,group,age,adjustment,cost_dinner,pay_dinner,cost_hotel,pay_hotel
-  Alice,Family1,adult,more,full,120,0.8,0
-  Bob,Family1,kid,less,reduced,0,full,200
-  Charlie,Family2,25,1.5,0,0,full,150
-  Diana,Family2,adult,,full,80,half,50
-

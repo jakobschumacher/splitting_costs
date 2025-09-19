@@ -77,17 +77,28 @@ class CostsplitterApp {
 
     this.showLoading(true);
     this.clearErrors();
+    CostsplitterApp.resetProgress();
 
     try {
+      CostsplitterApp.updateProgress('parsing', 'active', 'Parsing CSV file...');
+      await CostsplitterApp.delay(200); // Small delay to show progress
+
       const csvContent = await CostsplitterApp.readFileContent(this.selectedFile);
+      CostsplitterApp.updateProgress('parsing', 'completed', 'CSV parsed successfully');
+
+      CostsplitterApp.updateProgress('security', 'active', 'Running security checks...');
+      await CostsplitterApp.delay(300);
+
       const result = costsplitterPipeline(this.selectedFile, csvContent, this.paymentMode);
 
       if (result.success) {
+        CostsplitterApp.updateProgressFromResult(result);
         this.displayResults(result);
       } else {
-        this.displayError(result);
+        this.handleProcessingError(result);
       }
     } catch (error) {
+      CostsplitterApp.updateProgress('parsing', 'error', 'File processing failed');
       this.displayError({
         error: 'File processing failed',
         details: error.message,
@@ -95,6 +106,75 @@ class CostsplitterApp {
     } finally {
       this.showLoading(false);
     }
+  }
+
+  static delay(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  static resetProgress() {
+    const steps = document.querySelectorAll('.step');
+    steps.forEach((step) => {
+      step.classList.remove('active', 'completed', 'error');
+    });
+  }
+
+  static updateProgress(stepName, status, message) {
+    const step = document.querySelector(`[data-step="${stepName}"]`);
+    if (step) {
+      step.classList.remove('active', 'completed', 'error');
+      if (status) step.classList.add(status);
+    }
+
+    const loadingText = document.getElementById('loadingText');
+    if (loadingText && message) {
+      loadingText.textContent = message;
+    }
+  }
+
+  static updateProgressFromResult(result) {
+    const steps = result.steps || {};
+
+    if (steps.security === 'passed') {
+      CostsplitterApp.updateProgress('security', 'completed', 'Security check passed');
+    }
+
+    if (steps.validation === 'passed') {
+      CostsplitterApp.updateProgress('validation', 'completed', 'Data validation passed');
+    } else if (steps.validation === 'failed') {
+      CostsplitterApp.updateProgress('validation', 'error', 'Data validation failed');
+      return;
+    }
+
+    if (steps.transformation === 'completed') {
+      CostsplitterApp.updateProgress(
+        'transformation',
+        'completed',
+        'Data transformation completed',
+      );
+    }
+
+    if (steps.calculation === 'completed') {
+      CostsplitterApp.updateProgress('calculation', 'completed', 'Payment calculations completed');
+    }
+
+    if (steps.reporting === 'completed') {
+      CostsplitterApp.updateProgress('reporting', 'completed', 'Report generated successfully');
+    }
+  }
+
+  handleProcessingError(result) {
+    if (result.error === 'Security validation failed') {
+      CostsplitterApp.updateProgress('security', 'error', 'Security check failed');
+    } else if (result.error === 'Data validation failed') {
+      CostsplitterApp.updateProgress('validation', 'error', 'Data validation failed');
+    } else if (result.error === 'CSV parsing failed') {
+      CostsplitterApp.updateProgress('parsing', 'error', 'CSV parsing failed');
+    }
+
+    this.displayError(result);
   }
 
   static readFileContent(file) {
@@ -218,18 +298,53 @@ class CostsplitterApp {
 
   displayError(error) {
     this.errorDisplay.classList.remove('hidden');
-    this.errorDisplay.innerHTML = `
-      <h3>Error: ${error.error}</h3>
-      <p>${error.details}</p>
-      ${error.validationErrors ? `
+
+    let errorHtml = `<h3>Error: ${error.error}</h3>`;
+
+    if (error.details) {
+      if (Array.isArray(error.details)) {
+        errorHtml += `<ul>${error.details.map((detail) => `<li>${detail}</li>`).join('')}</ul>`;
+      } else {
+        errorHtml += `<p>${error.details}</p>`;
+      }
+    }
+
+    // Show steps that completed successfully
+    if (error.steps) {
+      errorHtml += '<h4>Processing Steps:</h4><ul>';
+      if (error.steps.security === 'passed') {
+        errorHtml += '<li>✅ Security check: PASSED</li>';
+      }
+      if (error.steps.validation === 'passed') {
+        errorHtml += '<li>✅ Data validation: PASSED</li>';
+      }
+      if (error.steps.validation === 'failed') {
+        errorHtml += '<li>❌ Data validation: FAILED</li>';
+      }
+      errorHtml += '</ul>';
+    }
+
+    // Show validation errors in detail
+    if (error.validationErrors) {
+      errorHtml += `
         <h4>Validation Errors:</h4>
         <ul>
           ${error.validationErrors.map((e) => (
-    `<li>Row ${e.row}, Column ${e.column}: ${e.message}</li>`
+    `<li><strong>Row ${e.row}, Column ${e.column}:</strong> ${e.message}</li>`
   )).join('')}
         </ul>
-      ` : ''}
-    `;
+      `;
+    }
+
+    // Show CSV columns if available for debugging
+    if (error.metadata && error.metadata.csvColumns) {
+      errorHtml += `
+        <h4>CSV Columns Found:</h4>
+        <p><code>${error.metadata.csvColumns.join(', ')}</code></p>
+      `;
+    }
+
+    this.errorDisplay.innerHTML = errorHtml;
   }
 
   clearErrors() {
