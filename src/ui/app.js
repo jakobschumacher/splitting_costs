@@ -72,7 +72,9 @@ class CostsplitterApp {
       const sizeText = `${(this.selectedFile.size / 1024).toFixed(1)} KB`;
       document.getElementById('fileSize').textContent = sizeText;
       document.getElementById('fileInfo').classList.remove('hidden');
-      this.processButton.disabled = false;
+
+      // Move to step 2
+      this.showStep(2);
     }
   }
 
