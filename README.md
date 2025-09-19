@@ -85,7 +85,7 @@ curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/b
 - See `claude.md` for detailed analysis and implementation notes
 
 ## 🌐 Live Demo
-Try the application online: [https://jakobschumacher.github.io/costsplitter/](https://jakobschumacher.github.io/costsplitter/)
+Try the application online: [https://jakobschumacher.github.io/splitting_costs/](https://jakobschumacher.github.io/splitting_costs/)
 
 ## 🚀 Deployment
 This application is automatically deployed to GitHub Pages using GitHub Actions. When you push to the master branch:
