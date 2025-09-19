@@ -14,13 +14,13 @@ class CostsplitterApp {
   initializeElements() {
     this.fileInput = document.getElementById('csvFile');
     this.dropZone = document.getElementById('dropZone');
-    this.uploadSection = document.getElementById('uploadSection');
-    this.resultsSection = document.getElementById('resultsSection');
+    this.step1 = document.getElementById('step1');
+    this.step2 = document.getElementById('step2');
+    this.step3 = document.getElementById('step3');
     this.paymentModeSelect = document.getElementById('paymentMode');
     this.processButton = document.getElementById('processButton');
     this.errorDisplay = document.getElementById('errorDisplay');
     this.loadingDisplay = document.getElementById('loadingDisplay');
-    this.resultsDisplay = document.getElementById('resultsDisplay');
   }
 
   bindEvents() {
