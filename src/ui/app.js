@@ -21,6 +21,12 @@ class CostsplitterApp {
     this.processButton = document.getElementById('processButton');
     this.errorDisplay = document.getElementById('errorDisplay');
     this.loadingDisplay = document.getElementById('loadingDisplay');
+    this.helpButton = document.getElementById('helpButton');
+    this.csvHelp = document.getElementById('csvHelp');
+    this.downloadPdfButton = document.getElementById('downloadPdfButton');
+    this.resetButton = document.getElementById('resetButton');
+    this.uploadDefaultState = document.getElementById('uploadDefaultState');
+    this.uploadedState = document.getElementById('uploadedState');
   }
 
   bindEvents() {
@@ -42,6 +48,12 @@ class CostsplitterApp {
 
     // Reset button
     document.getElementById('resetButton').addEventListener('click', () => this.reset());
+
+    // Help button
+    this.helpButton.addEventListener('click', () => this.toggleHelp());
+
+    // PDF download button
+    this.downloadPdfButton.addEventListener('click', () => this.downloadPdf());
   }
 
   handleDragOver(e) {
@@ -68,10 +80,19 @@ class CostsplitterApp {
 
   updateFileDisplay() {
     if (this.selectedFile) {
-      document.getElementById('fileName').textContent = this.selectedFile.name;
+      // Update file info display
+      
+      // Update the file info in the upload area
+      document.getElementById('uploadedFileName').textContent = this.selectedFile.name;
       const sizeText = `${(this.selectedFile.size / 1024).toFixed(1)} KB`;
-      document.getElementById('fileSize').textContent = sizeText;
-      document.getElementById('fileInfo').classList.remove('hidden');
+      document.getElementById('uploadedFileSize').textContent = sizeText;
+      document.getElementById('uploadedFileNameBottom').textContent = this.selectedFile.name;
+
+      // Switch upload area to success state
+      this.uploadDefaultState.classList.add('hidden');
+      this.uploadedState.classList.remove('hidden');
+      this.dropZone.style.borderColor = '#059669';
+      this.dropZone.style.backgroundColor = '#f0fdf4';
 
       // Move to step 2
       this.showStep(2);
@@ -218,6 +239,7 @@ class CostsplitterApp {
   }
 
   displayResults(result) {
+    this.currentResults = result;
     // Move to step 3
     this.showStep(3);
 
@@ -246,14 +268,8 @@ class CostsplitterApp {
         <div class="summary-value text-green">€${summary.totalPaid.toFixed(2)}</div>
       </div>
       <div class="summary-card">
-        <div class="summary-label">Total Owed</div>
-        <div class="summary-value" style="color: #3b82f6;">€${summary.totalOwed.toFixed(2)}</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">Balance Check</div>
-        <div class="summary-value ${summary.balanceCheck ? 'text-green' : 'text-red'}">
-          ${summary.balanceCheck ? '✓ Balanced' : '✗ Unbalanced'}
-        </div>
+        <div class="summary-label">Activities</div>
+        <div class="summary-value" style="color: #3b82f6;">${summary.activities ? summary.activities.length : 0}</div>
       </div>
     `;
   }
@@ -321,8 +337,15 @@ class CostsplitterApp {
         <h4 style="font-weight: 500; margin-bottom: 0.5rem;">${activity.name}</h4>
         <div style="font-size: 0.875rem; color: #6b7280;">
           <p style="margin-bottom: 0.25rem;">Total Paid: <span style="font-weight: 500;">€${activity.totalPaid.toFixed(2)}</span></p>
-          <p style="margin-bottom: 0.25rem;">Total Shares: <span style="font-weight: 500;">${activity.totalShares}</span></p>
-          <p>Cost per Unit: <span style="font-weight: 500;">€${activity.costPerUnit.toFixed(2)}</span></p>
+          <p style="margin-bottom: 0.25rem;">Paid by: <span style="font-weight: 500;">${activity.paidBy}</span></p>
+          <div style="margin-top: 0.5rem;">
+            <strong>Charges:</strong>
+            <div style="margin-left: 1rem; margin-top: 0.25rem;">
+              ${activity.charges ? activity.charges.map(charge =>
+                `<div>• ${charge.person}: €${charge.amount.toFixed(2)} (${charge.shares} shares)</div>`
+              ).join('') : '<div>No specific charges recorded</div>'}
+            </div>
+          </div>
         </div>
       </div>
     `).join('');
@@ -496,16 +519,72 @@ class CostsplitterApp {
     this.loadingDisplay.classList.toggle('hidden', !show);
   }
 
+  toggleHelp() {
+    this.csvHelp.classList.toggle('hidden');
+  }
+
+  downloadPdf() {
+    if (!this.currentResults) {
+      alert('No results to download. Please process a file first.');
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Title
+    doc.setFontSize(20);
+    doc.text('Costsplitter2 - Expense Report', 20, 20);
+
+    // Summary
+    const summary = this.currentResults.report.summary;
+    doc.setFontSize(12);
+    let yPos = 40;
+    doc.text(`Participants: ${summary.totalParticipants}`, 20, yPos);
+    yPos += 10;
+    doc.text(`Total Paid: €${summary.totalPaid.toFixed(2)}`, 20, yPos);
+    yPos += 10;
+    doc.text(`Activities: ${summary.activities ? summary.activities.length : 0}`, 20, yPos);
+    yPos += 20;
+
+    // Payment Instructions
+    doc.setFontSize(14);
+    doc.text('Payment Instructions:', 20, yPos);
+    yPos += 10;
+    doc.setFontSize(10);
+
+    const instructions = this.currentResults.report.instructions;
+    if (instructions.length === 0) {
+      doc.text('No payments needed - all settled!', 20, yPos);
+    } else {
+      instructions.forEach(instruction => {
+        doc.text(`${instruction.from} pays €${instruction.amount.toFixed(2)} to ${instruction.to}`, 20, yPos);
+        yPos += 8;
+      });
+    }
+
+    // Save the PDF
+    doc.save('costsplitter-report.pdf');
+  }
+
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
     this.showStep(1);
     CostsplitterApp.showProgress(false);
     this.clearErrors();
-    document.getElementById('fileInfo').classList.add('hidden');
+    // File info section no longer exists
     this.paymentModeSelect.value = 'individual';
     this.paymentMode = 'individual';
     CostsplitterApp.resetProgress();
+    this.csvHelp.classList.add('hidden');
+    this.currentResults = null;
+
+    // Reset upload area to default state
+    this.uploadDefaultState.classList.remove('hidden');
+    this.uploadedState.classList.add('hidden');
+    this.dropZone.style.borderColor = '';
+    this.dropZone.style.backgroundColor = '';
   }
 
   showStep(stepNumber) {
