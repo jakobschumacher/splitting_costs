@@ -1,4 +1,4 @@
-import { costsplitterPipeline } from '../pipeline.js';
+import { costsplitterPipeline } from '../pipeline';
 
 class CostsplitterApp {
   constructor() {
@@ -48,16 +48,16 @@ class CostsplitterApp {
   handleDrop(e) {
     e.preventDefault();
     this.dropZone.classList.remove('dragover');
-    const files = e.dataTransfer.files;
+    const { files } = e.dataTransfer;
     if (files.length > 0) {
-      this.selectedFile = files[0];
+      [this.selectedFile] = files;
       this.updateFileDisplay();
     }
   }
 
   handleFileSelect(e) {
     if (e.target.files.length > 0) {
-      this.selectedFile = e.target.files[0];
+      [this.selectedFile] = e.target.files;
       this.updateFileDisplay();
     }
   }
@@ -65,8 +65,8 @@ class CostsplitterApp {
   updateFileDisplay() {
     if (this.selectedFile) {
       document.getElementById('fileName').textContent = this.selectedFile.name;
-      document.getElementById('fileSize').textContent =
-        `${(this.selectedFile.size / 1024).toFixed(1)} KB`;
+      const sizeText = `${(this.selectedFile.size / 1024).toFixed(1)} KB`;
+      document.getElementById('fileSize').textContent = sizeText;
       document.getElementById('fileInfo').classList.remove('hidden');
       this.processButton.disabled = false;
     }
@@ -79,7 +79,7 @@ class CostsplitterApp {
     this.clearErrors();
 
     try {
-      const csvContent = await this.readFileContent(this.selectedFile);
+      const csvContent = await CostsplitterApp.readFileContent(this.selectedFile);
       const result = costsplitterPipeline(this.selectedFile, csvContent, this.paymentMode);
 
       if (result.success) {
@@ -97,11 +97,11 @@ class CostsplitterApp {
     }
   }
 
-  readFileContent(file) {
+  static readFileContent(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => resolve(e.target.result);
-      reader.onerror = (e) => reject(new Error('Failed to read file'));
+      reader.onerror = () => reject(new Error('Failed to read file'));
       reader.readAsText(file);
     });
   }
@@ -111,19 +111,19 @@ class CostsplitterApp {
     this.resultsSection.classList.remove('hidden');
 
     // Summary
-    this.displaySummary(result.report.summary);
+    CostsplitterApp.displaySummary(result.report.summary);
 
     // Payment instructions
-    this.displayInstructions(result.report.instructions);
+    CostsplitterApp.displayInstructions(result.report.instructions);
 
     // Payment matrix
-    this.displayPaymentMatrix(result.report.paymentMatrix);
+    CostsplitterApp.displayPaymentMatrix(result.report.paymentMatrix);
 
     // Activity breakdown
-    this.displayActivities(result.report.summary.activities);
+    CostsplitterApp.displayActivities(result.report.summary.activities);
   }
 
-  displaySummary(summary) {
+  static displaySummary(summary) {
     const summaryEl = document.getElementById('summaryContent');
     summaryEl.innerHTML = `
       <div class="summary-grid">
@@ -149,23 +149,30 @@ class CostsplitterApp {
     `;
   }
 
-  displayInstructions(instructions) {
+  static displayInstructions(instructions) {
     const instructionsEl = document.getElementById('instructionsContent');
     if (instructions.length === 0) {
-      instructionsEl.innerHTML = '<p class="no-transactions">✅ No payments needed - everyone is settled!</p>';
+      const noTransactionsText = '✅ No payments needed - everyone is settled!';
+      instructionsEl.innerHTML = `<p class="no-transactions">${noTransactionsText}</p>`;
       return;
     }
 
     instructionsEl.innerHTML = `
       <ul class="instructions-list">
-        ${instructions.map(instruction =>
-          `<li class="instruction-item">${instruction}</li>`
-        ).join('')}
+        ${instructions.map((instruction) => (
+    `<li class="instruction-item">${instruction}</li>`
+  )).join('')}
       </ul>
     `;
   }
 
-  displayPaymentMatrix(paymentMatrix) {
+  static getObligationClass(netObligation) {
+    if (netObligation < 0) return 'credit';
+    if (netObligation > 0) return 'debit';
+    return 'neutral';
+  }
+
+  static displayPaymentMatrix(paymentMatrix) {
     const matrixEl = document.getElementById('matrixContent');
     matrixEl.innerHTML = `
       <table class="payment-table">
@@ -178,12 +185,12 @@ class CostsplitterApp {
           </tr>
         </thead>
         <tbody>
-          ${paymentMatrix.map(p => `
+          ${paymentMatrix.map((p) => `
             <tr>
               <td>${p.element}</td>
               <td>€${p.shouldPay.toFixed(2)}</td>
               <td>€${p.alreadyPaid.toFixed(2)}</td>
-              <td class="${p.netObligation < 0 ? 'credit' : p.netObligation > 0 ? 'debit' : 'neutral'}">
+              <td class="${CostsplitterApp.getObligationClass(p.netObligation)}">
                 €${p.netObligation.toFixed(2)}
               </td>
             </tr>
@@ -193,11 +200,11 @@ class CostsplitterApp {
     `;
   }
 
-  displayActivities(activities) {
+  static displayActivities(activities) {
     const activitiesEl = document.getElementById('activitiesContent');
     activitiesEl.innerHTML = `
       <div class="activities-grid">
-        ${activities.map(activity => `
+        ${activities.map((activity) => `
           <div class="activity-card">
             <h4>${activity.name}</h4>
             <p>Total Paid: €${activity.totalPaid.toFixed(2)}</p>
@@ -217,9 +224,9 @@ class CostsplitterApp {
       ${error.validationErrors ? `
         <h4>Validation Errors:</h4>
         <ul>
-          ${error.validationErrors.map(e =>
-            `<li>Row ${e.row}, Column ${e.column}: ${e.message}</li>`
-          ).join('')}
+          ${error.validationErrors.map((e) => (
+    `<li>Row ${e.row}, Column ${e.column}: ${e.message}</li>`
+  )).join('')}
         </ul>
       ` : ''}
     `;
@@ -248,5 +255,6 @@ class CostsplitterApp {
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // eslint-disable-next-line no-new
   new CostsplitterApp();
 });
