@@ -187,7 +187,8 @@ class CostsplitterApp {
   }
 
   displayResults(result) {
-    this.uploadSection.classList.add('hidden');
+    // Keep upload section visible, just show results below
+    this.uploadSection.classList.add('has-results');
     this.resultsSection.classList.remove('hidden');
 
     // Summary
@@ -358,13 +359,14 @@ class CostsplitterApp {
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
-    this.uploadSection.classList.remove('hidden');
+    this.uploadSection.classList.remove('has-results');
     this.resultsSection.classList.add('hidden');
     this.clearErrors();
     document.getElementById('fileInfo').classList.add('hidden');
     this.processButton.disabled = true;
     this.paymentModeSelect.value = 'individual';
     this.paymentMode = 'individual';
+    CostsplitterApp.resetProgress();
   }
 }
 
