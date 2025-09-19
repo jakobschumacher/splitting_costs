@@ -76,35 +76,38 @@ class CostsplitterApp {
     if (!this.selectedFile) return;
 
     this.showLoading(true);
+    CostsplitterApp.showProgress(true);
     this.clearErrors();
     CostsplitterApp.resetProgress();
 
     try {
-      CostsplitterApp.updateProgress('parsing', 'active', 'Parsing CSV file...');
-      await CostsplitterApp.delay(200); // Small delay to show progress
+      CostsplitterApp.updateProgress('parsing', 'active');
+      await CostsplitterApp.delay(200);
 
       const csvContent = await CostsplitterApp.readFileContent(this.selectedFile);
-      CostsplitterApp.updateProgress('parsing', 'completed', 'CSV parsed successfully');
+      CostsplitterApp.updateProgress('parsing', 'completed');
 
-      CostsplitterApp.updateProgress('security', 'active', 'Running security checks...');
+      CostsplitterApp.updateProgress('security', 'active');
       await CostsplitterApp.delay(300);
 
       const result = costsplitterPipeline(this.selectedFile, csvContent, this.paymentMode);
 
       if (result.success) {
         CostsplitterApp.updateProgressFromResult(result);
+        CostsplitterApp.setProgressToSummaryMode('Processing Complete');
         this.displayResults(result);
       } else {
         this.handleProcessingError(result);
       }
     } catch (error) {
-      CostsplitterApp.updateProgress('parsing', 'error', 'File processing failed');
+      CostsplitterApp.updateProgress('parsing', 'error');
       this.displayError({
         error: 'File processing failed',
         details: error.message,
       });
     } finally {
       this.showLoading(false);
+      // Note: Progress stays visible for debugging/reference
     }
   }
 
@@ -114,23 +117,48 @@ class CostsplitterApp {
     });
   }
 
+  static showProgress(show) {
+    const progressSteps = document.getElementById('progressSteps');
+    if (progressSteps) {
+      progressSteps.classList.toggle('hidden', !show);
+    }
+  }
+
   static resetProgress() {
     const steps = document.querySelectorAll('.step');
     steps.forEach((step) => {
       step.classList.remove('active', 'completed', 'error');
     });
+
+    const progressSteps = document.getElementById('progressSteps');
+    if (progressSteps) {
+      progressSteps.classList.remove('summary-mode');
+    }
+
+    const progressTitle = document.getElementById('progressTitle');
+    if (progressTitle) {
+      progressTitle.textContent = 'Processing Your File';
+    }
   }
 
-  static updateProgress(stepName, status, message) {
+  static updateProgress(stepName, status) {
     const step = document.querySelector(`[data-step="${stepName}"]`);
     if (step) {
       step.classList.remove('active', 'completed', 'error');
       if (status) step.classList.add(status);
     }
+  }
 
-    const loadingText = document.getElementById('loadingText');
-    if (loadingText && message) {
-      loadingText.textContent = message;
+  static setProgressToSummaryMode(title) {
+    const progressSteps = document.getElementById('progressSteps');
+    const progressTitle = document.getElementById('progressTitle');
+
+    if (progressSteps) {
+      progressSteps.classList.add('summary-mode');
+    }
+
+    if (progressTitle) {
+      progressTitle.textContent = title;
     }
   }
 
@@ -138,42 +166,39 @@ class CostsplitterApp {
     const steps = result.steps || {};
 
     if (steps.security === 'passed') {
-      CostsplitterApp.updateProgress('security', 'completed', 'Security check passed');
+      CostsplitterApp.updateProgress('security', 'completed');
     }
 
     if (steps.validation === 'passed') {
-      CostsplitterApp.updateProgress('validation', 'completed', 'Data validation passed');
+      CostsplitterApp.updateProgress('validation', 'completed');
     } else if (steps.validation === 'failed') {
-      CostsplitterApp.updateProgress('validation', 'error', 'Data validation failed');
+      CostsplitterApp.updateProgress('validation', 'error');
       return;
     }
 
     if (steps.transformation === 'completed') {
-      CostsplitterApp.updateProgress(
-        'transformation',
-        'completed',
-        'Data transformation completed',
-      );
+      CostsplitterApp.updateProgress('transformation', 'completed');
     }
 
     if (steps.calculation === 'completed') {
-      CostsplitterApp.updateProgress('calculation', 'completed', 'Payment calculations completed');
+      CostsplitterApp.updateProgress('calculation', 'completed');
     }
 
     if (steps.reporting === 'completed') {
-      CostsplitterApp.updateProgress('reporting', 'completed', 'Report generated successfully');
+      CostsplitterApp.updateProgress('reporting', 'completed');
     }
   }
 
   handleProcessingError(result) {
     if (result.error === 'Security validation failed') {
-      CostsplitterApp.updateProgress('security', 'error', 'Security check failed');
+      CostsplitterApp.updateProgress('security', 'error');
     } else if (result.error === 'Data validation failed') {
-      CostsplitterApp.updateProgress('validation', 'error', 'Data validation failed');
+      CostsplitterApp.updateProgress('validation', 'error');
     } else if (result.error === 'CSV parsing failed') {
-      CostsplitterApp.updateProgress('parsing', 'error', 'CSV parsing failed');
+      CostsplitterApp.updateProgress('parsing', 'error');
     }
 
+    CostsplitterApp.setProgressToSummaryMode('Processing Failed');
     this.displayError(result);
   }
 
@@ -361,6 +386,7 @@ class CostsplitterApp {
     this.fileInput.value = '';
     this.uploadSection.classList.remove('has-results');
     this.resultsSection.classList.add('hidden');
+    CostsplitterApp.showProgress(false);
     this.clearErrors();
     document.getElementById('fileInfo').classList.add('hidden');
     this.processButton.disabled = true;

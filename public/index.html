@@ -44,18 +44,47 @@
         <!-- Error Display -->
         <div id="errorDisplay" class="error-display hidden"></div>
 
-        <!-- Loading Display -->
+        <!-- Progress Steps - Always visible when processing starts -->
+        <div id="progressSteps" class="progress-steps hidden">
+            <div class="progress-header">
+                <h3 id="progressTitle">Processing Your File</h3>
+            </div>
+            <div class="step" data-step="parsing">
+                <span class="step-icon">📄</span>
+                <span class="step-text">Parsing CSV</span>
+                <span class="step-status"></span>
+            </div>
+            <div class="step" data-step="security">
+                <span class="step-icon">🔒</span>
+                <span class="step-text">Security Check</span>
+                <span class="step-status"></span>
+            </div>
+            <div class="step" data-step="validation">
+                <span class="step-icon">✅</span>
+                <span class="step-text">Data Validation</span>
+                <span class="step-status"></span>
+            </div>
+            <div class="step" data-step="transformation">
+                <span class="step-icon">🔄</span>
+                <span class="step-text">Data Transformation</span>
+                <span class="step-status"></span>
+            </div>
+            <div class="step" data-step="calculation">
+                <span class="step-icon">🧮</span>
+                <span class="step-text">Calculating Payments</span>
+                <span class="step-status"></span>
+            </div>
+            <div class="step" data-step="reporting">
+                <span class="step-icon">📊</span>
+                <span class="step-text">Generating Report</span>
+                <span class="step-status"></span>
+            </div>
+        </div>
+
+        <!-- Loading Spinner - Only shows during processing -->
         <div id="loadingDisplay" class="loading-display hidden">
             <div class="spinner"></div>
             <p id="loadingText">Processing your file...</p>
-            <div id="progressSteps" class="progress-steps">
-                <div class="step" data-step="parsing">📄 Parsing CSV</div>
-                <div class="step" data-step="security">🔒 Security Check</div>
-                <div class="step" data-step="validation">✅ Data Validation</div>
-                <div class="step" data-step="transformation">🔄 Data Transformation</div>
-                <div class="step" data-step="calculation">🧮 Calculating Payments</div>
-                <div class="step" data-step="reporting">📊 Generating Report</div>
-            </div>
         </div>
 
         <!-- Results Section -->
