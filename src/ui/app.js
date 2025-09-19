@@ -1,4 +1,7 @@
 import { costsplitterPipeline } from '../pipeline';
+import {
+  classifyError, generateErrorSuggestions, generateHelpResources,
+} from './errorClassification';
 
 class CostsplitterApp {
   constructor() {
@@ -325,52 +328,161 @@ class CostsplitterApp {
   displayError(error) {
     this.errorDisplay.classList.remove('hidden');
 
-    let errorHtml = `<h3>Error: ${error.error}</h3>`;
+    // Get intelligent error classification
+    const classification = classifyError(error.error, error);
+    const suggestions = generateErrorSuggestions(error.error, error);
+    const helpResources = generateHelpResources(error.error);
 
-    if (error.details) {
-      if (Array.isArray(error.details)) {
-        errorHtml += `<ul>${error.details.map((detail) => `<li>${detail}</li>`).join('')}</ul>`;
-      } else {
-        errorHtml += `<p>${error.details}</p>`;
-      }
+    // Build context-aware error display
+    let errorHtml = CostsplitterApp.buildPrimaryErrorMessage(error, classification);
+
+    // Add suggestions based on error type
+    if (suggestions.length > 0) {
+      errorHtml += CostsplitterApp.buildSuggestionsSection(suggestions);
     }
 
-    // Show steps that completed successfully
+    // Show technical details based on classification
+    if (classification.showValidationErrors && error.validationErrors) {
+      errorHtml += CostsplitterApp.buildValidationErrorsSection(error.validationErrors);
+    }
+
+    if (classification.showCsvColumns && error.metadata?.csvColumns) {
+      errorHtml += CostsplitterApp.buildCsvColumnsSection(error.metadata.csvColumns);
+    }
+
+    // Always show processing steps for context
     if (error.steps) {
-      errorHtml += '<h4>Processing Steps:</h4><ul>';
-      if (error.steps.security === 'passed') {
-        errorHtml += '<li>✅ Security check: PASSED</li>';
-      }
-      if (error.steps.validation === 'passed') {
-        errorHtml += '<li>✅ Data validation: PASSED</li>';
-      }
-      if (error.steps.validation === 'failed') {
-        errorHtml += '<li>❌ Data validation: FAILED</li>';
-      }
-      errorHtml += '</ul>';
+      errorHtml += CostsplitterApp.buildProcessingStepsSection(error.steps);
     }
 
-    // Show validation errors in detail
-    if (error.validationErrors) {
-      errorHtml += `
-        <h4>Validation Errors:</h4>
-        <ul>
-          ${error.validationErrors.map((e) => (
-    `<li><strong>Row ${e.row}, Column ${e.column}:</strong> ${e.message}</li>`
-  )).join('')}
-        </ul>
-      `;
+    // Add expandable technical details section
+    if (classification.showTechnicalDetails || error.details) {
+      errorHtml += CostsplitterApp.buildTechnicalDetailsSection(error, classification);
     }
 
-    // Show CSV columns if available for debugging
-    if (error.metadata && error.metadata.csvColumns) {
-      errorHtml += `
-        <h4>CSV Columns Found:</h4>
-        <p><code>${error.metadata.csvColumns.join(', ')}</code></p>
-      `;
+    // Add help resources
+    if (helpResources.length > 0) {
+      errorHtml += CostsplitterApp.buildHelpResourcesSection(helpResources);
     }
 
     this.errorDisplay.innerHTML = errorHtml;
+  }
+
+  static buildPrimaryErrorMessage(error, classification) {
+    const errorTypeClass = classification.type.replace('-', '_');
+
+    return `
+      <div class="error-primary ${errorTypeClass}">
+        <h3>${classification.primaryMessage}</h3>
+        <p class="error-help">${classification.helpText}</p>
+      </div>
+    `;
+  }
+
+  static buildSuggestionsSection(suggestions) {
+    return `
+      <div class="error-suggestions">
+        <h4>💡 Try This:</h4>
+        <ul class="suggestions-list">
+          ${suggestions.map((suggestion) => `<li>${suggestion}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+
+  static buildValidationErrorsSection(validationErrors) {
+    return `
+      <div class="error-validation">
+        <h4>📋 Specific Issues Found:</h4>
+        <ul class="validation-errors">
+          ${validationErrors.map((e) => (
+    `<li><strong>Row ${e.row}, Column "${e.column}":</strong> ${e.message}</li>`
+  )).join('')}
+        </ul>
+      </div>
+    `;
+  }
+
+  static buildCsvColumnsSection(csvColumns) {
+    return `
+      <div class="error-csv-info">
+        <h4>📊 Your CSV Structure:</h4>
+        <div class="csv-columns">
+          <strong>Columns found:</strong> <code>${csvColumns.join(', ')}</code>
+        </div>
+      </div>
+    `;
+  }
+
+  static buildProcessingStepsSection(steps) {
+    return `
+      <div class="error-processing-steps">
+        <h4>🔄 Processing Status:</h4>
+        <ul class="steps-list">
+          ${steps.security === 'passed' ? '<li>✅ Security check: PASSED</li>' : ''}
+          ${steps.validation === 'passed' ? '<li>✅ Data validation: PASSED</li>' : ''}
+          ${steps.validation === 'failed' ? '<li>❌ Data validation: FAILED</li>' : ''}
+          ${steps.transformation === 'completed' ? '<li>✅ Data transformation: COMPLETED</li>' : ''}
+        </ul>
+      </div>
+    `;
+  }
+
+  static buildTechnicalDetailsSection(error, classification) {
+    const isCollapsible = !classification.showTechnicalDetails;
+    const detailsHtml = CostsplitterApp.formatTechnicalDetails(error);
+
+    if (isCollapsible) {
+      return `
+        <details class="error-technical-details">
+          <summary>🔧 Technical Details</summary>
+          <div class="technical-content">
+            ${detailsHtml}
+          </div>
+        </details>
+      `;
+    }
+    return `
+        <div class="error-technical-details expanded">
+          <h4>🔧 Technical Details:</h4>
+          <div class="technical-content">
+            ${detailsHtml}
+          </div>
+        </div>
+      `;
+  }
+
+  static formatTechnicalDetails(error) {
+    let details = '';
+
+    if (error.details) {
+      if (Array.isArray(error.details)) {
+        details += `<ul>${error.details.map((detail) => `<li>${detail}</li>`).join('')}</ul>`;
+      } else {
+        details += `<p><strong>Error Details:</strong> ${error.details}</p>`;
+      }
+    }
+
+    if (error.error) {
+      details += `<p><strong>Error Type:</strong> <code>${error.error}</code></p>`;
+    }
+
+    return details || '<p>No additional technical information available.</p>';
+  }
+
+  static buildHelpResourcesSection(helpResources) {
+    return `
+      <div class="error-help-resources">
+        <h4>📚 Need More Help?</h4>
+        <div class="help-buttons">
+          ${helpResources.map((resource) => (
+    `<button class="help-button" onclick="alert('${resource.description}')">
+              ${resource.title}
+            </button>`
+  )).join('')}
+        </div>
+      </div>
+    `;
   }
 
   clearErrors() {
