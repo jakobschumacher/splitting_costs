@@ -8,6 +8,7 @@ class CostsplitterApp {
     this.initializeElements();
     this.bindEvents();
     this.paymentMode = 'individual';
+    this.showStep(1); // Initialize with step 1 visible
   }
 
   initializeElements() {
