@@ -13,80 +13,102 @@
             <p>Fair cost division for group travel</p>
         </header>
 
-        <!-- Upload Section -->
-        <section id="uploadSection" class="card">
-            <div id="dropZone" class="drop-zone">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">📄</div>
-                <h3>Drop your CSV file here or click to browse</h3>
-                <p style="color: #6b7280;">Supports files up to 10MB</p>
+        <!-- Step 1: Upload File -->
+        <section id="step1" class="step-section">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <h2>Upload Your CSV File</h2>
             </div>
-            <input type="file" id="csvFile" class="hidden" accept=".csv">
-
-            <div id="fileInfo" class="hidden" style="margin-top: 1rem; padding: 1rem; background: #eff6ff; border-radius: 0.375rem;">
-                <p><strong>File:</strong> <span id="fileName"></span></p>
-                <p><strong>Size:</strong> <span id="fileSize"></span></p>
-            </div>
-
-            <div class="space-y-4" style="margin-top: 1.5rem;">
-                <div>
-                    <label for="paymentMode">Payment Mode</label>
-                    <select id="paymentMode">
-                        <option value="individual">Individual</option>
-                        <option value="group">Group</option>
-                    </select>
+            <div class="card">
+                <div id="dropZone" class="drop-zone">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📄</div>
+                    <h3>Drop your CSV file here or click to browse</h3>
+                    <p style="color: #6b7280;">Supports files up to 10MB</p>
                 </div>
-                <div class="flex space-x-3">
-                    <button id="processButton" class="btn btn-primary" disabled style="opacity: 0.5;">Process File</button>
-                    <button id="resetButton" class="btn btn-secondary">Reset</button>
+                <input type="file" id="csvFile" class="hidden" accept=".csv">
+
+                <div id="fileInfo" class="hidden" style="margin-top: 1rem; padding: 1rem; background: #eff6ff; border-radius: 0.375rem;">
+                    <p><strong>File:</strong> <span id="fileName"></span></p>
+                    <p><strong>Size:</strong> <span id="fileSize"></span></p>
                 </div>
             </div>
         </section>
 
-        <!-- Error Display -->
-        <div id="errorDisplay" class="hidden card" style="border-color: #fecaca; background: #fef2f2;"></div>
-
-        <!-- Progress Steps -->
-        <div id="progressSteps" class="hidden card">
-            <h3 id="progressTitle">Processing Your File</h3>
-            <div style="margin-top: 1rem;">
-                <div class="progress-step" data-step="parsing">
-                    <span>📄</span>
-                    <span>Parsing CSV</span>
-                </div>
-                <div class="progress-step" data-step="security">
-                    <span>🔒</span>
-                    <span>Security Check</span>
-                </div>
-                <div class="progress-step" data-step="validation">
-                    <span>✅</span>
-                    <span>Data Validation</span>
-                </div>
-                <div class="progress-step" data-step="transformation">
-                    <span>🔄</span>
-                    <span>Data Transformation</span>
-                </div>
-                <div class="progress-step" data-step="calculation">
-                    <span>🧮</span>
-                    <span>Calculating Payments</span>
-                </div>
-                <div class="progress-step" data-step="reporting">
-                    <span>📊</span>
-                    <span>Generating Report</span>
-                </div>
+        <!-- Step 2: Configure & Process -->
+        <section id="step2" class="step-section hidden">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <h2>Configure Options & Process</h2>
             </div>
-        </div>
-
-        <!-- Loading Display -->
-        <div id="loadingDisplay" class="hidden text-center" style="padding: 2rem;">
-            <div class="spinner"></div>
-            <p style="margin-top: 0.5rem; color: #6b7280;">Processing your file...</p>
-        </div>
-
-        <!-- Results Section -->
-        <section id="resultsSection" class="hidden">
             <div class="card">
-                <h2>✅ Processing Complete</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="paymentMode">Payment Mode</label>
+                        <select id="paymentMode">
+                            <option value="individual">Individual</option>
+                            <option value="group">Group</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="processButton" class="btn btn-primary">Process File</button>
+                        <button id="resetButton" class="btn btn-secondary">Reset</button>
+                    </div>
+                </div>
 
+                <!-- Horizontal Progress Steps -->
+                <div id="progressSteps" class="hidden" style="margin-top: 2rem;">
+                    <h3 id="progressTitle" style="margin-bottom: 1rem;">Processing Your File</h3>
+                    <div class="progress-horizontal">
+                        <div class="progress-step-horizontal" data-step="parsing">
+                            <div class="progress-icon">📄</div>
+                            <div class="progress-label">Parsing</div>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step-horizontal" data-step="security">
+                            <div class="progress-icon">🔒</div>
+                            <div class="progress-label">Security</div>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step-horizontal" data-step="validation">
+                            <div class="progress-icon">✅</div>
+                            <div class="progress-label">Validation</div>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step-horizontal" data-step="transformation">
+                            <div class="progress-icon">🔄</div>
+                            <div class="progress-label">Transform</div>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step-horizontal" data-step="calculation">
+                            <div class="progress-icon">🧮</div>
+                            <div class="progress-label">Calculate</div>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step-horizontal" data-step="reporting">
+                            <div class="progress-icon">📊</div>
+                            <div class="progress-label">Report</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Display -->
+                <div id="loadingDisplay" class="hidden text-center" style="padding: 2rem;">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 0.5rem; color: #6b7280;">Processing your file...</p>
+                </div>
+
+                <!-- Error Display -->
+                <div id="errorDisplay" class="hidden" style="margin-top: 2rem; padding: 1rem; border-radius: 0.375rem; border: 1px solid #fecaca; background: #fef2f2;"></div>
+            </div>
+        </section>
+
+        <!-- Step 3: Results -->
+        <section id="step3" class="step-section hidden">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <h2>✅ Results</h2>
+            </div>
+            <div class="card">
                 <div class="grid grid-4" id="summaryContent">
                     <!-- Summary cards will be inserted here -->
                 </div>

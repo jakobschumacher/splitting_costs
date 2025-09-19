@@ -495,14 +495,35 @@ class CostsplitterApp {
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
-    this.resultsSection.classList.add('hidden');
+    this.showStep(1);
     CostsplitterApp.showProgress(false);
     this.clearErrors();
     document.getElementById('fileInfo').classList.add('hidden');
-    this.processButton.disabled = true;
     this.paymentModeSelect.value = 'individual';
     this.paymentMode = 'individual';
     CostsplitterApp.resetProgress();
+  }
+
+  showStep(stepNumber) {
+    // Hide all steps
+    this.step1.classList.add('hidden');
+    this.step2.classList.add('hidden');
+    this.step3.classList.add('hidden');
+
+    // Show the requested step
+    switch (stepNumber) {
+      case 1:
+        this.step1.classList.remove('hidden');
+        break;
+      case 2:
+        this.step2.classList.remove('hidden');
+        break;
+      case 3:
+        this.step3.classList.remove('hidden');
+        break;
+      default:
+        this.step1.classList.remove('hidden');
+    }
   }
 }
 
