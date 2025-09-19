@@ -1,3 +1,3 @@
-// Main entry point for Costsplitter2
+// Main entry point for Costsplitter
 import './ui/app';
 import './ui/styles.css';

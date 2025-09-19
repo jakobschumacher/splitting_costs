@@ -1,4 +1,4 @@
-# Costsplitter2 - JavaScript Version
+# Costsplitter - JavaScript Version
 
 ## Project Overview
 This is a JavaScript reimplementation of the R package `costsplitter` for fair cost division in group travel scenarios. The goal is to create a web-based application where users can upload a CSV file and get automatic cost splitting calculations.

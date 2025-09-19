@@ -1,5 +1,5 @@
 {
-  "name": "costsplitter2",
+  "name": "costsplitter",
   "version": "1.0.0",
   "description": "Fair cost division for group travel - JavaScript web application",
   "main": "src/index.js",

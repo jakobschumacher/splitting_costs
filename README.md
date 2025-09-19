@@ -1,4 +1,4 @@
-# Costsplitter2 - Fair Cost Division for Group Travel
+# Costsplitter - Fair Cost Division for Group Travel
 
 A JavaScript web application for fairly splitting costs among group travel participants, handling complex scenarios like partial participation, age differences, and income adjustments.
 
@@ -42,7 +42,7 @@ resume
 
 Or manually:
 ```bash
-distrobox-enter js-Costsplitter2
+distrobox-enter js-Costsplitter
 ```
 
 ### Run the Application
@@ -86,6 +86,6 @@ curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/b
 
 ## 📋 Project Info
 - **Type**: JavaScript Web Application
-- **Container**: js-Costsplitter2
+- **Container**: js-Costsplitter
 - **Created**: 2025-09-19
 - **Based on**: R package costsplitter v0.5

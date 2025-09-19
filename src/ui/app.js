@@ -543,7 +543,7 @@ class CostsplitterApp {
 
     // Title and filename
     doc.setFontSize(20);
-    doc.text('Costsplitter2 - Expense Report', 20, yPos);
+    doc.text('Costsplitter - Expense Report', 20, yPos);
     yPos += 10;
     doc.setFontSize(10);
     doc.text(`Source file: ${fileName}`, 20, yPos);
