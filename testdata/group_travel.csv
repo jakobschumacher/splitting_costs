@@ -1,0 +1,7 @@
+name,group,age,adjustment,cost_dinner,pay_dinner,cost_hotel,pay_hotel,cost_transport,pay_transport
+Alice,Family1,adult,more,full,120,0.8,0,full,80
+Bob,Family1,kid,less,reduced,0,full,200,0.5,0
+Charlie,Family2,25,1.5,0,0,full,150,full,100
+Diana,Family2,adult,,full,80,half,50,full,60
+Eve,Family3,12,less,reduced,30,0.3,0,reduced,20
+Frank,Family3,adult,,full,90,0.9,180,full,70

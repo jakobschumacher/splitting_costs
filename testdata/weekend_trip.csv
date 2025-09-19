@@ -1,0 +1,6 @@
+name,group,age,cost_dinner_day1,pay_dinner_day1,cost_dinner_day2,pay_dinner_day2,cost_accommodation,pay_accommodation,adjustment
+Sarah,Friends,28,full,45,full,0,full,150,
+Mike,Friends,30,full,60,0.5,25,0.8,0,
+Lisa,Friends,26,0.8,0,full,40,full,200,less
+Tom,Friends,29,full,35,full,50,0.6,100,more
+Emma,Friends,27,reduced,20,reduced,15,full,120,

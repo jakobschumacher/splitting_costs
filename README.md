@@ -45,6 +45,23 @@ Or manually:
 distrobox-enter js-Costsplitter2
 ```
 
+### Run the Application
+```bash
+npm install
+npm run dev    # Development server
+npm test       # Run test suite
+npm run build  # Production build
+```
+
+### Test Data
+The `testdata/` directory contains various CSV examples to test different scenarios:
+- `simple_dinner.csv` - Basic 4-person dinner split
+- `family_vacation.csv` - Multi-generational family trip
+- `business_trip.csv` - Corporate travel expenses
+- `large_group.csv` - 15-person group scenario
+- `edge_cases.csv` - Testing error handling
+- And more! See `testdata/README.md` for details
+
 ### Rebuild Environment
 ```bash
 curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap
