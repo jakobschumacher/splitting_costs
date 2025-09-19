@@ -1,0 +1,345 @@
+/* Costsplitter2 Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #7f8c8d;
+  font-size: 1.1em;
+}
+
+/* Upload Section */
+.upload-section {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.drop-zone {
+  border: 2px dashed #bdc3c7;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+  border-color: #3498db;
+  background-color: #f8f9fa;
+}
+
+.drop-zone-content {
+  pointer-events: none;
+}
+
+.upload-icon {
+  font-size: 3em;
+  color: #bdc3c7;
+  margin-bottom: 15px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-info {
+  background: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.control-section {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.control-group label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+select,
+button {
+  padding: 10px 15px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+button {
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.reset-btn {
+  background: #95a5a6;
+}
+
+.reset-btn:hover {
+  background: #7f8c8d;
+}
+
+/* Results Section */
+.results-section {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.result-tabs {
+  display: flex;
+  border-bottom: 2px solid #ecf0f1;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 15px 25px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  border-bottom-color: #3498db;
+  color: #3498db;
+  font-weight: 600;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Summary */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+.summary-item .label {
+  font-weight: 600;
+}
+
+.summary-item .value.success {
+  color: #27ae60;
+}
+
+.summary-item .value.error {
+  color: #e74c3c;
+}
+
+/* Instructions */
+.instructions-list {
+  list-style: none;
+}
+
+.instruction-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #e8f6f3;
+  border-left: 4px solid #27ae60;
+  border-radius: 3px;
+}
+
+.no-transactions {
+  text-align: center;
+  padding: 30px;
+  color: #27ae60;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+/* Payment Table */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.payment-table th,
+.payment-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.payment-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.payment-table .credit {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.payment-table .debit {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.payment-table .neutral {
+  color: #7f8c8d;
+}
+
+/* Activities */
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.activity-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 5px;
+  border-left: 4px solid #3498db;
+}
+
+.activity-card h4 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.activity-card p {
+  margin-bottom: 5px;
+  color: #7f8c8d;
+}
+
+/* Error Display */
+.error-display {
+  background: #fadbd8;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.error-display h3 {
+  color: #e74c3c;
+  margin-bottom: 10px;
+}
+
+.error-display ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+/* Loading */
+.loading-display {
+  text-align: center;
+  padding: 30px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .control-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
