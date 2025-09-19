@@ -532,39 +532,140 @@ class CostsplitterApp {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Title
-    doc.setFontSize(20);
-    doc.text('Costsplitter2 - Expense Report', 20, 20);
-
-    // Summary
+    // Get data
     const summary = this.currentResults.report.summary;
-    doc.setFontSize(12);
-    let yPos = 40;
-    doc.text(`Participants: ${summary.totalParticipants}`, 20, yPos);
+    const instructions = this.currentResults.report.instructions;
+    const paymentMatrix = this.currentResults.report.paymentMatrix;
+    const activities = summary.activities || [];
+    const fileName = this.selectedFile ? this.selectedFile.name : 'expense-data';
+
+    let yPos = 20;
+
+    // Title and filename
+    doc.setFontSize(20);
+    doc.text('Costsplitter2 - Expense Report', 20, yPos);
     yPos += 10;
-    doc.text(`Total Paid: €${summary.totalPaid.toFixed(2)}`, 20, yPos);
-    yPos += 10;
-    doc.text(`Activities: ${summary.activities ? summary.activities.length : 0}`, 20, yPos);
+    doc.setFontSize(10);
+    doc.text(`Source file: ${fileName}`, 20, yPos);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 120, yPos);
     yPos += 20;
 
-    // Payment Instructions
-    doc.setFontSize(14);
-    doc.text('Payment Instructions:', 20, yPos);
+    // Summary section
+    doc.setFontSize(16);
+    doc.text('Summary', 20, yPos);
+    yPos += 10;
+    doc.setFontSize(12);
+    doc.text(`Participants: ${summary.totalParticipants}`, 25, yPos);
+    yPos += 8;
+    doc.text(`Total Paid: €${summary.totalPaid.toFixed(2)}`, 25, yPos);
+    yPos += 8;
+    doc.text(`Activities: ${activities.length}`, 25, yPos);
+    yPos += 20;
+
+    // Payment Instructions section
+    doc.setFontSize(16);
+    doc.text('Payment Instructions', 20, yPos);
     yPos += 10;
     doc.setFontSize(10);
 
-    const instructions = this.currentResults.report.instructions;
     if (instructions.length === 0) {
-      doc.text('No payments needed - all settled!', 20, yPos);
+      doc.text('No payments needed - all settled!', 25, yPos);
+      yPos += 15;
     } else {
       instructions.forEach(instruction => {
-        doc.text(`${instruction.from} pays €${instruction.amount.toFixed(2)} to ${instruction.to}`, 20, yPos);
+        doc.text(`• ${instruction}`, 25, yPos);
+        yPos += 6;
+      });
+      yPos += 10;
+    }
+
+    // Check if we need a new page
+    if (yPos > 220) {
+      doc.addPage();
+      yPos = 20;
+    }
+
+    // Payment Matrix section
+    doc.setFontSize(16);
+    doc.text('Payment Matrix', 20, yPos);
+    yPos += 15;
+
+    // Table headers
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'bold');
+    doc.text('Name', 25, yPos);
+    doc.text('Should Pay', 70, yPos);
+    doc.text('Already Paid', 110, yPos);
+    doc.text('Net Amount', 155, yPos);
+    yPos += 8;
+
+    // Table separator line
+    doc.line(20, yPos - 2, 190, yPos - 2);
+
+    // Table data
+    doc.setFont(undefined, 'normal');
+    paymentMatrix.forEach(person => {
+      doc.text(person.element, 25, yPos);
+      doc.text(`€${person.shouldPay.toFixed(2)}`, 70, yPos);
+      doc.text(`€${person.alreadyPaid.toFixed(2)}`, 110, yPos);
+      const netColor = person.netObligation < 0 ? [0, 150, 0] : person.netObligation > 0 ? [200, 0, 0] : [0, 0, 0];
+      doc.setTextColor(...netColor);
+      doc.text(`€${person.netObligation.toFixed(2)}`, 155, yPos);
+      doc.setTextColor(0, 0, 0);
+      yPos += 6;
+    });
+    yPos += 15;
+
+    // Check if we need a new page for activities
+    if (yPos > 200) {
+      doc.addPage();
+      yPos = 20;
+    }
+
+    // Activity Breakdown section
+    if (activities.length > 0) {
+      doc.setFontSize(16);
+      doc.text('Activity Breakdown', 20, yPos);
+      yPos += 15;
+
+      activities.forEach(activity => {
+        // Check if we need a new page
+        if (yPos > 240) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text(activity.name, 25, yPos);
+        yPos += 8;
+
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Total Paid: €${activity.totalPaid.toFixed(2)}`, 30, yPos);
+        yPos += 6;
+
+        if (activity.paidBy) {
+          doc.text(`Paid by: ${activity.paidBy}`, 30, yPos);
+          yPos += 6;
+        }
+
+        if (activity.charges && activity.charges.length > 0) {
+          doc.text('Individual charges:', 30, yPos);
+          yPos += 6;
+          activity.charges.forEach(charge => {
+            doc.text(`  • ${charge.person}: €${charge.amount.toFixed(2)} (${charge.shares} shares)`, 35, yPos);
+            yPos += 5;
+          });
+        }
         yPos += 8;
       });
     }
 
-    // Save the PDF
-    doc.save('costsplitter-report.pdf');
+    // Save the PDF with dynamic filename
+    const timestamp = new Date().toISOString().slice(0, 10);
+    const baseFileName = fileName.replace('.csv', '');
+    doc.save(`${baseFileName}-report-${timestamp}.pdf`);
   }
 
   reset() {
