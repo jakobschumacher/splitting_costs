@@ -155,10 +155,27 @@ export const calculatePaymentObligations = (data, payBy = 'individual') => {
       return sum + (row[weightedKey] || 0);
     }, 0);
 
+    // Find who paid for this activity
+    const payers = data
+      .filter((row) => (row[`pay_${activity}`] || 0) > 0)
+      .map((row) => row.name);
+    const paidBy = payers.length > 0 ? payers.join(', ') : 'No one';
+
+    // Calculate individual charges for this activity
+    const charges = weightedData
+      .filter((row) => (row[`weighted_${activity}`] || 0) > 0)
+      .map((row) => ({
+        person: row.name,
+        amount: (row[`weighted_${activity}`] || 0) * costPerUnit[activity],
+        shares: row[`weighted_${activity}`] || 0,
+      }));
+
     activities[activity] = {
       totalPaid: activityPaid,
       totalWeightedShares: Math.round(totalWeightedShares * 100) / 100,
       costPerUnit: costPerUnit[activity],
+      paidBy,
+      charges,
     };
   });
 

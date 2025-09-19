@@ -191,5 +191,25 @@ Diana,Family2,adult,,full,80,half,50`;
       expect(result.report.metadata.generatedAt).toBeDefined();
       expect(result.report.metadata.algorithm).toBe('Minimized payment transactions');
     });
+
+    test('validates activity structure includes paidBy and charges properties', () => {
+      const file = { size: 1000 };
+      const result = costsplitterPipeline(file, minimalCsv, 'individual');
+
+      expect(result.success).toBe(true);
+      expect(result.report.summary.activities).toBeDefined();
+      expect(result.report.summary.activities.length).toBeGreaterThan(0);
+
+      const activity = result.report.summary.activities[0];
+      expect(activity.paidBy).toBeDefined();
+      expect(activity.paidBy).not.toBe('undefined');
+      expect(activity.charges).toBeDefined();
+      expect(Array.isArray(activity.charges)).toBe(true);
+
+      // Verify paidBy is properly populated from payment data
+      expect(activity.paidBy).toContain('John'); // John paid 100
+      expect(activity.paidBy).toContain('Jane'); // Jane paid 50
+      expect(activity.paidBy).toContain('Bob'); // Bob paid 75
+    });
   });
 });

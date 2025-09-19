@@ -77,6 +77,8 @@ export const generateSummaryReport = (paymentMatrix, summary) => {
     totalPaid: summary.activities[activity].totalPaid,
     totalShares: summary.activities[activity].totalWeightedShares,
     costPerUnit: Math.round(summary.activities[activity].costPerUnit * 100) / 100,
+    paidBy: summary.activities[activity].paidBy,
+    charges: summary.activities[activity].charges,
   }));
 
   return {
