@@ -34,7 +34,12 @@ class CostsplitterApp {
     this.errorDisplay = document.getElementById('errorDisplay');
     this.loadingDisplay = document.getElementById('loadingDisplay');
     this.helpButton = document.getElementById('helpButton');
-    this.csvHelp = document.getElementById('csvHelp');
+    this.helpContent = document.getElementById('helpContent');
+    this.helpTitle = document.getElementById('helpTitle');
+    this.closeHelpButton = document.getElementById('closeHelpButton');
+    this.helpStep1 = document.getElementById('helpStep1');
+    this.helpStep2 = document.getElementById('helpStep2');
+    this.helpStep3 = document.getElementById('helpStep3');
     this.downloadPdfButton = document.getElementById('downloadPdfButton');
     this.resetButton = document.getElementById('resetButton');
     this.progressSteps = document.getElementById('progressSteps');
@@ -82,6 +87,8 @@ class CostsplitterApp {
 
     // Help button
     this.helpButton.addEventListener('click', () => this.toggleHelp());
+    // Close help button
+    this.closeHelpButton.addEventListener('click', () => this.closeHelp());
 
     // Example file buttons
     document.querySelectorAll('[data-example]').forEach(button => {
@@ -723,7 +730,55 @@ class CostsplitterApp {
   }
 
   toggleHelp() {
-    this.csvHelp.classList.toggle('hidden');
+    const isHidden = this.helpContent.classList.contains('hidden');
+
+    if (isHidden) {
+      this.showContextualHelp();
+    } else {
+      this.closeHelp();
+    }
+  }
+
+  showContextualHelp() {
+    // Determine which step we're currently on
+    let currentStep = 1;
+    if (!this.step2.classList.contains('step-disabled')) {
+      currentStep = 2;
+    }
+    if (!this.step3.classList.contains('step-disabled') && this.currentResults) {
+      currentStep = 3;
+    }
+
+    // Hide all help step content
+    this.helpStep1.classList.add('hidden');
+    this.helpStep2.classList.add('hidden');
+    this.helpStep3.classList.add('hidden');
+
+    // Show appropriate content and update title based on current step
+    switch (currentStep) {
+      case 1:
+        this.helpStep1.classList.remove('hidden');
+        this.helpTitle.setAttribute('data-i18n', 'csvHelp.title');
+        this.helpTitle.textContent = i18n.translate('csvHelp.title');
+        break;
+      case 2:
+        this.helpStep2.classList.remove('hidden');
+        this.helpTitle.setAttribute('data-i18n', 'help.step2.title');
+        this.helpTitle.textContent = i18n.translate('help.step2.title');
+        break;
+      case 3:
+        this.helpStep3.classList.remove('hidden');
+        this.helpTitle.setAttribute('data-i18n', 'help.step3.title');
+        this.helpTitle.textContent = i18n.translate('help.step3.title');
+        break;
+    }
+
+    // Show the help content
+    this.helpContent.classList.remove('hidden');
+  }
+
+  closeHelp() {
+    this.helpContent.classList.add('hidden');
   }
 
   downloadPdf() {
@@ -885,7 +940,7 @@ class CostsplitterApp {
     this.roundingMode = 'exact';
     this.updateRoundingUI();
     CostsplitterApp.resetProgress();
-    this.csvHelp.classList.add('hidden');
+    this.helpContent.classList.add('hidden');
     this.currentResults = null;
 
     // Reset upload area to default state

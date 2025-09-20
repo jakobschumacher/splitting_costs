@@ -49,6 +49,25 @@ export const de = {
   'csvHelp.columns.age': 'age - optionales Alter oder Kategorie (adult, kid, numerisch)',
   'csvHelp.columns.adjustment': 'adjustment - optionaler Zahlungsmodifikator (more, less, 1.2)',
   'csvHelp.example': 'Beispiel:',
+  'csvHelp.commonIssues': 'Häufige Probleme:',
+  'csvHelp.issue1': '• Fehlende "name" Spalte - diese ist für alle Teilnehmer erforderlich',
+  'csvHelp.issue2': '• Text und Zahlen in Zahlungsspalten gemischt (nur Zahlen verwenden)',
+  'csvHelp.issue3': '• Datei als Excel (.xlsx) statt CSV-Format gespeichert',
+  'csvHelp.issue4': '• Zusätzliche Kommas oder Anführungszeichen verursachen Parsing-Fehler',
+  'csvHelp.examples': 'Benötigen Sie ein Beispiel? Probieren Sie:',
+  'csvHelp.closeHelp': 'Hilfe schließen',
+
+  // Step-specific Help
+  'help.step1.title': 'Erste Schritte',
+  'help.step1.description': 'Laden Sie Ihre CSV-Datei mit Ausgabendaten hoch, um mit den Kostenaufteilungsberechnungen zu beginnen.',
+  'help.step2.title': 'Verarbeitungsoptionen',
+  'help.step2.description': 'Wählen Sie aus, wie Zahlungen und Rundungen behandelt werden sollen, bevor Sie Ihre Daten verarbeiten.',
+  'help.step2.paymentModes': 'Zahlungsmodi: Individuell verfolgt jede Person separat, Gruppe kombiniert Familien-/Teameinheiten.',
+  'help.step2.rounding': 'Rundung: Exakt behält genaue Beträge bei, Auf 5€ runden vereinfacht Endzahlungen.',
+  'help.step3.title': 'Ergebnisse verstehen',
+  'help.step3.description': 'Überprüfen Sie, wer wem was schuldet und laden Sie einen detaillierten Zahlungsbericht herunter.',
+  'help.step3.matrix': 'Die Zahlungsmatrix zeigt die Verpflichtungen jeder Person und die erforderlichen Aktionen.',
+  'help.step3.activities': 'Die Aktivitätsaufschlüsselung zeigt Kosten und Teilnehmer für jede Ausgabenkategorie.',
 
   // Step 3: Results
   'step3.title': 'Ergebnisse',
