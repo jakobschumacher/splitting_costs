@@ -82,6 +82,7 @@ export const en = {
   'activity.paidBy': 'Paid by',
   'activity.costPerUnit': 'Cost per unit',
   'activity.shares': 'shares',
+  'activity.charges': 'Charges',
 
   // Errors
   'error.title': 'An error occurred',

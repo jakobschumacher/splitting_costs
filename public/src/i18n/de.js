@@ -82,6 +82,7 @@ export const de = {
   'activity.paidBy': 'Bezahlt von',
   'activity.costPerUnit': 'Kosten pro Einheit',
   'activity.shares': 'Anteile',
+  'activity.charges': 'Kosten',
 
   // Errors
   'error.title': 'Ein Fehler ist aufgetreten',

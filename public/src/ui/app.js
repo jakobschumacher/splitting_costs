@@ -499,7 +499,7 @@ class CostsplitterApp {
           <p style="margin-bottom: 0.25rem;">${i18n.t('activity.totalPaid')}: <span style="font-weight: 500;">${i18n.formatCurrency(activity.totalPaid)}</span></p>
           <p style="margin-bottom: 0.25rem;">${i18n.t('activity.paidBy')}: <span style="font-weight: 500;">${activity.paidBy}</span></p>
           <div style="margin-top: 0.5rem;">
-            <strong>Charges:</strong>
+            <strong>${i18n.t('activity.charges')}:</strong>
             <div style="margin-left: 1rem; margin-top: 0.25rem;">
               ${activity.charges ? activity.charges.map(charge =>
                 `<div>• ${charge.person}: ${i18n.formatCurrency(charge.amount)}</div>`
