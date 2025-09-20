@@ -39,7 +39,7 @@
 }
 
 .toggle-label.active {
-  color: #3b82f6;
+  color: #374151;
   font-weight: 600;
 }
 
@@ -63,9 +63,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #3b82f6;
+  background-color: #e5e7eb;
   transition: 0.3s;
   border-radius: 24px;
+  border: 1px solid #d1d5db;
 }
 
 .toggle-slider:before {
@@ -81,7 +82,8 @@
 }
 
 input:checked + .toggle-slider {
-  background-color: #059669;
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
 }
 
 input:checked + .toggle-slider:before {
@@ -97,11 +99,13 @@ input:checked + .toggle-slider:before {
 
 /* Rounding toggle specific styles */
 .rounding-slider {
-  background-color: #8b5cf6;
+  background-color: #e5e7eb;
+  border: 1px solid #d1d5db;
 }
 
 input:checked + .rounding-slider {
-  background-color: #f59e0b;
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
 }
 
 /* Responsive settings layout */
