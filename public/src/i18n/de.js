@@ -6,7 +6,6 @@ export const de = {
 
   // Step 1: Upload Your Data
   'step1.title': 'Daten hochladen',
-  'step1.welcome.title': 'Laden Sie Ihre Ausgabendaten hoch',
   'step1.welcome.description': 'Laden Sie Ihre CSV-Datei mit Gruppenausgaben hoch und erhalten Sie sofortige Zahlungsberechnungen. Faire Aufteilung leicht gemacht mit Unterstützung für verschiedene Teilnahmelevel und Zahlungspräferenzen.',
   'step1.upload.title': 'CSV-Datei hier ablegen oder zum Durchsuchen klicken',
   'step1.upload.subtitle': 'Unterstützt Dateien bis zu 10MB',
@@ -19,6 +18,8 @@ export const de = {
 
   // Step 2: Configure & Process
   'step2.title': 'Konfigurieren & Verarbeiten',
+  'step2.disabled.title': 'Verarbeitungsoptionen',
+  'step2.disabled.message': 'Laden Sie eine CSV-Datei hoch, um Verarbeitungsoptionen zu konfigurieren',
   'step2.options.title': 'Verarbeitungsoptionen',
   'step2.paymentMode.label': 'Zahlungsmodus',
   'step2.paymentMode.individual': 'Individuell',
@@ -52,6 +53,8 @@ export const de = {
 
   // Step 3: Results
   'step3.title': 'Ergebnisse',
+  'step3.disabled.title': 'Zahlungsergebnisse',
+  'step3.disabled.message': 'Verarbeiten Sie Ihre Datei, um Zahlungsberechnungen und Berichte zu sehen',
   'step3.paymentInstructions': 'Zahlungsanweisungen',
   'step3.paymentMatrix': 'Zahlungsübersicht',
   'step3.activityBreakdown': 'Aktivitätsaufschlüsselung',

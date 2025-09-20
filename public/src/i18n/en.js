@@ -6,7 +6,6 @@ export const en = {
 
   // Step 1: Upload Your Data
   'step1.title': 'Upload Your Data',
-  'step1.welcome.title': 'Upload Your Expense Data',
   'step1.welcome.description': 'Drop your CSV file with group expenses and get instant payment calculations. Fair splitting made simple with support for different participation levels and payment preferences.',
   'step1.upload.title': 'Drop your CSV file here or click to browse',
   'step1.upload.subtitle': 'Supports files up to 10MB',
@@ -19,6 +18,8 @@ export const en = {
 
   // Step 2: Configure & Process
   'step2.title': 'Configure & Process',
+  'step2.disabled.title': 'Processing Options',
+  'step2.disabled.message': 'Upload a CSV file to configure processing options',
   'step2.options.title': 'Processing Options',
   'step2.paymentMode.label': 'Payment Mode',
   'step2.paymentMode.individual': 'Individual',
@@ -52,6 +53,8 @@ export const en = {
 
   // Step 3: Results
   'step3.title': 'Results',
+  'step3.disabled.title': 'Payment Results',
+  'step3.disabled.message': 'Process your file to see payment calculations and reports',
   'step3.paymentInstructions': 'Payment Instructions',
   'step3.paymentMatrix': 'Payment Overview',
   'step3.activityBreakdown': 'Activity Breakdown',

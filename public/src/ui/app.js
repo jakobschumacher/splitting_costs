@@ -13,7 +13,7 @@ class CostsplitterApp {
     this.selectedFile = null;
     this.currentResults = null;
     this.initializeI18n();
-    this.showStep(1); // Initialize with step 1 visible
+    this.initializeStepStates(); // Initialize all steps with proper states
   }
 
   initializeElements() {
@@ -41,6 +41,9 @@ class CostsplitterApp {
     this.uploadDefaultState = document.getElementById('uploadDefaultState');
     this.uploadedState = document.getElementById('uploadedState');
     this.processingOptions = document.getElementById('processingOptions');
+    this.step2Disabled = document.getElementById('step2Disabled');
+    this.step3Disabled = document.getElementById('step3Disabled');
+    this.resultsContent = document.getElementById('resultsContent');
     this.languageSelector = document.getElementById('languageSelector');
   }
 
@@ -188,10 +191,8 @@ class CostsplitterApp {
       this.dropZone.style.borderColor = '#059669';
       this.dropZone.style.backgroundColor = '#f0fdf4';
 
-      // Show Step 2 with processing options and enable process button
-      this.showStep(2);
-      this.processingOptions.classList.remove('hidden');
-      this.processButton.disabled = false;
+      // Enable Step 2 with processing options
+      this.enableStep(2);
     }
   }
 
@@ -332,7 +333,7 @@ class CostsplitterApp {
   displayResults(result) {
     this.currentResults = result;
     // Move to step 3
-    this.showStep(3);
+    this.enableStep(3);
 
     // Check for warnings and display them
     if (result.calculation && result.calculation.warning) {
@@ -873,7 +874,7 @@ class CostsplitterApp {
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
-    this.showStep(1); // Back to step 1 (Upload Your Data)
+    this.initializeStepStates(); // Reset to initial state
     CostsplitterApp.showProgress(false);
     this.clearErrors();
     // File info section no longer exists
@@ -892,36 +893,54 @@ class CostsplitterApp {
     this.uploadedState.classList.add('hidden');
     this.dropZone.style.borderColor = '';
     this.dropZone.style.backgroundColor = '';
-
-    // Hide processing options and disable process button
-    this.processingOptions.classList.add('hidden');
-    this.processButton.disabled = true;
   }
 
-  showStep(stepNumber) {
-    // Hide all steps
-    this.step1.classList.add('hidden');
-    this.step2.classList.add('hidden');
-    this.step3.classList.add('hidden');
+  initializeStepStates() {
+    // Show all steps from the beginning
+    this.step1.classList.remove('hidden');
+    this.step2.classList.remove('hidden');
+    this.step3.classList.remove('hidden');
 
-    // Show the requested step and any previous completed steps
+    // Set initial states
+    this.enableStep(1);
+    this.disableStep(2);
+    this.disableStep(3);
+  }
+
+  enableStep(stepNumber) {
+    const step = document.getElementById(`step${stepNumber}`);
+    step.classList.remove('step-disabled');
+
     switch (stepNumber) {
-      case 1:
-        this.step1.classList.remove('hidden'); // Upload Your Data
-        break;
       case 2:
-        this.step1.classList.remove('hidden'); // Keep step 1 visible
-        this.step2.classList.remove('hidden'); // Configure & Process
+        this.step2Disabled.classList.add('hidden');
+        this.processingOptions.classList.remove('hidden');
+        this.processButton.disabled = false;
         break;
       case 3:
-        this.step1.classList.remove('hidden'); // Keep step 1 visible
-        this.step2.classList.remove('hidden'); // Keep step 2 visible
-        this.step3.classList.remove('hidden'); // Results
+        this.step3Disabled.classList.add('hidden');
+        this.resultsContent.classList.remove('hidden');
         break;
-      default:
-        this.step1.classList.remove('hidden');
     }
   }
+
+  disableStep(stepNumber) {
+    const step = document.getElementById(`step${stepNumber}`);
+    step.classList.add('step-disabled');
+
+    switch (stepNumber) {
+      case 2:
+        this.step2Disabled.classList.remove('hidden');
+        this.processingOptions.classList.add('hidden');
+        this.processButton.disabled = true;
+        break;
+      case 3:
+        this.step3Disabled.classList.remove('hidden');
+        this.resultsContent.classList.add('hidden');
+        break;
+    }
+  }
+
 
   updatePaymentModeUI() {
     const isGroupMode = this.paymentMode === 'group';

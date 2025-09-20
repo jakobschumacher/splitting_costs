@@ -36,9 +36,8 @@
                 <h2 data-i18n="step1.title">Upload Your Data</h2>
             </div>
             <div class="card">
-                <div style="text-align: center; padding: 1.5rem 1rem 1rem 1rem;">
-                    <h3 style="color: #1f2937; margin-bottom: 1rem;" data-i18n="step1.welcome.title">Upload Your Expense Data</h3>
-                    <p style="color: #6b7280; font-size: 0.95rem; line-height: 1.5; margin-bottom: 2rem;" data-i18n="step1.welcome.description">
+                <div style="text-align: center; padding: 1rem 1rem 0.5rem 1rem;">
+                    <p style="color: #6b7280; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;" data-i18n="step1.welcome.description">
                         Drop your CSV file with group expenses and get instant payment calculations.
                         Fair splitting made simple with support for different participation levels and payment preferences.
                     </p>
@@ -86,13 +85,20 @@
         </section>
 
         <!-- Step 2: Configure & Process -->
-        <section id="step2" class="step-section">
+        <section id="step2" class="step-section step-disabled">
             <div class="step-header">
                 <span class="step-number">2</span>
                 <h2 data-i18n="step2.title">Configure & Process</h2>
             </div>
             <div class="card">
-                <!-- Processing Options -->
+                <!-- Disabled State Message -->
+                <div id="step2Disabled" class="step-disabled-message" style="padding: 2rem; text-align: center; color: #9ca3af;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">⚙️</div>
+                    <h3 style="color: #6b7280; margin-bottom: 0.5rem;" data-i18n="step2.disabled.title">Processing Options</h3>
+                    <p style="margin: 0;" data-i18n="step2.disabled.message">Upload a CSV file to configure processing options</p>
+                </div>
+
+                <!-- Processing Options (hidden initially) -->
                 <div id="processingOptions" class="hidden" style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
                     <h4 style="margin-top: 0; margin-bottom: 1.5rem; color: #374151;" data-i18n="step2.options.title">Processing Options</h4>
                     <div class="settings-container">
@@ -184,30 +190,40 @@
         </section>
 
         <!-- Step 3: Results -->
-        <section id="step3" class="step-section hidden">
+        <section id="step3" class="step-section step-disabled">
             <div class="step-header">
                 <span class="step-number">3</span>
                 <h2 data-i18n="step3.title">Results</h2>
             </div>
             <div class="card">
-                <div class="space-y-4">
-                    <div>
-                        <h3 data-i18n="step3.paymentMatrix">Payment Overview</h3>
-                        <div id="matrixContent" class="overflow-x-auto">
-                            <!-- Combined matrix and instructions table will be inserted here -->
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 data-i18n="step3.activityBreakdown">Activity Breakdown</h3>
-                        <div id="activitiesContent" class="grid grid-3">
-                            <!-- Activities will be inserted here -->
-                        </div>
-                    </div>
-
-                <div style="margin-top: 2rem; text-align: center;">
-                    <button id="downloadPdfButton" class="btn btn-primary" data-i18n="step3.downloadPdf">Download PDF Report</button>
+                <!-- Disabled State Message -->
+                <div id="step3Disabled" class="step-disabled-message" style="padding: 2rem; text-align: center; color: #9ca3af;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">📊</div>
+                    <h3 style="color: #6b7280; margin-bottom: 0.5rem;" data-i18n="step3.disabled.title">Payment Results</h3>
+                    <p style="margin: 0;" data-i18n="step3.disabled.message">Process your file to see payment calculations and reports</p>
                 </div>
+
+                <!-- Results Content (hidden initially) -->
+                <div id="resultsContent" class="hidden">
+                    <div class="space-y-4">
+                        <div>
+                            <h3 data-i18n="step3.paymentMatrix">Payment Overview</h3>
+                            <div id="matrixContent" class="overflow-x-auto">
+                                <!-- Combined matrix and instructions table will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 data-i18n="step3.activityBreakdown">Activity Breakdown</h3>
+                            <div id="activitiesContent" class="grid grid-3">
+                                <!-- Activities will be inserted here -->
+                            </div>
+                        </div>
+
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button id="downloadPdfButton" class="btn btn-primary" data-i18n="step3.downloadPdf">Download PDF Report</button>
+                    </div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -393,6 +393,29 @@ h3 {
   color: #374151;
 }
 
+/* Disabled Step Styles */
+.step-disabled {
+  opacity: 0.6;
+}
+
+.step-disabled .step-number {
+  background: #d1d5db;
+  color: #9ca3af;
+}
+
+.step-disabled .step-header h2 {
+  color: #9ca3af;
+}
+
+.step-disabled .card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.step-disabled-message {
+  transition: opacity 0.3s ease;
+}
+
 /* Horizontal Progress */
 .progress-horizontal {
   display: flex;
