@@ -1,6 +1,6 @@
 export const de = {
   // Header
-  'header.title': 'Kostenteiler',
+  'header.title': 'Costsplitter',
   'header.subtitle': 'Faire Kostenaufteilung für Gruppenreisen',
   'header.description': 'Laden Sie Ihre Ausgaben-CSV-Datei hoch, um automatisch zu berechnen, wer wem was schuldet. Unterstützt individuelle Zahlungen und gemeinsame Ausgaben mit anpassbaren Aufteilungsverhältnissen.',
 

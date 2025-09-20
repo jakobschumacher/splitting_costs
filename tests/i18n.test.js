@@ -24,7 +24,7 @@ describe('Internationalization (i18n) Tests', () => {
     test('switches to German translation', () => {
       expect(i18n.setLanguage('de')).toBe(true);
       expect(i18n.getCurrentLanguage()).toBe('de');
-      expect(i18n.t('header.title')).toBe('Kostenteiler');
+      expect(i18n.t('header.title')).toBe('Costsplitter'); // Brand name stays the same
       expect(i18n.t('step1.title')).toBe('Optionen konfigurieren');
     });
 
@@ -75,7 +75,7 @@ describe('Internationalization (i18n) Tests', () => {
       i18n.setLanguage('de');
       translateContainer();
 
-      expect(document.querySelector('[data-i18n="header.title"]').textContent).toBe('Kostenteiler');
+      expect(document.querySelector('[data-i18n="header.title"]').textContent).toBe('Costsplitter');
       expect(document.querySelector('[data-i18n="step1.title"]').textContent).toBe('Optionen konfigurieren');
     });
 
