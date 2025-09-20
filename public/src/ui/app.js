@@ -359,9 +359,6 @@ class CostsplitterApp {
 
     // Payment matrix with integrated instructions
     CostsplitterApp.displayPaymentMatrix(result.report.paymentMatrix, result.report.instructions);
-
-    // Activity breakdown
-    CostsplitterApp.displayActivities(result.report.summary.activities);
   }
 
   static displaySummary(summary) {
