@@ -11,7 +11,7 @@ class CostsplitterApp {
     this.roundingMode = 'exact';
     this.selectedFile = null;
     this.currentResults = null;
-    this.showStep(1); // Initialize with step 1 visible
+    this.showStep(2); // Initialize with step 1 & 2 visible
   }
 
   initializeElements() {
@@ -65,9 +65,6 @@ class CostsplitterApp {
 
     // Initialize rounding UI
     this.updateRoundingUI();
-
-    // Process button
-    this.processButton.addEventListener('click', () => this.processFile());
 
     // Reset button
     document.getElementById('resetButton').addEventListener('click', () => this.reset());
@@ -144,8 +141,8 @@ class CostsplitterApp {
       this.dropZone.style.borderColor = '#059669';
       this.dropZone.style.backgroundColor = '#f0fdf4';
 
-      // Move to step 2
-      this.showStep(2);
+      // Automatically process the file
+      this.processFile();
     }
   }
 
@@ -761,7 +758,7 @@ class CostsplitterApp {
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
-    this.showStep(1);
+    this.showStep(2); // Back to step 1 & 2 (Configure + Upload)
     CostsplitterApp.showProgress(false);
     this.clearErrors();
     // File info section no longer exists
@@ -791,16 +788,16 @@ class CostsplitterApp {
     // Show the requested step and any previous completed steps
     switch (stepNumber) {
       case 1:
-        this.step1.classList.remove('hidden');
+        this.step1.classList.remove('hidden'); // Configure Options
         break;
       case 2:
         this.step1.classList.remove('hidden'); // Keep step 1 visible
-        this.step2.classList.remove('hidden');
+        this.step2.classList.remove('hidden'); // Upload & Process
         break;
       case 3:
         this.step1.classList.remove('hidden'); // Keep step 1 visible
         this.step2.classList.remove('hidden'); // Keep step 2 visible
-        this.step3.classList.remove('hidden');
+        this.step3.classList.remove('hidden'); // Results
         break;
       default:
         this.step1.classList.remove('hidden');

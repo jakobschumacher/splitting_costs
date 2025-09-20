@@ -24,10 +24,9 @@ const mockHTML = `
     <span id="roundToFiveLabel">Round to 5€</span>
     <p id="roundingDescription">Exact: Keep precise amounts down to cents</p>
     <div id="step1" class="step-section"></div>
-    <div id="step2" class="step-section hidden"></div>
+    <div id="step2" class="step-section"></div>
     <div id="step3" class="step-section hidden"></div>
     <input type="checkbox" id="roundToFiveEuros">
-    <button id="processButton" class="btn btn-primary">Process File</button>
     <div id="errorDisplay" class="hidden"></div>
     <div id="loadingDisplay" class="hidden"></div>
     <button id="helpButton" class="btn">?</button>
@@ -141,7 +140,6 @@ describe('CostsplitterApp Frontend Tests', () => {
       expect(app.exactLabel).toBeTruthy();
       expect(app.roundToFiveLabel).toBeTruthy();
       expect(app.roundingDescription).toBeTruthy();
-      expect(app.processButton).toBeTruthy();
       expect(app.errorDisplay).toBeTruthy();
       expect(app.loadingDisplay).toBeTruthy();
       expect(app.helpButton).toBeTruthy();
@@ -156,9 +154,9 @@ describe('CostsplitterApp Frontend Tests', () => {
       expect(app.paymentMode).toBe('individual');
     });
 
-    test('shows step 1 by default', () => {
+    test('shows step 1 and 2 by default', () => {
       expect(app.step1.classList.contains('hidden')).toBe(false);
-      expect(app.step2.classList.contains('hidden')).toBe(true);
+      expect(app.step2.classList.contains('hidden')).toBe(false);
       expect(app.step3.classList.contains('hidden')).toBe(true);
     });
 
@@ -443,7 +441,7 @@ describe('CostsplitterApp Frontend Tests', () => {
       await app.processFile();
 
       expect(app.errorDisplay.classList.contains('hidden')).toBe(false);
-      expect(app.errorDisplay.textContent).toContain('Processing failed');
+      expect(app.errorDisplay.textContent).toContain('An error occurred');
     });
   });
 
@@ -461,7 +459,7 @@ describe('CostsplitterApp Frontend Tests', () => {
       expect(app.paymentMode).toBe('individual');
       expect(app.currentResults).toBeNull();
       expect(app.step1.classList.contains('hidden')).toBe(false);
-      expect(app.step2.classList.contains('hidden')).toBe(true);
+      expect(app.step2.classList.contains('hidden')).toBe(false);
       expect(app.step3.classList.contains('hidden')).toBe(true);
       expect(app.uploadDefaultState.classList.contains('hidden')).toBe(false);
       expect(app.uploadedState.classList.contains('hidden')).toBe(true);

@@ -25,8 +25,12 @@
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
-        <!-- Settings Toggles -->
-        <section class="settings-section mb-6">
+        <!-- Step 1: Configure Options -->
+        <section id="step1" class="step-section">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <h2>Configure Options</h2>
+            </div>
             <div class="card">
                 <div class="settings-container">
                     <!-- Payment Mode Toggle -->
@@ -64,11 +68,11 @@
             </div>
         </section>
 
-        <!-- Step 1: Upload File -->
-        <section id="step1" class="step-section">
+        <!-- Step 2: Upload & Process File -->
+        <section id="step2" class="step-section">
             <div class="step-header">
-                <span class="step-number">1</span>
-                <h2>Upload Your CSV File</h2>
+                <span class="step-number">2</span>
+                <h2>Upload & Process Your CSV File</h2>
             </div>
             <div class="card">
                 <div id="dropZone" class="drop-zone">
@@ -99,22 +103,6 @@
                     </div>
                 </div>
                 <input type="file" id="csvFile" class="hidden" accept=".csv">
-
-            </div>
-        </section>
-
-        <!-- Step 2: Configure & Process -->
-        <section id="step2" class="step-section hidden">
-            <div class="step-header">
-                <span class="step-number">2</span>
-                <h2>Configure Options & Process</h2>
-            </div>
-            <div class="card">
-                <div class="space-y-4">
-                    <div class="flex space-x-3">
-                        <button id="processButton" class="btn btn-primary">Process File</button>
-                    </div>
-                </div>
 
                 <!-- Horizontal Progress Steps -->
                 <div id="progressSteps" class="hidden" style="margin-top: 2rem;">
