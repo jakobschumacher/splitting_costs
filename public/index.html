@@ -53,13 +53,14 @@
                         <h3 style="color: #059669; margin-bottom: 0.5rem;" data-i18n="step1.upload.success">File uploaded successfully!</h3>
                         <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0;"><span data-i18n="step1.upload.ready">Ready to configure processing options</span> <span id="uploadedFileNameBottom"></span></p>
                     </div>
-                    <div id="helpContent" class="hidden" style="margin-top: 1rem; padding: 1.5rem; background: #f0fdf4; border-radius: 0.5rem; border: 1px solid #bbf7d0; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <h4 id="helpTitle" style="margin: 0; color: #047857;" data-i18n="csvHelp.title">CSV File Format</h4>
-                            <button id="closeHelpButton" style="background: none; border: none; color: #6b7280; font-size: 1.2rem; cursor: pointer; padding: 0.25rem;" data-i18n="csvHelp.closeHelp" title="Close Help">×</button>
-                        </div>
 
-                        <div id="helpStep1" class="help-step-content">
+                    <!-- Help content for Step 1 -->
+                    <div id="helpContent1" class="step-help-content hidden">
+                        <div class="help-header">
+                            <h4 id="helpTitle1" data-i18n="csvHelp.title">CSV File Format</h4>
+                            <button class="close-help-button" data-step="1">×</button>
+                        </div>
+                        <div id="helpStep1Content">
                             <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="csvHelp.description">Your CSV should contain the following columns:</p>
                             <ul style="font-size: 0.875rem; margin: 0.5rem 0; padding-left: 1.5rem;">
                                 <li><strong data-i18n="csvHelp.columns.name">name - participant name (required)</strong></li>
@@ -85,18 +86,6 @@
                                 <button class="btn" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" data-example="family" data-i18n="step1.welcome.examples.family">Family Trip</button>
                                 <button class="btn" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" data-example="business" data-i18n="step1.welcome.examples.business">Business Travel</button>
                             </div>
-                        </div>
-
-                        <div id="helpStep2" class="help-step-content hidden">
-                            <p style="margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="help.step2.description">Choose how to handle payments and rounding before processing your data.</p>
-                            <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step2.paymentModes">Payment Modes: Individual tracks each person separately, Group combines family/team units.</p>
-                            <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step2.rounding">Rounding: Exact keeps precise amounts, Round to 5€ simplifies final payments.</p>
-                        </div>
-
-                        <div id="helpStep3" class="help-step-content hidden">
-                            <p style="margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="help.step3.description">Review who owes what to whom and download a detailed payment report.</p>
-                            <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step3.matrix">Payment Matrix shows each person's obligations and the actions needed.</p>
-                            <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step3.activities">Activity Breakdown displays costs and participants for each expense category.</p>
                         </div>
                     </div>
                 </div>
@@ -220,6 +209,19 @@
 
                 <!-- Error Display -->
                 <div id="errorDisplay" class="hidden" style="margin-top: 2rem; padding: 1rem; border-radius: 0.375rem; border: 1px solid #fecaca; background: #fef2f2;"></div>
+
+                <!-- Help content for Step 2 -->
+                <div id="helpContent2" class="step-help-content hidden">
+                    <div class="help-header">
+                        <h4 id="helpTitle2" data-i18n="help.step2.title">Processing Options</h4>
+                        <button class="close-help-button" data-step="2">×</button>
+                    </div>
+                    <div id="helpStep2Content">
+                        <p style="margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="help.step2.description">Choose how to handle payments and rounding before processing your data.</p>
+                        <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step2.paymentModes">Payment Modes: Individual tracks each person separately, Group combines family/team units.</p>
+                        <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step2.rounding">Rounding: Exact keeps precise amounts, Round to 5€ simplifies final payments.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -262,6 +264,19 @@
                     <div style="margin-top: 2rem; text-align: center;">
                         <button id="downloadPdfButton" class="btn btn-primary" data-i18n="step3.downloadPdf">Download PDF Report</button>
                     </div>
+                    </div>
+
+                    <!-- Help content for Step 3 -->
+                    <div id="helpContent3" class="step-help-content hidden">
+                        <div class="help-header">
+                            <h4 id="helpTitle3" data-i18n="help.step3.title">Understanding Results</h4>
+                            <button class="close-help-button" data-step="3">×</button>
+                        </div>
+                        <div id="helpStep3Content">
+                            <p style="margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="help.step3.description">Review who owes what to whom and download a detailed payment report.</p>
+                            <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step3.matrix">Payment Matrix shows each person's obligations and the actions needed.</p>
+                            <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step3.activities">Activity Breakdown displays costs and participants for each expense category.</p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -33,12 +33,9 @@ class CostsplitterApp {
     this.processButton = document.getElementById('processButton');
     this.errorDisplay = document.getElementById('errorDisplay');
     this.loadingDisplay = document.getElementById('loadingDisplay');
-    this.helpContent = document.getElementById('helpContent');
-    this.helpTitle = document.getElementById('helpTitle');
-    this.closeHelpButton = document.getElementById('closeHelpButton');
-    this.helpStep1 = document.getElementById('helpStep1');
-    this.helpStep2 = document.getElementById('helpStep2');
-    this.helpStep3 = document.getElementById('helpStep3');
+    this.helpContent1 = document.getElementById('helpContent1');
+    this.helpContent2 = document.getElementById('helpContent2');
+    this.helpContent3 = document.getElementById('helpContent3');
     this.downloadPdfButton = document.getElementById('downloadPdfButton');
     this.resetButton = document.getElementById('resetButton');
     this.progressSteps = document.getElementById('progressSteps');
@@ -84,13 +81,19 @@ class CostsplitterApp {
     // Reset button
     document.getElementById('resetButton').addEventListener('click', () => this.reset());
 
-    // Close help button
-    this.closeHelpButton.addEventListener('click', () => this.closeHelp());
     // Step-specific help buttons
     document.querySelectorAll('.step-help-button').forEach(button => {
       button.addEventListener('click', (e) => {
         const stepNumber = parseInt(e.target.dataset.step);
-        this.showStepHelp(stepNumber);
+        this.toggleStepHelp(stepNumber);
+      });
+    });
+
+    // Close help buttons
+    document.querySelectorAll('.close-help-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const stepNumber = parseInt(e.target.dataset.step);
+        this.closeStepHelp(stepNumber);
       });
     });
 
@@ -734,57 +737,52 @@ class CostsplitterApp {
   }
 
 
-  closeHelp() {
-    this.helpContent.classList.add('hidden');
+  toggleStepHelp(stepNumber) {
+    const helpContent = this.getHelpContentElement(stepNumber);
+    if (!helpContent) return;
+
+    const isVisible = !helpContent.classList.contains('hidden');
+
+    if (isVisible) {
+      this.closeStepHelp(stepNumber);
+    } else {
+      this.showStepHelp(stepNumber);
+    }
   }
 
   showStepHelp(stepNumber) {
-    const isHelpVisible = !this.helpContent.classList.contains('hidden');
+    // Close all other help sections first
+    this.closeAllHelp();
 
-    // If help is already visible and showing the same step, hide it
-    if (isHelpVisible && this.isShowingStepHelp(stepNumber)) {
-      this.closeHelp();
-      return;
+    const helpContent = this.getHelpContentElement(stepNumber);
+    if (helpContent) {
+      helpContent.classList.remove('hidden');
     }
-
-    // Hide all help step content
-    this.helpStep1.classList.add('hidden');
-    this.helpStep2.classList.add('hidden');
-    this.helpStep3.classList.add('hidden');
-
-    // Show appropriate content and update title based on step number
-    switch (stepNumber) {
-      case 1:
-        this.helpStep1.classList.remove('hidden');
-        this.helpTitle.setAttribute('data-i18n', 'csvHelp.title');
-        this.helpTitle.textContent = i18n.translate('csvHelp.title');
-        break;
-      case 2:
-        this.helpStep2.classList.remove('hidden');
-        this.helpTitle.setAttribute('data-i18n', 'help.step2.title');
-        this.helpTitle.textContent = i18n.translate('help.step2.title');
-        break;
-      case 3:
-        this.helpStep3.classList.remove('hidden');
-        this.helpTitle.setAttribute('data-i18n', 'help.step3.title');
-        this.helpTitle.textContent = i18n.translate('help.step3.title');
-        break;
-    }
-
-    // Show the help content
-    this.helpContent.classList.remove('hidden');
   }
 
-  isShowingStepHelp(stepNumber) {
+  closeStepHelp(stepNumber) {
+    const helpContent = this.getHelpContentElement(stepNumber);
+    if (helpContent) {
+      helpContent.classList.add('hidden');
+    }
+  }
+
+  closeAllHelp() {
+    if (this.helpContent1) this.helpContent1.classList.add('hidden');
+    if (this.helpContent2) this.helpContent2.classList.add('hidden');
+    if (this.helpContent3) this.helpContent3.classList.add('hidden');
+  }
+
+  getHelpContentElement(stepNumber) {
     switch (stepNumber) {
       case 1:
-        return !this.helpStep1.classList.contains('hidden');
+        return this.helpContent1;
       case 2:
-        return !this.helpStep2.classList.contains('hidden');
+        return this.helpContent2;
       case 3:
-        return !this.helpStep3.classList.contains('hidden');
+        return this.helpContent3;
       default:
-        return false;
+        return null;
     }
   }
 
@@ -947,7 +945,7 @@ class CostsplitterApp {
     this.roundingMode = 'exact';
     this.updateRoundingUI();
     CostsplitterApp.resetProgress();
-    this.helpContent.classList.add('hidden');
+    this.closeAllHelp();
     this.currentResults = null;
 
     // Reset upload area to default state
