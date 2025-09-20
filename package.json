@@ -9,6 +9,7 @@
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "build": "mkdir -p dist && cp -r public/* dist/",
+    "build:github": "mkdir -p dist && cp -r public/* dist/",
     "dev": "cd public && python3 -m http.server 3000",
     "start": "npm run dev"
   },
