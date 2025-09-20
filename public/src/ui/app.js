@@ -188,32 +188,26 @@ class CostsplitterApp {
     if (!this.selectedFile) return;
 
     this.showLoading(true);
-    CostsplitterApp.showProgress(true);
     this.clearErrors();
-    CostsplitterApp.resetProgress();
 
     try {
-      CostsplitterApp.updateProgress('parsing', 'active');
-      await CostsplitterApp.delay(200);
-
+      // Process file without showing progress indicators initially
       const csvContent = await CostsplitterApp.readFileContent(this.selectedFile);
-      CostsplitterApp.updateProgress('parsing', 'completed');
-
-      CostsplitterApp.updateProgress('security', 'active');
-      await CostsplitterApp.delay(300);
-
       const result = costsplitterPipeline(this.selectedFile, csvContent, this.paymentMode, this.roundingMode);
 
       if (result.success) {
-        // Hide progress steps on success - only show when there are errors
-        if (this.progressSteps) {
-          this.progressSteps.classList.add('hidden');
-        }
+        // Success: Show results directly without any progress indicators
         this.displayResults(result);
       } else {
+        // Error: Now show progress indicators to help debug the issue
+        CostsplitterApp.showProgress(true);
+        CostsplitterApp.resetProgress();
         this.handleProcessingError(result);
       }
     } catch (error) {
+      // Error: Show progress indicators to help debug the issue
+      CostsplitterApp.showProgress(true);
+      CostsplitterApp.resetProgress();
       CostsplitterApp.updateProgress('parsing', 'error');
       this.displayError({
         error: 'File processing failed',
@@ -221,7 +215,6 @@ class CostsplitterApp {
       });
     } finally {
       this.showLoading(false);
-      // Note: Progress stays visible for debugging/reference
     }
   }
 
