@@ -383,16 +383,25 @@ class CostsplitterApp {
   static displayPaymentMatrix(paymentMatrix, instructions = []) {
     const matrixEl = document.getElementById('matrixContent');
 
-    // Create a map of who owes whom from the instructions
-    const instructionMap = {};
+    // Create maps for who pays whom and who receives from whom
+    const payerMap = {};  // Maps payer -> list of payments they need to make
+    const receiverMap = {};  // Maps receiver -> list of payments they will receive
+
     if (instructions.length > 0) {
       instructions.forEach(instruction => {
-        // Parse instructions like "Alice pays €10.50 to Bob"
-        const match = instruction.match(/^(\w+)\s+pays\s+€([\d.]+)\s+to\s+(\w+)$/);
+        // Parse instructions like "Alice pays Bob €25.50"
+        const match = instruction.match(/^(.+?)\s+pays\s+(.+?)\s+€([\d.]+)$/);
         if (match) {
-          const [, payer, amount, receiver] = match;
-          if (!instructionMap[payer]) instructionMap[payer] = [];
-          instructionMap[payer].push(`${i18n.t('payment.pays')} ${i18n.formatCurrency(parseFloat(amount))} ${i18n.t('payment.to')} ${receiver}`);
+          const [, payer, receiver, amount] = match;
+          const formattedAmount = i18n.formatCurrency(parseFloat(amount));
+
+          // Add to payer map
+          if (!payerMap[payer]) payerMap[payer] = [];
+          payerMap[payer].push(`${i18n.t('payment.pays')} ${formattedAmount} ${i18n.t('payment.to')} ${receiver}`);
+
+          // Add to receiver map
+          if (!receiverMap[receiver]) receiverMap[receiver] = [];
+          receiverMap[receiver].push(`${i18n.t('payment.receives')} ${formattedAmount} ${i18n.t('payment.from')} ${payer}`);
         }
       });
     }
@@ -410,23 +419,40 @@ class CostsplitterApp {
         </thead>
         <tbody>
           ${paymentMatrix.map((p) => {
-            const personInstructions = instructionMap[p.element] || [];
-            const hasInstructions = personInstructions.length > 0;
+            const paymentInstructions = payerMap[p.element] || [];
+            const receivingInstructions = receiverMap[p.element] || [];
             const isSettled = Math.abs(p.netObligation) < 0.01;
 
             let actionContent;
             if (isSettled) {
               actionContent = `<span style="color: #059669; font-weight: 500;">✅ ${i18n.t('matrix.settled')}</span>`;
-            } else if (hasInstructions) {
-              actionContent = personInstructions.map(inst =>
-                `<div style="font-size: 0.875rem; color: #3b82f6; margin-bottom: 0.25rem;">→ ${inst}</div>`
-              ).join('');
-            } else if (p.netObligation > 0) {
-              actionContent = `<span style="color: #dc2626; font-size: 0.875rem;">${i18n.t('matrix.owes')}</span>`;
-            } else if (p.netObligation < 0) {
-              actionContent = `<span style="color: #059669; font-size: 0.875rem;">${i18n.t('matrix.receives')}</span>`;
             } else {
-              actionContent = `<span style="color: #6b7280; font-size: 0.875rem;">${i18n.t('matrix.settled')}</span>`;
+              const allInstructions = [];
+
+              // Add payment instructions (what this person needs to pay)
+              if (paymentInstructions.length > 0) {
+                paymentInstructions.forEach(inst => {
+                  allInstructions.push(`<div style="font-size: 0.875rem; color: #dc2626; margin-bottom: 0.25rem; font-weight: 500;">→ ${inst}</div>`);
+                });
+              }
+
+              // Add receiving instructions (what this person will receive)
+              if (receivingInstructions.length > 0) {
+                receivingInstructions.forEach(inst => {
+                  allInstructions.push(`<div style="font-size: 0.875rem; color: #059669; margin-bottom: 0.25rem;">← ${inst}</div>`);
+                });
+              }
+
+              // If no specific instructions but has net obligation, show general status
+              if (allInstructions.length === 0) {
+                if (p.netObligation > 0) {
+                  actionContent = `<span style="color: #dc2626; font-size: 0.875rem;">${i18n.t('matrix.owes')}</span>`;
+                } else if (p.netObligation < 0) {
+                  actionContent = `<span style="color: #059669; font-size: 0.875rem;">${i18n.t('matrix.receives')}</span>`;
+                }
+              } else {
+                actionContent = allInstructions.join('');
+              }
             }
 
             return `

@@ -63,6 +63,8 @@ export const de = {
   'payment.instructions.multiple': 'Transaktionen erforderlich:',
   'payment.pays': 'zahlt',
   'payment.to': 'an',
+  'payment.receives': 'Erhält',
+  'payment.from': 'von',
 
   // Matrix Headers
   'matrix.name': 'Name',
