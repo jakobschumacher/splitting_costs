@@ -134,3 +134,8 @@ export function translateContainer(container = document) {
 i18n.subscribe(() => {
   translateContainer();
 });
+
+// Initial translation when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  translateContainer();
+});
