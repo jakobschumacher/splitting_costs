@@ -1,4 +1,4 @@
-// Papa is loaded globally from CDN
+import Papa from 'papaparse';
 import { validateSecurityCheck } from './security/security.js';
 import { validateDataIntegrity } from './validation/validation.js';
 import { transformDataToNumeric } from './transform/transform.js';
