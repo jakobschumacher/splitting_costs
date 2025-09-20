@@ -6,7 +6,6 @@ export const de = {
 
   // Step 1: Upload Your Data
   'step1.title': 'Daten hochladen',
-  'step1.welcome.description': 'Laden Sie Ihre CSV-Datei mit Gruppenausgaben hoch und erhalten Sie sofortige Zahlungsberechnungen. Faire Aufteilung leicht gemacht mit Unterstützung für verschiedene Teilnahmelevel und Zahlungspräferenzen.',
   'step1.upload.title': 'CSV-Datei hier ablegen oder zum Durchsuchen klicken',
   'step1.upload.subtitle': 'Unterstützt Dateien bis zu 10MB',
   'step1.upload.success': 'Datei erfolgreich hochgeladen!',

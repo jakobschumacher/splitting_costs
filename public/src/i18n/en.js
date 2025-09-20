@@ -6,7 +6,6 @@ export const en = {
 
   // Step 1: Upload Your Data
   'step1.title': 'Upload Your Data',
-  'step1.welcome.description': 'Drop your CSV file with group expenses and get instant payment calculations. Fair splitting made simple with support for different participation levels and payment preferences.',
   'step1.upload.title': 'Drop your CSV file here or click to browse',
   'step1.upload.subtitle': 'Supports files up to 10MB',
   'step1.upload.success': 'File uploaded successfully!',
