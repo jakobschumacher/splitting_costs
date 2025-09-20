@@ -369,7 +369,13 @@ h3 {
 .step-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+.step-header-left {
+  display: flex;
+  align-items: center;
 }
 
 .step-number {
@@ -393,6 +399,32 @@ h3 {
   color: #374151;
 }
 
+.step-help-button {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-help-button:hover {
+  background: #e5e7eb;
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+.step-help-button:active {
+  transform: scale(0.95);
+}
+
 /* Disabled Step Styles */
 .step-disabled {
   opacity: 0.6;
@@ -405,6 +437,20 @@ h3 {
 
 .step-disabled .step-header h2 {
   color: #9ca3af;
+}
+
+.step-disabled .step-help-button {
+  background: #f9fafb;
+  color: #d1d5db;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.step-disabled .step-help-button:hover {
+  background: #f9fafb;
+  color: #d1d5db;
+  border-color: #e5e7eb;
+  transform: none;
 }
 
 .step-disabled .card {
@@ -567,6 +613,17 @@ h3 {
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
+  }
+
+  .step-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .step-help-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.75rem;
   }
 
   .grid-4,

@@ -33,7 +33,6 @@ class CostsplitterApp {
     this.processButton = document.getElementById('processButton');
     this.errorDisplay = document.getElementById('errorDisplay');
     this.loadingDisplay = document.getElementById('loadingDisplay');
-    this.helpButton = document.getElementById('helpButton');
     this.helpContent = document.getElementById('helpContent');
     this.helpTitle = document.getElementById('helpTitle');
     this.closeHelpButton = document.getElementById('closeHelpButton');
@@ -85,10 +84,15 @@ class CostsplitterApp {
     // Reset button
     document.getElementById('resetButton').addEventListener('click', () => this.reset());
 
-    // Help button
-    this.helpButton.addEventListener('click', () => this.toggleHelp());
     // Close help button
     this.closeHelpButton.addEventListener('click', () => this.closeHelp());
+    // Step-specific help buttons
+    document.querySelectorAll('.step-help-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const stepNumber = parseInt(e.target.dataset.step);
+        this.showStepHelp(stepNumber);
+      });
+    });
 
     // Example file buttons
     document.querySelectorAll('[data-example]').forEach(button => {
@@ -729,33 +733,19 @@ class CostsplitterApp {
     this.loadingDisplay.classList.toggle('hidden', !show);
   }
 
-  toggleHelp() {
-    const isHidden = this.helpContent.classList.contains('hidden');
 
-    if (isHidden) {
-      this.showContextualHelp();
-    } else {
-      this.closeHelp();
-    }
+  closeHelp() {
+    this.helpContent.classList.add('hidden');
   }
 
-  showContextualHelp() {
-    // Determine which step we're currently on
-    let currentStep = 1;
-    if (!this.step2.classList.contains('step-disabled')) {
-      currentStep = 2;
-    }
-    if (!this.step3.classList.contains('step-disabled') && this.currentResults) {
-      currentStep = 3;
-    }
-
+  showStepHelp(stepNumber) {
     // Hide all help step content
     this.helpStep1.classList.add('hidden');
     this.helpStep2.classList.add('hidden');
     this.helpStep3.classList.add('hidden');
 
-    // Show appropriate content and update title based on current step
-    switch (currentStep) {
+    // Show appropriate content and update title based on step number
+    switch (stepNumber) {
       case 1:
         this.helpStep1.classList.remove('hidden');
         this.helpTitle.setAttribute('data-i18n', 'csvHelp.title');
@@ -775,10 +765,6 @@ class CostsplitterApp {
 
     // Show the help content
     this.helpContent.classList.remove('hidden');
-  }
-
-  closeHelp() {
-    this.helpContent.classList.add('hidden');
   }
 
   downloadPdf() {

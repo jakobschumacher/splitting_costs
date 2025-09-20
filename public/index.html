@@ -22,7 +22,6 @@
                         <option value="de">DE</option>
                     </select>
                     <button id="resetButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;" data-i18n="button.reset" title="Reset">↻</button>
-                    <button id="helpButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;" data-i18n="button.help" title="Help">?</button>
                 </div>
             </div>
             <p data-i18n="header.subtitle">Fair cost division for group travel</p>
@@ -32,8 +31,11 @@
         <!-- Step 1: Upload Your Data -->
         <section id="step1" class="step-section">
             <div class="step-header">
-                <span class="step-number">1</span>
-                <h2 data-i18n="step1.title">Upload Your Data</h2>
+                <div class="step-header-left">
+                    <span class="step-number">1</span>
+                    <h2 data-i18n="step1.title">Upload Your Data</h2>
+                </div>
+                <button class="step-help-button" data-step="1" title="Get help with file upload">?</button>
             </div>
             <div class="card">
 
@@ -114,8 +116,11 @@
         <!-- Step 2: Configure & Process -->
         <section id="step2" class="step-section step-disabled">
             <div class="step-header">
-                <span class="step-number">2</span>
-                <h2 data-i18n="step2.title">Configure & Process</h2>
+                <div class="step-header-left">
+                    <span class="step-number">2</span>
+                    <h2 data-i18n="step2.title">Configure & Process</h2>
+                </div>
+                <button class="step-help-button" data-step="2" title="Get help with processing options">?</button>
             </div>
             <div class="card">
                 <!-- Disabled State Message -->
@@ -221,8 +226,11 @@
         <!-- Step 3: Results -->
         <section id="step3" class="step-section step-disabled">
             <div class="step-header">
-                <span class="step-number">3</span>
-                <h2 data-i18n="step3.title">Results</h2>
+                <div class="step-header-left">
+                    <span class="step-number">3</span>
+                    <h2 data-i18n="step3.title">Results</h2>
+                </div>
+                <button class="step-help-button" data-step="3" title="Get help with understanding results">?</button>
             </div>
             <div class="card">
                 <!-- Disabled State Message -->

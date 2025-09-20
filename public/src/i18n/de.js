@@ -132,7 +132,6 @@ export const de = {
 
   // Buttons
   'button.reset': 'Zurücksetzen',
-  'button.help': 'Hilfe',
 
   // Language
   'language.current': 'Deutsch',
