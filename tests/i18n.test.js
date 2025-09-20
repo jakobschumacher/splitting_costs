@@ -18,14 +18,14 @@ describe('Internationalization (i18n) Tests', () => {
   describe('Core i18n functionality', () => {
     test('returns English translation by default', () => {
       expect(i18n.t('header.title')).toBe('Costsplitter');
-      expect(i18n.t('step1.title')).toBe('Get Started');
+      expect(i18n.t('step1.title')).toBe('Upload Your Data');
     });
 
     test('switches to German translation', () => {
       expect(i18n.setLanguage('de')).toBe(true);
       expect(i18n.getCurrentLanguage()).toBe('de');
       expect(i18n.t('header.title')).toBe('Costsplitter'); // Brand name stays the same
-      expect(i18n.t('step1.title')).toBe('Loslegen');
+      expect(i18n.t('step1.title')).toBe('Daten hochladen');
     });
 
     test('falls back to key when translation is missing', () => {
@@ -76,7 +76,7 @@ describe('Internationalization (i18n) Tests', () => {
       translateContainer();
 
       expect(document.querySelector('[data-i18n="header.title"]').textContent).toBe('Costsplitter');
-      expect(document.querySelector('[data-i18n="step1.title"]').textContent).toBe('Loslegen');
+      expect(document.querySelector('[data-i18n="step1.title"]').textContent).toBe('Daten hochladen');
     });
 
     test('handles missing elements gracefully', () => {

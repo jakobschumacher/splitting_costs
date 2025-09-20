@@ -13,7 +13,7 @@ class CostsplitterApp {
     this.selectedFile = null;
     this.currentResults = null;
     this.initializeI18n();
-    this.showStep(2); // Initialize with step 1 & 2 visible
+    this.showStep(1); // Initialize with step 1 visible
   }
 
   initializeElements() {
@@ -188,7 +188,8 @@ class CostsplitterApp {
       this.dropZone.style.borderColor = '#059669';
       this.dropZone.style.backgroundColor = '#f0fdf4';
 
-      // Show processing options and enable process button
+      // Show Step 2 with processing options and enable process button
+      this.showStep(2);
       this.processingOptions.classList.remove('hidden');
       this.processButton.disabled = false;
     }
@@ -872,7 +873,7 @@ class CostsplitterApp {
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
-    this.showStep(2); // Back to step 1 & 2 (Welcome + Upload)
+    this.showStep(1); // Back to step 1 (Upload Your Data)
     CostsplitterApp.showProgress(false);
     this.clearErrors();
     // File info section no longer exists
@@ -906,11 +907,11 @@ class CostsplitterApp {
     // Show the requested step and any previous completed steps
     switch (stepNumber) {
       case 1:
-        this.step1.classList.remove('hidden'); // Welcome & Get Started
+        this.step1.classList.remove('hidden'); // Upload Your Data
         break;
       case 2:
         this.step1.classList.remove('hidden'); // Keep step 1 visible
-        this.step2.classList.remove('hidden'); // Upload & Process
+        this.step2.classList.remove('hidden'); // Configure & Process
         break;
       case 3:
         this.step1.classList.remove('hidden'); // Keep step 1 visible

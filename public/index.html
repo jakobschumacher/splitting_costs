@@ -29,62 +29,34 @@
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;" data-i18n="header.description">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
-        <!-- Step 1: Welcome & Get Started -->
+        <!-- Step 1: Upload Your Data -->
         <section id="step1" class="step-section">
             <div class="step-header">
                 <span class="step-number">1</span>
-                <h2 data-i18n="step1.title">Get Started</h2>
+                <h2 data-i18n="step1.title">Upload Your Data</h2>
             </div>
             <div class="card">
-                <div style="text-align: center; padding: 2rem 1rem;">
-                    <div style="margin-bottom: 2rem;">
-                        <h3 style="color: #1f2937; margin-bottom: 1rem;" data-i18n="step1.welcome.title">Upload Your Expense Data</h3>
-                        <p style="color: #6b7280; font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;" data-i18n="step1.welcome.description">
-                            Drop your CSV file with group expenses and get instant payment calculations.
-                            Fair splitting made simple with support for different participation levels and payment preferences.
-                        </p>
-                    </div>
-
-                    <div style="margin-bottom: 2rem;">
-                        <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem; margin-bottom: 1rem;" onclick="document.getElementById('csvFile').click()" data-i18n="step1.welcome.uploadButton">
-                            📁 Upload CSV File
-                        </button>
-                        <br>
-                        <small style="color: #9ca3af;" data-i18n="step1.welcome.fileInfo">Supports .csv files up to 10MB</small>
-                    </div>
-
-                    <div style="border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
-                        <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="step1.welcome.exampleText">Need an example? Try one of our sample files:</p>
-                        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                            <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="simple" data-i18n="step1.welcome.examples.simple">Simple Dinner</button>
-                            <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="family" data-i18n="step1.welcome.examples.family">Family Trip</button>
-                            <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="business" data-i18n="step1.welcome.examples.business">Business Travel</button>
-                        </div>
-                    </div>
+                <div style="text-align: center; padding: 1.5rem 1rem 1rem 1rem;">
+                    <h3 style="color: #1f2937; margin-bottom: 1rem;" data-i18n="step1.welcome.title">Upload Your Expense Data</h3>
+                    <p style="color: #6b7280; font-size: 0.95rem; line-height: 1.5; margin-bottom: 2rem;" data-i18n="step1.welcome.description">
+                        Drop your CSV file with group expenses and get instant payment calculations.
+                        Fair splitting made simple with support for different participation levels and payment preferences.
+                    </p>
                 </div>
-            </div>
-        </section>
 
-        <!-- Step 2: Upload & Process File -->
-        <section id="step2" class="step-section">
-            <div class="step-header">
-                <span class="step-number">2</span>
-                <h2 data-i18n="step2.title">Upload & Process Your CSV File</h2>
-            </div>
-            <div class="card">
                 <div id="dropZone" class="drop-zone">
                     <!-- Default upload state -->
                     <div id="uploadDefaultState">
                         <div style="font-size: 4rem; margin-bottom: 1rem;">⬆</div>
-                        <h3 data-i18n="step2.upload.title">Drop your CSV file here or click to browse</h3>
-                        <p style="color: #6b7280;" data-i18n="step2.upload.subtitle">Supports files up to 10MB</p>
+                        <h3 data-i18n="step1.upload.title">Drop your CSV file here or click to browse</h3>
+                        <p style="color: #6b7280;" data-i18n="step1.upload.subtitle">Supports files up to 10MB</p>
                     </div>
 
                     <!-- File uploaded state (hidden by default) -->
                     <div id="uploadedState" class="hidden">
                         <div style="font-size: 4rem; margin-bottom: 1rem; color: #059669;">✓</div>
-                        <h3 style="color: #059669; margin-bottom: 0.5rem;" data-i18n="step2.upload.success">File uploaded successfully!</h3>
-                        <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0;"><span data-i18n="step2.upload.ready">Ready to process</span> <span id="uploadedFileNameBottom"></span></p>
+                        <h3 style="color: #059669; margin-bottom: 0.5rem;" data-i18n="step1.upload.success">File uploaded successfully!</h3>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0;"><span data-i18n="step1.upload.ready">Ready to configure processing options</span> <span id="uploadedFileNameBottom"></span></p>
                     </div>
                     <div id="csvHelp" class="hidden" style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.375rem; border: 1px solid #bbf7d0; text-align: left;">
                         <h4 style="margin-top: 0; color: #047857;" data-i18n="csvHelp.title">CSV File Format</h4>
@@ -102,8 +74,26 @@
                 </div>
                 <input type="file" id="csvFile" class="hidden" accept=".csv">
 
+                <div style="text-align: center; padding: 1.5rem 1rem; border-top: 1px solid #f3f4f6;">
+                    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="step1.welcome.exampleText">Need an example? Try one of our sample files:</p>
+                    <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="simple" data-i18n="step1.welcome.examples.simple">Simple Dinner</button>
+                        <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="family" data-i18n="step1.welcome.examples.family">Family Trip</button>
+                        <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="business" data-i18n="step1.welcome.examples.business">Business Travel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Configure & Process -->
+        <section id="step2" class="step-section">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <h2 data-i18n="step2.title">Configure & Process</h2>
+            </div>
+            <div class="card">
                 <!-- Processing Options -->
-                <div id="processingOptions" class="hidden" style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                <div id="processingOptions" class="hidden" style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
                     <h4 style="margin-top: 0; margin-bottom: 1.5rem; color: #374151;" data-i18n="step2.options.title">Processing Options</h4>
                     <div class="settings-container">
                         <!-- Payment Mode Toggle -->

@@ -4,23 +4,21 @@ export const de = {
   'header.subtitle': 'Faire Kostenaufteilung für Gruppenreisen',
   'header.description': 'Laden Sie Ihre Ausgaben-CSV-Datei hoch, um automatisch zu berechnen, wer wem was schuldet. Unterstützt individuelle Zahlungen und gemeinsame Ausgaben mit anpassbaren Aufteilungsverhältnissen.',
 
-  // Step 1: Welcome & Get Started
-  'step1.title': 'Loslegen',
+  // Step 1: Upload Your Data
+  'step1.title': 'Daten hochladen',
   'step1.welcome.title': 'Laden Sie Ihre Ausgabendaten hoch',
   'step1.welcome.description': 'Laden Sie Ihre CSV-Datei mit Gruppenausgaben hoch und erhalten Sie sofortige Zahlungsberechnungen. Faire Aufteilung leicht gemacht mit Unterstützung für verschiedene Teilnahmelevel und Zahlungspräferenzen.',
-  'step1.welcome.uploadButton': '📁 CSV-Datei hochladen',
-  'step1.welcome.fileInfo': 'Unterstützt .csv-Dateien bis zu 10MB',
+  'step1.upload.title': 'CSV-Datei hier ablegen oder zum Durchsuchen klicken',
+  'step1.upload.subtitle': 'Unterstützt Dateien bis zu 10MB',
+  'step1.upload.success': 'Datei erfolgreich hochgeladen!',
+  'step1.upload.ready': 'Bereit für Verarbeitungsoptionen',
   'step1.welcome.exampleText': 'Benötigen Sie ein Beispiel? Probieren Sie eine unserer Beispieldateien:',
   'step1.welcome.examples.simple': 'Einfaches Abendessen',
   'step1.welcome.examples.family': 'Familienreise',
   'step1.welcome.examples.business': 'Geschäftsreise',
 
-  // Step 2: Upload & Process
-  'step2.title': 'CSV-Datei hochladen und verarbeiten',
-  'step2.upload.title': 'CSV-Datei hier ablegen oder zum Durchsuchen klicken',
-  'step2.upload.subtitle': 'Unterstützt Dateien bis zu 10MB',
-  'step2.upload.success': 'Datei erfolgreich hochgeladen!',
-  'step2.upload.ready': 'Bereit zur Verarbeitung',
+  // Step 2: Configure & Process
+  'step2.title': 'Konfigurieren & Verarbeiten',
   'step2.options.title': 'Verarbeitungsoptionen',
   'step2.paymentMode.label': 'Zahlungsmodus',
   'step2.paymentMode.individual': 'Individuell',

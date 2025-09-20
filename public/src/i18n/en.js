@@ -4,23 +4,21 @@ export const en = {
   'header.subtitle': 'Fair cost division for group travel',
   'header.description': 'Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.',
 
-  // Step 1: Welcome & Get Started
-  'step1.title': 'Get Started',
+  // Step 1: Upload Your Data
+  'step1.title': 'Upload Your Data',
   'step1.welcome.title': 'Upload Your Expense Data',
   'step1.welcome.description': 'Drop your CSV file with group expenses and get instant payment calculations. Fair splitting made simple with support for different participation levels and payment preferences.',
-  'step1.welcome.uploadButton': '📁 Upload CSV File',
-  'step1.welcome.fileInfo': 'Supports .csv files up to 10MB',
+  'step1.upload.title': 'Drop your CSV file here or click to browse',
+  'step1.upload.subtitle': 'Supports files up to 10MB',
+  'step1.upload.success': 'File uploaded successfully!',
+  'step1.upload.ready': 'Ready to configure processing options',
   'step1.welcome.exampleText': 'Need an example? Try one of our sample files:',
   'step1.welcome.examples.simple': 'Simple Dinner',
   'step1.welcome.examples.family': 'Family Trip',
   'step1.welcome.examples.business': 'Business Travel',
 
-  // Step 2: Upload & Process
-  'step2.title': 'Upload & Process Your CSV File',
-  'step2.upload.title': 'Drop your CSV file here or click to browse',
-  'step2.upload.subtitle': 'Supports files up to 10MB',
-  'step2.upload.success': 'File uploaded successfully!',
-  'step2.upload.ready': 'Ready to process',
+  // Step 2: Configure & Process
+  'step2.title': 'Configure & Process',
   'step2.options.title': 'Processing Options',
   'step2.paymentMode.label': 'Payment Mode',
   'step2.paymentMode.individual': 'Individual',
