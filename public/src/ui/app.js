@@ -2,6 +2,7 @@ import { costsplitterPipeline } from '../pipeline.js';
 import {
   classifyError, generateErrorSuggestions, generateHelpResources,
 } from './errorClassification.js';
+import { i18n, translateContainer } from '../i18n/i18n.js';
 
 class CostsplitterApp {
   constructor() {
@@ -11,6 +12,7 @@ class CostsplitterApp {
     this.roundingMode = 'exact';
     this.selectedFile = null;
     this.currentResults = null;
+    this.initializeI18n();
     this.showStep(2); // Initialize with step 1 & 2 visible
   }
 
@@ -38,6 +40,7 @@ class CostsplitterApp {
     this.progressSteps = document.getElementById('progressSteps');
     this.uploadDefaultState = document.getElementById('uploadDefaultState');
     this.uploadedState = document.getElementById('uploadedState');
+    this.languageSelector = document.getElementById('languageSelector');
   }
 
   bindEvents() {
@@ -75,6 +78,40 @@ class CostsplitterApp {
 
     // PDF download button
     this.downloadPdfButton.addEventListener('click', () => this.downloadPdf());
+
+    // Language selector
+    this.languageSelector.addEventListener('change', (e) => this.changeLanguage(e.target.value));
+  }
+
+  initializeI18n() {
+    // Set the language selector to current language
+    this.languageSelector.value = i18n.getCurrentLanguage();
+
+    // Subscribe to language changes to update dynamic content
+    i18n.subscribe((language) => {
+      this.updatePaymentModeUI();
+      this.updateRoundingUI();
+      // Update any other dynamic content as needed
+    });
+
+    // Initial translation
+    translateContainer();
+  }
+
+  changeLanguage(language) {
+    if (i18n.setLanguage(language)) {
+      // Update the HTML lang attribute
+      document.documentElement.lang = language;
+
+      // Re-translate any dynamic content
+      this.updatePaymentModeUI();
+      this.updateRoundingUI();
+
+      // Re-translate results if they exist
+      if (this.currentResults) {
+        this.displayResults(this.currentResults);
+      }
+    }
   }
 
   handleDragOver(e) {
@@ -316,16 +353,16 @@ class CostsplitterApp {
     const summaryEl = document.getElementById('summaryContent');
     summaryEl.innerHTML = `
       <div class="summary-card">
-        <div class="summary-label">Participants</div>
+        <div class="summary-label">${i18n.t('summary.participants')}</div>
         <div class="summary-value">${summary.totalParticipants}</div>
       </div>
       <div class="summary-card">
-        <div class="summary-label">Total Paid</div>
-        <div class="summary-value text-green">€${summary.totalPaid.toFixed(2)}</div>
+        <div class="summary-label">${i18n.t('summary.totalPaid')}</div>
+        <div class="summary-value text-green">${i18n.formatCurrency(summary.totalPaid)}</div>
       </div>
       <div class="summary-card">
-        <div class="summary-label">Activities</div>
-        <div class="summary-value" style="color: #3b82f6;">${summary.activities ? summary.activities.length : 0}</div>
+        <div class="summary-label">${i18n.t('summary.activities')}</div>
+        <div class="summary-value" style="color: #3b82f6;">${summary.activities ? Object.keys(summary.activities).length : 0}</div>
       </div>
     `;
   }
@@ -387,18 +424,29 @@ class CostsplitterApp {
 
   static displayActivities(activities) {
     const activitiesEl = document.getElementById('activitiesContent');
-    // eslint-disable-next-line max-len
-    activitiesEl.innerHTML = activities.map((activity) => `
+
+    if (!activities || Object.keys(activities).length === 0) {
+      activitiesEl.innerHTML = '<div>No activities to display</div>';
+      return;
+    }
+
+    // Convert activities object to array for easier handling
+    const activityList = Object.entries(activities).map(([name, activity]) => ({
+      name,
+      ...activity
+    }));
+
+    activitiesEl.innerHTML = activityList.map((activity) => `
       <div class="activity-card">
         <h4 style="font-weight: 500; margin-bottom: 0.5rem;">${activity.name}</h4>
         <div style="font-size: 0.875rem; color: #6b7280;">
-          <p style="margin-bottom: 0.25rem;">Total Paid: <span style="font-weight: 500;">€${activity.totalPaid.toFixed(2)}</span></p>
-          <p style="margin-bottom: 0.25rem;">Paid by: <span style="font-weight: 500;">${activity.paidBy}</span></p>
+          <p style="margin-bottom: 0.25rem;">${i18n.t('activity.totalPaid')}: <span style="font-weight: 500;">${i18n.formatCurrency(activity.totalPaid)}</span></p>
+          <p style="margin-bottom: 0.25rem;">${i18n.t('activity.paidBy')}: <span style="font-weight: 500;">${activity.paidBy}</span></p>
           <div style="margin-top: 0.5rem;">
             <strong>Charges:</strong>
             <div style="margin-left: 1rem; margin-top: 0.25rem;">
               ${activity.charges ? activity.charges.map(charge =>
-                `<div>• ${charge.person}: €${charge.amount.toFixed(2)} (${charge.shares} shares)</div>`
+                `<div>• ${charge.person}: ${i18n.formatCurrency(charge.amount)}</div>`
               ).join('') : '<div>No specific charges recorded</div>'}
             </div>
           </div>
@@ -814,11 +862,11 @@ class CostsplitterApp {
     this.individualLabel.classList.toggle('active', !isGroupMode);
     this.groupLabel.classList.toggle('active', isGroupMode);
 
-    // Update description
+    // Update description using i18n
     if (isGroupMode) {
-      this.paymentModeDescription.textContent = 'Group: All expenses are shared equally among participants';
+      this.paymentModeDescription.textContent = i18n.t('step1.paymentMode.description.group');
     } else {
-      this.paymentModeDescription.textContent = 'Individual: Each person\'s expenses are tracked separately';
+      this.paymentModeDescription.textContent = i18n.t('step1.paymentMode.description.individual');
     }
   }
 
@@ -829,11 +877,11 @@ class CostsplitterApp {
     this.exactLabel.classList.toggle('active', !isRoundToFive);
     this.roundToFiveLabel.classList.toggle('active', isRoundToFive);
 
-    // Update description
+    // Update description using i18n
     if (isRoundToFive) {
-      this.roundingDescription.textContent = 'Round to 5€: All amounts rounded to nearest 5 Euro for easier payments';
+      this.roundingDescription.textContent = i18n.t('step1.rounding.description.roundToFive');
     } else {
-      this.roundingDescription.textContent = 'Exact: Keep precise amounts down to cents';
+      this.roundingDescription.textContent = i18n.t('step1.rounding.description.exact');
     }
   }
 }

@@ -15,52 +15,56 @@
         <!-- Header -->
         <header class="text-center mb-8">
             <div style="position: relative;">
-                <h1 style="margin: 0 0 0.5rem 0;">Costsplitter</h1>
+                <h1 style="margin: 0 0 0.5rem 0;" data-i18n="header.title">Costsplitter</h1>
                 <div style="position: absolute; top: 0; right: 0; display: flex; gap: 0.5rem;">
-                    <button id="resetButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">↻</button>
-                    <button id="helpButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">?</button>
+                    <select id="languageSelector" class="btn" style="width: auto; height: 2rem; border-radius: 1rem; padding: 0 0.5rem; font-size: 0.875rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">
+                        <option value="en">EN</option>
+                        <option value="de">DE</option>
+                    </select>
+                    <button id="resetButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;" data-i18n="button.reset" title="Reset">↻</button>
+                    <button id="helpButton" class="btn" style="width: 2rem; height: 2rem; border-radius: 50%; padding: 0; font-size: 1rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;" data-i18n="button.help" title="Help">?</button>
                 </div>
             </div>
-            <p>Fair cost division for group travel</p>
-            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
+            <p data-i18n="header.subtitle">Fair cost division for group travel</p>
+            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;" data-i18n="header.description">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
         <!-- Step 1: Configure Options -->
         <section id="step1" class="step-section">
             <div class="step-header">
                 <span class="step-number">1</span>
-                <h2>Configure Options</h2>
+                <h2 data-i18n="step1.title">Configure Options</h2>
             </div>
             <div class="card">
                 <div class="settings-container">
                     <!-- Payment Mode Toggle -->
                     <div class="setting-group">
-                        <label class="setting-label">Payment Mode</label>
+                        <label class="setting-label" data-i18n="step1.paymentMode.label">Payment Mode</label>
                         <div class="toggle-container">
-                            <span class="toggle-label" id="individualLabel">Individual</span>
+                            <span class="toggle-label" id="individualLabel" data-i18n="step1.paymentMode.individual">Individual</span>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="paymentModeToggle">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <span class="toggle-label" id="groupLabel">Group</span>
+                            <span class="toggle-label" id="groupLabel" data-i18n="step1.paymentMode.group">Group</span>
                         </div>
-                        <p class="setting-description" id="paymentModeDescription">
+                        <p class="setting-description" id="paymentModeDescription" data-i18n="step1.paymentMode.description.individual">
                             Individual: Each person's expenses are tracked separately
                         </p>
                     </div>
 
                     <!-- Rounding Toggle -->
                     <div class="setting-group">
-                        <label class="setting-label">Amount Rounding</label>
+                        <label class="setting-label" data-i18n="step1.rounding.label">Amount Rounding</label>
                         <div class="toggle-container">
-                            <span class="toggle-label" id="exactLabel">Exact</span>
+                            <span class="toggle-label" id="exactLabel" data-i18n="step1.rounding.exact">Exact</span>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="roundingToggle">
                                 <span class="toggle-slider rounding-slider"></span>
                             </label>
-                            <span class="toggle-label" id="roundToFiveLabel">Round to 5€</span>
+                            <span class="toggle-label" id="roundToFiveLabel" data-i18n="step1.rounding.roundToFive">Round to 5€</span>
                         </div>
-                        <p class="setting-description" id="roundingDescription">
+                        <p class="setting-description" id="roundingDescription" data-i18n="step1.rounding.description.exact">
                             Exact: Keep precise amounts down to cents
                         </p>
                     </div>
@@ -72,70 +76,70 @@
         <section id="step2" class="step-section">
             <div class="step-header">
                 <span class="step-number">2</span>
-                <h2>Upload & Process Your CSV File</h2>
+                <h2 data-i18n="step2.title">Upload & Process Your CSV File</h2>
             </div>
             <div class="card">
                 <div id="dropZone" class="drop-zone">
                     <!-- Default upload state -->
                     <div id="uploadDefaultState">
                         <div style="font-size: 4rem; margin-bottom: 1rem;">⬆</div>
-                        <h3>Drop your CSV file here or click to browse</h3>
-                        <p style="color: #6b7280;">Supports files up to 10MB</p>
+                        <h3 data-i18n="step2.upload.title">Drop your CSV file here or click to browse</h3>
+                        <p style="color: #6b7280;" data-i18n="step2.upload.subtitle">Supports files up to 10MB</p>
                     </div>
 
                     <!-- File uploaded state (hidden by default) -->
                     <div id="uploadedState" class="hidden">
                         <div style="font-size: 4rem; margin-bottom: 1rem; color: #059669;">✓</div>
-                        <h3 style="color: #059669; margin-bottom: 0.5rem;">File uploaded successfully!</h3>
-                        <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0;">Ready to process <span id="uploadedFileNameBottom"></span></p>
+                        <h3 style="color: #059669; margin-bottom: 0.5rem;" data-i18n="step2.upload.success">File uploaded successfully!</h3>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0;"><span data-i18n="step2.upload.ready">Ready to process</span> <span id="uploadedFileNameBottom"></span></p>
                     </div>
                     <div id="csvHelp" class="hidden" style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.375rem; border: 1px solid #bbf7d0; text-align: left;">
-                        <h4 style="margin-top: 0; color: #047857;">CSV File Format</h4>
-                        <p style="margin-bottom: 0.5rem; font-size: 0.875rem;">Your CSV should contain the following columns:</p>
+                        <h4 style="margin-top: 0; color: #047857;" data-i18n="csvHelp.title">CSV File Format</h4>
+                        <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="csvHelp.description">Your CSV should contain the following columns:</p>
                         <ul style="font-size: 0.875rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                            <li><strong>activity</strong> - name of the expense/activity</li>
-                            <li><strong>paidBy</strong> - person who paid for this expense</li>
-                            <li><strong>amount</strong> - total amount paid (e.g., 25.50)</li>
-                            <li><strong>participants</strong> - comma-separated list of people</li>
-                            <li><strong>shares</strong> (optional) - custom shares per person (e.g., "2,1,1")</li>
+                            <li><strong data-i18n="csvHelp.columns.activity">activity - name of the expense/activity</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.paidBy">paidBy - person who paid for this expense</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.amount">amount - total amount paid (e.g., 25.50)</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.participants">participants - comma-separated list of people</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.shares">shares (optional) - custom shares per person (e.g., "2,1,1")</strong></li>
                         </ul>
-                        <p style="font-size: 0.875rem; margin-bottom: 0;">Example: <code style="background: #e5e7eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem;">"Dinner,Alice,60.00,Alice,Bob,Charlie,2,1,1"</code></p>
+                        <p style="font-size: 0.875rem; margin-bottom: 0;"><span data-i18n="csvHelp.example">Example:</span> <code style="background: #e5e7eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem;">"Dinner,Alice,60.00,Alice,Bob,Charlie,2,1,1"</code></p>
                     </div>
                 </div>
                 <input type="file" id="csvFile" class="hidden" accept=".csv">
 
                 <!-- Horizontal Progress Steps -->
                 <div id="progressSteps" class="hidden" style="margin-top: 2rem;">
-                    <h3 id="progressTitle" style="margin-bottom: 1rem;">Processing Your File</h3>
+                    <h3 id="progressTitle" style="margin-bottom: 1rem;" data-i18n="step2.progress.title">Processing Your File</h3>
                     <div class="progress-horizontal">
                         <div class="progress-step-horizontal" data-step="parsing">
                             <div class="progress-icon">⚙</div>
-                            <div class="progress-label">Parsing</div>
+                            <div class="progress-label" data-i18n="step2.progress.parsing">Parsing</div>
                         </div>
                         <div class="progress-connector"></div>
                         <div class="progress-step-horizontal" data-step="security">
                             <div class="progress-icon">⚿</div>
-                            <div class="progress-label">Security</div>
+                            <div class="progress-label" data-i18n="step2.progress.security">Security</div>
                         </div>
                         <div class="progress-connector"></div>
                         <div class="progress-step-horizontal" data-step="validation">
                             <div class="progress-icon">✓</div>
-                            <div class="progress-label">Validation</div>
+                            <div class="progress-label" data-i18n="step2.progress.validation">Validation</div>
                         </div>
                         <div class="progress-connector"></div>
                         <div class="progress-step-horizontal" data-step="transformation">
                             <div class="progress-icon">↔</div>
-                            <div class="progress-label">Transform</div>
+                            <div class="progress-label" data-i18n="step2.progress.transformation">Transform</div>
                         </div>
                         <div class="progress-connector"></div>
                         <div class="progress-step-horizontal" data-step="calculation">
                             <div class="progress-icon">∑</div>
-                            <div class="progress-label">Calculate</div>
+                            <div class="progress-label" data-i18n="step2.progress.calculation">Calculate</div>
                         </div>
                         <div class="progress-connector"></div>
                         <div class="progress-step-horizontal" data-step="reporting">
                             <div class="progress-icon">※</div>
-                            <div class="progress-label">Report</div>
+                            <div class="progress-label" data-i18n="step2.progress.reporting">Report</div>
                         </div>
                     </div>
                 </div>
@@ -155,7 +159,7 @@
         <section id="step3" class="step-section hidden">
             <div class="step-header">
                 <span class="step-number">3</span>
-                <h2>Results</h2>
+                <h2 data-i18n="step3.title">Results</h2>
             </div>
             <div class="card">
                 <div class="grid grid-4" id="summaryContent">
@@ -164,33 +168,34 @@
 
                 <div class="space-y-4" style="margin-top: 2rem;">
                     <div>
-                        <h3>Payment Instructions</h3>
+                        <h3 data-i18n="step3.paymentInstructions">Payment Instructions</h3>
                         <div id="instructionsContent" class="instructions-box">
                             <!-- Instructions will be inserted here -->
                         </div>
                     </div>
 
                     <div>
-                        <h3>Payment Matrix</h3>
+                        <h3 data-i18n="step3.paymentMatrix">Payment Matrix</h3>
                         <div id="matrixContent" class="overflow-x-auto">
                             <!-- Matrix table will be inserted here -->
                         </div>
                     </div>
 
                     <div>
-                        <h3>Activity Breakdown</h3>
+                        <h3 data-i18n="step3.activityBreakdown">Activity Breakdown</h3>
                         <div id="activitiesContent" class="grid grid-3">
                             <!-- Activities will be inserted here -->
                         </div>
                     </div>
 
                 <div style="margin-top: 2rem; text-align: center;">
-                    <button id="downloadPdfButton" class="btn btn-primary">Download PDF Report</button>
+                    <button id="downloadPdfButton" class="btn btn-primary" data-i18n="step3.downloadPdf">Download PDF Report</button>
                 </div>
                 </div>
             </div>
         </section>
     </div>
+    <script type="module" src="src/i18n/i18n.js"></script>
     <script type="module" src="src/ui/app.js"></script>
 </body>
 </html>
