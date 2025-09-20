@@ -346,6 +346,8 @@ class CostsplitterApp {
 
   displayResults(result) {
     this.currentResults = result;
+    // Clear any previous errors since we successfully got results
+    this.clearErrors();
     // Move to step 3
     this.enableStep(3);
 
