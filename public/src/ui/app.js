@@ -739,6 +739,14 @@ class CostsplitterApp {
   }
 
   showStepHelp(stepNumber) {
+    const isHelpVisible = !this.helpContent.classList.contains('hidden');
+
+    // If help is already visible and showing the same step, hide it
+    if (isHelpVisible && this.isShowingStepHelp(stepNumber)) {
+      this.closeHelp();
+      return;
+    }
+
     // Hide all help step content
     this.helpStep1.classList.add('hidden');
     this.helpStep2.classList.add('hidden');
@@ -765,6 +773,19 @@ class CostsplitterApp {
 
     // Show the help content
     this.helpContent.classList.remove('hidden');
+  }
+
+  isShowingStepHelp(stepNumber) {
+    switch (stepNumber) {
+      case 1:
+        return !this.helpStep1.classList.contains('hidden');
+      case 2:
+        return !this.helpStep2.classList.contains('hidden');
+      case 3:
+        return !this.helpStep3.classList.contains('hidden');
+      default:
+        return false;
+    }
   }
 
   downloadPdf() {
