@@ -67,7 +67,7 @@ export const en = {
   'help.step3.title': 'Understanding Results',
   'help.step3.description': 'Review who owes what to whom and download a detailed payment report.',
   'help.step3.matrix': 'Payment Matrix shows each person\'s obligations and the actions needed.',
-  'help.step3.activities': 'Activity Breakdown displays costs and participants for each expense category.',
+  'help.step3.pdf': 'Download the PDF report for detailed activity breakdown and comprehensive analysis.',
 
   // Step 3: Results
   'step3.title': 'Results',
@@ -75,7 +75,6 @@ export const en = {
   'step3.disabled.message': 'Process your file to see payment calculations and reports',
   'step3.paymentInstructions': 'Payment Instructions',
   'step3.paymentMatrix': 'Payment Overview',
-  'step3.activityBreakdown': 'Activity Breakdown',
   'step3.downloadPdf': 'Download PDF Report',
 
   // Summary Cards

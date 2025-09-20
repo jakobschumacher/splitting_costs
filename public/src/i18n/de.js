@@ -67,7 +67,7 @@ export const de = {
   'help.step3.title': 'Ergebnisse verstehen',
   'help.step3.description': 'Überprüfen Sie, wer wem was schuldet und laden Sie einen detaillierten Zahlungsbericht herunter.',
   'help.step3.matrix': 'Die Zahlungsmatrix zeigt die Verpflichtungen jeder Person und die erforderlichen Aktionen.',
-  'help.step3.activities': 'Die Aktivitätsaufschlüsselung zeigt Kosten und Teilnehmer für jede Ausgabenkategorie.',
+  'help.step3.pdf': 'Laden Sie den PDF-Bericht für eine detaillierte Aktivitätsaufschlüsselung und umfassende Analyse herunter.',
 
   // Step 3: Results
   'step3.title': 'Ergebnisse',
@@ -75,7 +75,6 @@ export const de = {
   'step3.disabled.message': 'Verarbeiten Sie Ihre Datei, um Zahlungsberechnungen und Berichte zu sehen',
   'step3.paymentInstructions': 'Zahlungsanweisungen',
   'step3.paymentMatrix': 'Zahlungsübersicht',
-  'step3.activityBreakdown': 'Aktivitätsaufschlüsselung',
   'step3.downloadPdf': 'PDF-Bericht herunterladen',
 
   // Summary Cards
