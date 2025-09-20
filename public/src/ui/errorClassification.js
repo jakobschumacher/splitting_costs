@@ -115,26 +115,25 @@ export function generateErrorSuggestions(errorType) {
 
   switch (errorType) {
     case 'Data validation failed':
-      suggestions.push('💡 Check that all required columns are present');
-      suggestions.push('💡 Ensure numeric values don\'t contain text');
-      suggestions.push('💡 Verify column names match the expected format');
+      suggestions.push('Check that all required columns are present');
+      suggestions.push('Ensure numeric values don\'t contain text');
+      suggestions.push('Verify column names match the expected format');
       break;
 
     case 'CSV parsing failed':
-      suggestions.push('💡 Save your file as CSV format (not Excel)');
-      suggestions.push('💡 Check for missing commas or extra quotation marks');
-      suggestions.push('💡 Ensure all rows have the same number of columns');
+      suggestions.push('Save your file as CSV format (not Excel)');
+      suggestions.push('Check for missing commas or extra quotation marks');
+      suggestions.push('Ensure all rows have the same number of columns');
       break;
 
     case 'Security validation failed':
-      suggestions.push('💡 Remove any formulas starting with = or @');
-      suggestions.push('💡 Check file size is under 10MB');
-      suggestions.push('💡 Use plain text values only');
+      suggestions.push('Remove any formulas starting with = or @');
+      suggestions.push('Check file size is under 10MB');
+      suggestions.push('Use plain text values only');
       break;
 
     default:
-      suggestions.push('🔄 Try refreshing the page and uploading again');
-      suggestions.push('📧 Contact support if the problem continues');
+      suggestions.push('Try refreshing the page and uploading again');
       break;
   }
 
@@ -149,12 +148,12 @@ export function generateHelpResources(errorType) {
     case 'Data validation failed':
     case 'CSV parsing failed':
       resources.push({
-        title: '📖 CSV Format Guide',
+        title: 'CSV Format Guide',
         description: 'Learn about proper CSV file structure',
         action: 'View Guide',
       });
       resources.push({
-        title: '📋 Example Files',
+        title: 'Example Files',
         description: 'Download working CSV examples',
         action: 'Download Examples',
       });
@@ -162,18 +161,14 @@ export function generateHelpResources(errorType) {
 
     case 'Security validation failed':
       resources.push({
-        title: '🔒 Security Guidelines',
+        title: 'Security Guidelines',
         description: 'Understand file security requirements',
         action: 'Learn More',
       });
       break;
 
     default:
-      resources.push({
-        title: '📞 Contact Support',
-        description: 'Get help with technical issues',
-        action: 'Contact Us',
-      });
+      // No default help resources needed
       break;
   }
 
