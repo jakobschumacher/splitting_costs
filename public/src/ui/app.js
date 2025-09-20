@@ -329,14 +329,8 @@ class CostsplitterApp {
       return;
     }
 
-    // Summary
-    CostsplitterApp.displaySummary(result.report.summary);
-
-    // Payment instructions
-    CostsplitterApp.displayInstructions(result.report.instructions);
-
-    // Payment matrix
-    CostsplitterApp.displayPaymentMatrix(result.report.paymentMatrix);
+    // Payment matrix with integrated instructions
+    CostsplitterApp.displayPaymentMatrix(result.report.paymentMatrix, result.report.instructions);
 
     // Activity breakdown
     CostsplitterApp.displayActivities(result.report.summary.activities);
@@ -386,32 +380,75 @@ class CostsplitterApp {
     return 'text-gray';
   }
 
-  static displayPaymentMatrix(paymentMatrix) {
+  static displayPaymentMatrix(paymentMatrix, instructions = []) {
     const matrixEl = document.getElementById('matrixContent');
+
+    // Create a map of who owes whom from the instructions
+    const instructionMap = {};
+    if (instructions.length > 0) {
+      instructions.forEach(instruction => {
+        // Parse instructions like "Alice pays €10.50 to Bob"
+        const match = instruction.match(/^(\w+)\s+pays\s+€([\d.]+)\s+to\s+(\w+)$/);
+        if (match) {
+          const [, payer, amount, receiver] = match;
+          if (!instructionMap[payer]) instructionMap[payer] = [];
+          instructionMap[payer].push(`${i18n.t('payment.pays')} ${i18n.formatCurrency(parseFloat(amount))} ${i18n.t('payment.to')} ${receiver}`);
+        }
+      });
+    }
+
     matrixEl.innerHTML = `
       <table class="table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Should Pay</th>
-            <th>Already Paid</th>
-            <th>Net Amount</th>
+            <th>${i18n.t('matrix.name')}</th>
+            <th>${i18n.t('matrix.shouldPay')}</th>
+            <th>${i18n.t('matrix.alreadyPaid')}</th>
+            <th>${i18n.t('matrix.netAmount')}</th>
+            <th>${i18n.t('matrix.action')}</th>
           </tr>
         </thead>
         <tbody>
-          ${paymentMatrix.map((p) => `
-            <tr>
-              <td style="font-weight: 500;">${p.element}</td>
-              <td>€${p.shouldPay.toFixed(2)}</td>
-              <td>€${p.alreadyPaid.toFixed(2)}</td>
-              <td class="${CostsplitterApp.getObligationClass(p.netObligation)}"
-                   style="font-weight: 500;">
-                €${p.netObligation.toFixed(2)}
-              </td>
-            </tr>
-          `).join('')}
+          ${paymentMatrix.map((p) => {
+            const personInstructions = instructionMap[p.element] || [];
+            const hasInstructions = personInstructions.length > 0;
+            const isSettled = Math.abs(p.netObligation) < 0.01;
+
+            let actionContent;
+            if (isSettled) {
+              actionContent = `<span style="color: #059669; font-weight: 500;">✅ ${i18n.t('matrix.settled')}</span>`;
+            } else if (hasInstructions) {
+              actionContent = personInstructions.map(inst =>
+                `<div style="font-size: 0.875rem; color: #3b82f6; margin-bottom: 0.25rem;">→ ${inst}</div>`
+              ).join('');
+            } else if (p.netObligation > 0) {
+              actionContent = `<span style="color: #dc2626; font-size: 0.875rem;">${i18n.t('matrix.owes')}</span>`;
+            } else if (p.netObligation < 0) {
+              actionContent = `<span style="color: #059669; font-size: 0.875rem;">${i18n.t('matrix.receives')}</span>`;
+            } else {
+              actionContent = `<span style="color: #6b7280; font-size: 0.875rem;">${i18n.t('matrix.settled')}</span>`;
+            }
+
+            return `
+              <tr>
+                <td style="font-weight: 500;">${p.element}</td>
+                <td>${i18n.formatCurrency(p.shouldPay)}</td>
+                <td>${i18n.formatCurrency(p.alreadyPaid)}</td>
+                <td class="${CostsplitterApp.getObligationClass(p.netObligation)}"
+                     style="font-weight: 500;">
+                  ${i18n.formatCurrency(p.netObligation)}
+                </td>
+                <td style="min-width: 200px;">
+                  ${actionContent}
+                </td>
+              </tr>
+            `;
+          }).join('')}
         </tbody>
       </table>
+      ${instructions.length === 0 ?
+        `<div style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.5rem; border: 1px solid #bbf7d0;"><p style="margin: 0; color: #059669; font-weight: 500; text-align: center;">✅ ${i18n.t('matrix.noPaymentsNeeded')}</p></div>`
+        : ''}
     `;
   }
 
@@ -449,18 +486,15 @@ class CostsplitterApp {
   }
 
   displayWarning(warningMessage) {
-    const summaryEl = document.getElementById('summaryContent');
-    const instructionsEl = document.getElementById('instructionsContent');
     const matrixEl = document.getElementById('matrixContent');
     const activitiesEl = document.getElementById('activitiesContent');
 
     // Clear existing content
-    summaryEl.innerHTML = '';
     matrixEl.innerHTML = '';
     activitiesEl.innerHTML = '';
 
-    // Display warning message
-    instructionsEl.innerHTML = `
+    // Display warning message in the matrix area
+    matrixEl.innerHTML = `
       <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem;">
         <div style="display: flex; align-items: flex-start;">
           <span style="color: #d97706; font-size: 1.5rem; margin-right: 0.75rem;">⚠️</span>

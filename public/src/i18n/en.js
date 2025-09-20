@@ -44,7 +44,7 @@ export const en = {
   // Step 3: Results
   'step3.title': 'Results',
   'step3.paymentInstructions': 'Payment Instructions',
-  'step3.paymentMatrix': 'Payment Matrix',
+  'step3.paymentMatrix': 'Payment Overview',
   'step3.activityBreakdown': 'Activity Breakdown',
   'step3.downloadPdf': 'Download PDF Report',
 
@@ -65,8 +65,15 @@ export const en = {
   'payment.to': 'to',
 
   // Matrix Headers
-  'matrix.owes': 'Owes',
-  'matrix.receives': 'Receives',
+  'matrix.name': 'Name',
+  'matrix.shouldPay': 'Should Pay',
+  'matrix.alreadyPaid': 'Already Paid',
+  'matrix.netAmount': 'Net Amount',
+  'matrix.action': 'Action',
+  'matrix.settled': 'Settled',
+  'matrix.owes': 'Owes money',
+  'matrix.receives': 'Receives money',
+  'matrix.noPaymentsNeeded': 'No payments needed - everyone is settled!',
 
   // Activity Details
   'activity.totalPaid': 'Total Paid',
