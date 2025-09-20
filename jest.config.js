@@ -4,6 +4,7 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
   },
   testMatch: ['**/tests/**/*.test.js'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
   collectCoverageFrom: [
     'src/**/*.js',
     '!src/index.js'
@@ -15,5 +16,9 @@ module.exports = {
       lines: 80,
       statements: 80
     }
+  },
+  globals: {
+    TextEncoder: TextEncoder,
+    TextDecoder: TextDecoder,
   }
 };

@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb-base"],
+  "extends": ["eslint:recommended"],
   "env": {
     "browser": true,
     "node": true,
@@ -12,6 +12,7 @@
   },
   "rules": {
     "max-len": ["error", { "code": 100 }],
-    "no-console": "warn"
+    "no-console": "warn",
+    "no-unused-vars": "warn"
   }
 }

@@ -1,7 +1,7 @@
-import { costsplitterPipeline } from '../pipeline';
+import { costsplitterPipeline } from '../pipeline.js';
 import {
   classifyError, generateErrorSuggestions, generateHelpResources,
-} from './errorClassification';
+} from './errorClassification.js';
 
 class CostsplitterApp {
   constructor() {
