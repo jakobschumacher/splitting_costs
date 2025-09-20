@@ -40,6 +40,7 @@ class CostsplitterApp {
     this.progressSteps = document.getElementById('progressSteps');
     this.uploadDefaultState = document.getElementById('uploadDefaultState');
     this.uploadedState = document.getElementById('uploadedState');
+    this.processingOptions = document.getElementById('processingOptions');
     this.languageSelector = document.getElementById('languageSelector');
   }
 
@@ -70,11 +71,19 @@ class CostsplitterApp {
     // Initialize rounding UI
     this.updateRoundingUI();
 
+    // Process button
+    this.processButton.addEventListener('click', () => this.processFile());
+
     // Reset button
     document.getElementById('resetButton').addEventListener('click', () => this.reset());
 
     // Help button
     this.helpButton.addEventListener('click', () => this.toggleHelp());
+
+    // Example file buttons
+    document.querySelectorAll('[data-example]').forEach(button => {
+      button.addEventListener('click', (e) => this.loadExampleFile(e.target.dataset.example));
+    });
 
     // PDF download button
     this.downloadPdfButton.addEventListener('click', () => this.downloadPdf());
@@ -179,8 +188,9 @@ class CostsplitterApp {
       this.dropZone.style.borderColor = '#059669';
       this.dropZone.style.backgroundColor = '#f0fdf4';
 
-      // Automatically process the file
-      this.processFile();
+      // Show processing options and enable process button
+      this.processingOptions.classList.remove('hidden');
+      this.processButton.disabled = false;
     }
   }
 
@@ -862,7 +872,7 @@ class CostsplitterApp {
   reset() {
     this.selectedFile = null;
     this.fileInput.value = '';
-    this.showStep(2); // Back to step 1 & 2 (Configure + Upload)
+    this.showStep(2); // Back to step 1 & 2 (Welcome + Upload)
     CostsplitterApp.showProgress(false);
     this.clearErrors();
     // File info section no longer exists
@@ -881,6 +891,10 @@ class CostsplitterApp {
     this.uploadedState.classList.add('hidden');
     this.dropZone.style.borderColor = '';
     this.dropZone.style.backgroundColor = '';
+
+    // Hide processing options and disable process button
+    this.processingOptions.classList.add('hidden');
+    this.processButton.disabled = true;
   }
 
   showStep(stepNumber) {
@@ -892,7 +906,7 @@ class CostsplitterApp {
     // Show the requested step and any previous completed steps
     switch (stepNumber) {
       case 1:
-        this.step1.classList.remove('hidden'); // Configure Options
+        this.step1.classList.remove('hidden'); // Welcome & Get Started
         break;
       case 2:
         this.step1.classList.remove('hidden'); // Keep step 1 visible
@@ -917,9 +931,9 @@ class CostsplitterApp {
 
     // Update description using i18n
     if (isGroupMode) {
-      this.paymentModeDescription.textContent = i18n.t('step1.paymentMode.description.group');
+      this.paymentModeDescription.textContent = i18n.t('step2.paymentMode.description.group');
     } else {
-      this.paymentModeDescription.textContent = i18n.t('step1.paymentMode.description.individual');
+      this.paymentModeDescription.textContent = i18n.t('step2.paymentMode.description.individual');
     }
   }
 
@@ -932,9 +946,43 @@ class CostsplitterApp {
 
     // Update description using i18n
     if (isRoundToFive) {
-      this.roundingDescription.textContent = i18n.t('step1.rounding.description.roundToFive');
+      this.roundingDescription.textContent = i18n.t('step2.rounding.description.roundToFive');
     } else {
-      this.roundingDescription.textContent = i18n.t('step1.rounding.description.exact');
+      this.roundingDescription.textContent = i18n.t('step2.rounding.description.exact');
+    }
+  }
+
+  async loadExampleFile(exampleType) {
+    try {
+      // Map example types to file names
+      const fileMap = {
+        simple: 'simple_dinner.csv',
+        family: 'family_vacation.csv',
+        business: 'business_trip.csv'
+      };
+
+      const fileName = fileMap[exampleType];
+      if (!fileName) return;
+
+      // Fetch the example file
+      const response = await fetch(`testdata/${fileName}`);
+      if (!response.ok) throw new Error('Failed to load example file');
+
+      const csvContent = await response.text();
+
+      // Create a File object from the CSV content
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      this.selectedFile = new File([blob], fileName, { type: 'text/csv' });
+
+      // Update the display
+      this.updateFileDisplay();
+
+    } catch (error) {
+      console.error('Error loading example file:', error);
+      this.displayError({
+        error: 'Failed to load example file',
+        details: 'Could not load the selected example file. Please try uploading your own CSV file.'
+      });
     }
   }
 }

@@ -29,44 +29,37 @@
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;" data-i18n="header.description">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
-        <!-- Step 1: Configure Options -->
+        <!-- Step 1: Welcome & Get Started -->
         <section id="step1" class="step-section">
             <div class="step-header">
                 <span class="step-number">1</span>
-                <h2 data-i18n="step1.title">Configure Options</h2>
+                <h2 data-i18n="step1.title">Get Started</h2>
             </div>
             <div class="card">
-                <div class="settings-container">
-                    <!-- Payment Mode Toggle -->
-                    <div class="setting-group">
-                        <label class="setting-label" data-i18n="step1.paymentMode.label">Payment Mode</label>
-                        <div class="toggle-container">
-                            <span class="toggle-label" id="individualLabel" data-i18n="step1.paymentMode.individual">Individual</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="paymentModeToggle">
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <span class="toggle-label" id="groupLabel" data-i18n="step1.paymentMode.group">Group</span>
-                        </div>
-                        <p class="setting-description" id="paymentModeDescription" data-i18n="step1.paymentMode.description.individual">
-                            Individual: Each person's expenses are tracked separately
+                <div style="text-align: center; padding: 2rem 1rem;">
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #1f2937; margin-bottom: 1rem;" data-i18n="step1.welcome.title">Upload Your Expense Data</h3>
+                        <p style="color: #6b7280; font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;" data-i18n="step1.welcome.description">
+                            Drop your CSV file with group expenses and get instant payment calculations.
+                            Fair splitting made simple with support for different participation levels and payment preferences.
                         </p>
                     </div>
 
-                    <!-- Rounding Toggle -->
-                    <div class="setting-group">
-                        <label class="setting-label" data-i18n="step1.rounding.label">Amount Rounding</label>
-                        <div class="toggle-container">
-                            <span class="toggle-label" id="exactLabel" data-i18n="step1.rounding.exact">Exact</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="roundingToggle">
-                                <span class="toggle-slider rounding-slider"></span>
-                            </label>
-                            <span class="toggle-label" id="roundToFiveLabel" data-i18n="step1.rounding.roundToFive">Round to 5€</span>
+                    <div style="margin-bottom: 2rem;">
+                        <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem; margin-bottom: 1rem;" onclick="document.getElementById('csvFile').click()" data-i18n="step1.welcome.uploadButton">
+                            📁 Upload CSV File
+                        </button>
+                        <br>
+                        <small style="color: #9ca3af;" data-i18n="step1.welcome.fileInfo">Supports .csv files up to 10MB</small>
+                    </div>
+
+                    <div style="border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="step1.welcome.exampleText">Need an example? Try one of our sample files:</p>
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                            <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="simple" data-i18n="step1.welcome.examples.simple">Simple Dinner</button>
+                            <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="family" data-i18n="step1.welcome.examples.family">Family Trip</button>
+                            <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="business" data-i18n="step1.welcome.examples.business">Business Travel</button>
                         </div>
-                        <p class="setting-description" id="roundingDescription" data-i18n="step1.rounding.description.exact">
-                            Exact: Keep precise amounts down to cents
-                        </p>
                     </div>
                 </div>
             </div>
@@ -97,16 +90,61 @@
                         <h4 style="margin-top: 0; color: #047857;" data-i18n="csvHelp.title">CSV File Format</h4>
                         <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="csvHelp.description">Your CSV should contain the following columns:</p>
                         <ul style="font-size: 0.875rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                            <li><strong data-i18n="csvHelp.columns.activity">activity - name of the expense/activity</strong></li>
-                            <li><strong data-i18n="csvHelp.columns.paidBy">paidBy - person who paid for this expense</strong></li>
-                            <li><strong data-i18n="csvHelp.columns.amount">amount - total amount paid (e.g., 25.50)</strong></li>
-                            <li><strong data-i18n="csvHelp.columns.participants">participants - comma-separated list of people</strong></li>
-                            <li><strong data-i18n="csvHelp.columns.shares">shares (optional) - custom shares per person (e.g., "2,1,1")</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.name">name - participant name (required)</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.group">group - optional grouping (e.g., family name)</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.pay">pay_[activity] - amount already paid for activity</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.cost">cost_[activity] - participation level (full, half, 0.5, etc.)</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.age">age - optional age or category (adult, kid, numeric)</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.adjustment">adjustment - optional payment modifier (more, less, 1.2)</strong></li>
                         </ul>
-                        <p style="font-size: 0.875rem; margin-bottom: 0;"><span data-i18n="csvHelp.example">Example:</span> <code style="background: #e5e7eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem;">"Dinner,Alice,60.00,Alice,Bob,Charlie,2,1,1"</code></p>
+                        <p style="font-size: 0.875rem; margin-bottom: 0;"><span data-i18n="csvHelp.example">Example:</span> <code style="background: #e5e7eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem;">"name,group,pay_dinner,cost_dinner\nAlice,Family A,100,full\nBob,Family B,50,0.5"</code></p>
                     </div>
                 </div>
                 <input type="file" id="csvFile" class="hidden" accept=".csv">
+
+                <!-- Processing Options -->
+                <div id="processingOptions" class="hidden" style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                    <h4 style="margin-top: 0; margin-bottom: 1.5rem; color: #374151;" data-i18n="step2.options.title">Processing Options</h4>
+                    <div class="settings-container">
+                        <!-- Payment Mode Toggle -->
+                        <div class="setting-group">
+                            <label class="setting-label" data-i18n="step2.paymentMode.label">Payment Mode</label>
+                            <div class="toggle-container">
+                                <span class="toggle-label" id="individualLabel" data-i18n="step2.paymentMode.individual">Individual</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="paymentModeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label" id="groupLabel" data-i18n="step2.paymentMode.group">Group</span>
+                            </div>
+                            <p class="setting-description" id="paymentModeDescription" data-i18n="step2.paymentMode.description.individual">
+                                Individual: Each person's expenses are tracked separately
+                            </p>
+                        </div>
+
+                        <!-- Rounding Toggle -->
+                        <div class="setting-group">
+                            <label class="setting-label" data-i18n="step2.rounding.label">Amount Rounding</label>
+                            <div class="toggle-container">
+                                <span class="toggle-label" id="exactLabel" data-i18n="step2.rounding.exact">Exact</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="roundingToggle">
+                                    <span class="toggle-slider rounding-slider"></span>
+                                </label>
+                                <span class="toggle-label" id="roundToFiveLabel" data-i18n="step2.rounding.roundToFive">Round to 5€</span>
+                            </div>
+                            <p class="setting-description" id="roundingDescription" data-i18n="step2.rounding.description.exact">
+                                Exact: Keep precise amounts down to cents
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button id="processButton" class="btn btn-primary" disabled data-i18n="step2.processButton">
+                            Process File
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Horizontal Progress Steps -->
                 <div id="progressSteps" class="hidden" style="margin-top: 2rem;">
