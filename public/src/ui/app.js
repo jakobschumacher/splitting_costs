@@ -8,6 +8,7 @@ class CostsplitterApp {
     this.initializeElements();
     this.bindEvents();
     this.paymentMode = 'individual';
+    this.roundingMode = 'exact';
     this.selectedFile = null;
     this.currentResults = null;
     this.showStep(1); // Initialize with step 1 visible
@@ -19,7 +20,14 @@ class CostsplitterApp {
     this.step1 = document.getElementById('step1');
     this.step2 = document.getElementById('step2');
     this.step3 = document.getElementById('step3');
-    this.paymentModeSelect = document.getElementById('paymentMode');
+    this.paymentModeToggle = document.getElementById('paymentModeToggle');
+    this.individualLabel = document.getElementById('individualLabel');
+    this.groupLabel = document.getElementById('groupLabel');
+    this.paymentModeDescription = document.getElementById('paymentModeDescription');
+    this.roundingToggle = document.getElementById('roundingToggle');
+    this.exactLabel = document.getElementById('exactLabel');
+    this.roundToFiveLabel = document.getElementById('roundToFiveLabel');
+    this.roundingDescription = document.getElementById('roundingDescription');
     this.processButton = document.getElementById('processButton');
     this.errorDisplay = document.getElementById('errorDisplay');
     this.loadingDisplay = document.getElementById('loadingDisplay');
@@ -40,10 +48,23 @@ class CostsplitterApp {
     this.dropZone.addEventListener('drop', (e) => this.handleDrop(e));
     this.dropZone.addEventListener('click', () => this.fileInput.click());
 
-    // Payment mode selection
-    this.paymentModeSelect.addEventListener('change', (e) => {
-      this.paymentMode = e.target.value;
+    // Payment mode toggle
+    this.paymentModeToggle.addEventListener('change', (e) => {
+      this.paymentMode = e.target.checked ? 'group' : 'individual';
+      this.updatePaymentModeUI();
     });
+
+    // Initialize payment mode UI
+    this.updatePaymentModeUI();
+
+    // Rounding toggle
+    this.roundingToggle.addEventListener('change', (e) => {
+      this.roundingMode = e.target.checked ? 'roundToFive' : 'exact';
+      this.updateRoundingUI();
+    });
+
+    // Initialize rounding UI
+    this.updateRoundingUI();
 
     // Process button
     this.processButton.addEventListener('click', () => this.processFile());
@@ -146,7 +167,7 @@ class CostsplitterApp {
       CostsplitterApp.updateProgress('security', 'active');
       await CostsplitterApp.delay(300);
 
-      const result = costsplitterPipeline(this.selectedFile, csvContent, this.paymentMode);
+      const result = costsplitterPipeline(this.selectedFile, csvContent, this.paymentMode, this.roundingMode);
 
       if (result.success) {
         CostsplitterApp.updateProgressFromResult(result);
@@ -744,8 +765,12 @@ class CostsplitterApp {
     CostsplitterApp.showProgress(false);
     this.clearErrors();
     // File info section no longer exists
-    this.paymentModeSelect.value = 'individual';
+    this.paymentModeToggle.checked = false;
     this.paymentMode = 'individual';
+    this.updatePaymentModeUI();
+    this.roundingToggle.checked = false;
+    this.roundingMode = 'exact';
+    this.updateRoundingUI();
     CostsplitterApp.resetProgress();
     this.csvHelp.classList.add('hidden');
     this.currentResults = null;
@@ -779,6 +804,36 @@ class CostsplitterApp {
         break;
       default:
         this.step1.classList.remove('hidden');
+    }
+  }
+
+  updatePaymentModeUI() {
+    const isGroupMode = this.paymentMode === 'group';
+
+    // Update label states
+    this.individualLabel.classList.toggle('active', !isGroupMode);
+    this.groupLabel.classList.toggle('active', isGroupMode);
+
+    // Update description
+    if (isGroupMode) {
+      this.paymentModeDescription.textContent = 'Group: All expenses are shared equally among participants';
+    } else {
+      this.paymentModeDescription.textContent = 'Individual: Each person\'s expenses are tracked separately';
+    }
+  }
+
+  updateRoundingUI() {
+    const isRoundToFive = this.roundingMode === 'roundToFive';
+
+    // Update label states
+    this.exactLabel.classList.toggle('active', !isRoundToFive);
+    this.roundToFiveLabel.classList.toggle('active', isRoundToFive);
+
+    // Update description
+    if (isRoundToFive) {
+      this.roundingDescription.textContent = 'Round to 5€: All amounts rounded to nearest 5 Euro for easier payments';
+    } else {
+      this.roundingDescription.textContent = 'Exact: Keep precise amounts down to cents';
     }
   }
 }

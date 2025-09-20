@@ -25,6 +25,45 @@
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
+        <!-- Settings Toggles -->
+        <section class="settings-section mb-6">
+            <div class="card">
+                <div class="settings-container">
+                    <!-- Payment Mode Toggle -->
+                    <div class="setting-group">
+                        <label class="setting-label">Payment Mode</label>
+                        <div class="toggle-container">
+                            <span class="toggle-label" id="individualLabel">Individual</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="paymentModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label" id="groupLabel">Group</span>
+                        </div>
+                        <p class="setting-description" id="paymentModeDescription">
+                            Individual: Each person's expenses are tracked separately
+                        </p>
+                    </div>
+
+                    <!-- Rounding Toggle -->
+                    <div class="setting-group">
+                        <label class="setting-label">Amount Rounding</label>
+                        <div class="toggle-container">
+                            <span class="toggle-label" id="exactLabel">Exact</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="roundingToggle">
+                                <span class="toggle-slider rounding-slider"></span>
+                            </label>
+                            <span class="toggle-label" id="roundToFiveLabel">Round to 5€</span>
+                        </div>
+                        <p class="setting-description" id="roundingDescription">
+                            Exact: Keep precise amounts down to cents
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Step 1: Upload File -->
         <section id="step1" class="step-section">
             <div class="step-header">
@@ -72,13 +111,6 @@
             </div>
             <div class="card">
                 <div class="space-y-4">
-                    <div>
-                        <label for="paymentMode">Payment Mode</label>
-                        <select id="paymentMode">
-                            <option value="individual">Individual</option>
-                            <option value="group">Group</option>
-                        </select>
-                    </div>
                     <div class="flex space-x-3">
                         <button id="processButton" class="btn btn-primary">Process File</button>
                     </div>

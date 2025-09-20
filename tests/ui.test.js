@@ -15,13 +15,17 @@ const mockHTML = `
   <div class="container">
     <input type="file" id="csvFile" accept=".csv" class="hidden">
     <div id="dropZone" class="drop-zone"></div>
+    <input type="checkbox" id="paymentModeToggle">
+    <span id="individualLabel">Individual</span>
+    <span id="groupLabel">Group</span>
+    <p id="paymentModeDescription">Individual: Each person's expenses are tracked separately</p>
+    <input type="checkbox" id="roundingToggle">
+    <span id="exactLabel">Exact</span>
+    <span id="roundToFiveLabel">Round to 5€</span>
+    <p id="roundingDescription">Exact: Keep precise amounts down to cents</p>
     <div id="step1" class="step-section"></div>
     <div id="step2" class="step-section hidden"></div>
     <div id="step3" class="step-section hidden"></div>
-    <select id="paymentMode">
-      <option value="individual">Individual</option>
-      <option value="group">Group</option>
-    </select>
     <input type="checkbox" id="roundToFiveEuros">
     <button id="processButton" class="btn btn-primary">Process File</button>
     <div id="errorDisplay" class="hidden"></div>
@@ -129,7 +133,14 @@ describe('CostsplitterApp Frontend Tests', () => {
       expect(app.step1).toBeTruthy();
       expect(app.step2).toBeTruthy();
       expect(app.step3).toBeTruthy();
-      expect(app.paymentModeSelect).toBeTruthy();
+      expect(app.paymentModeToggle).toBeTruthy();
+      expect(app.individualLabel).toBeTruthy();
+      expect(app.groupLabel).toBeTruthy();
+      expect(app.paymentModeDescription).toBeTruthy();
+      expect(app.roundingToggle).toBeTruthy();
+      expect(app.exactLabel).toBeTruthy();
+      expect(app.roundToFiveLabel).toBeTruthy();
+      expect(app.roundingDescription).toBeTruthy();
       expect(app.processButton).toBeTruthy();
       expect(app.errorDisplay).toBeTruthy();
       expect(app.loadingDisplay).toBeTruthy();
@@ -189,15 +200,26 @@ describe('CostsplitterApp Frontend Tests', () => {
       expect(app.selectedFile).toBe(mockFile);
     });
 
-    test('binds payment mode change event', () => {
+    test('binds payment mode toggle event', () => {
       const event = new Event('change');
       Object.defineProperty(event, 'target', {
-        value: { value: 'group' },
+        value: { checked: true },
         enumerable: true
       });
 
-      app.paymentModeSelect.dispatchEvent(event);
+      app.paymentModeToggle.dispatchEvent(event);
       expect(app.paymentMode).toBe('group');
+    });
+
+    test('binds rounding toggle event', () => {
+      const event = new Event('change');
+      Object.defineProperty(event, 'target', {
+        value: { checked: true },
+        enumerable: true
+      });
+
+      app.roundingToggle.dispatchEvent(event);
+      expect(app.roundingMode).toBe('roundToFive');
     });
 
     test('binds help button click event', () => {
@@ -390,7 +412,8 @@ describe('CostsplitterApp Frontend Tests', () => {
       expect(costsplitterPipeline).toHaveBeenCalledWith(
         mockFile,
         'test,content',
-        'individual'
+        'individual',
+        'exact'
       );
     });
 

@@ -14,6 +14,17 @@ export const calculateWeightedShares = (data) => data.map((row) => {
   return weightedRow;
 });
 
+const roundToFiveEuros = (amount) => {
+  return Math.round(amount / 5) * 5;
+};
+
+const applyRounding = (amount, roundingMode) => {
+  if (roundingMode === 'roundToFive') {
+    return roundToFiveEuros(amount);
+  }
+  return amount;
+};
+
 export const calculateCostPerUnit = (weightedData) => {
   const costPerUnit = {};
 
@@ -49,7 +60,7 @@ export const calculateCostPerUnit = (weightedData) => {
   return costPerUnit;
 };
 
-export const calculateIndividualObligations = (weightedData, costPerUnit) => (
+export const calculateIndividualObligations = (weightedData, costPerUnit, roundingMode = 'exact') => (
   weightedData.map((row) => {
     let shouldPay = 0;
     let alreadyPaid = 0;
@@ -66,15 +77,18 @@ export const calculateIndividualObligations = (weightedData, costPerUnit) => (
       alreadyPaid += row[payKey] || 0;
     });
 
+    const roundedShouldPay = applyRounding(shouldPay, roundingMode);
+    const roundedNetObligation = applyRounding(roundedShouldPay - alreadyPaid, roundingMode);
+
     return {
       element: row.name,
-      shouldPay: Math.round(shouldPay * 100) / 100,
+      shouldPay: Math.round(roundedShouldPay * 100) / 100,
       alreadyPaid,
-      netObligation: Math.round((shouldPay - alreadyPaid) * 100) / 100,
+      netObligation: Math.round(roundedNetObligation * 100) / 100,
     };
   }));
 
-export const calculateGroupObligations = (weightedData, costPerUnit) => {
+export const calculateGroupObligations = (weightedData, costPerUnit, roundingMode = 'exact') => {
   const groupData = {};
 
   // Aggregate by group
@@ -111,15 +125,18 @@ export const calculateGroupObligations = (weightedData, costPerUnit) => {
       group.shouldPay += group.weightedShares[activity] * costPerUnit[activity];
     });
 
-    group.shouldPay = Math.round(group.shouldPay * 100) / 100;
-    group.netObligation = Math.round((group.shouldPay - group.alreadyPaid) * 100) / 100;
+    const roundedShouldPay = applyRounding(group.shouldPay, roundingMode);
+    const roundedNetObligation = applyRounding(roundedShouldPay - group.alreadyPaid, roundingMode);
+
+    group.shouldPay = Math.round(roundedShouldPay * 100) / 100;
+    group.netObligation = Math.round(roundedNetObligation * 100) / 100;
     delete group.weightedShares;
   });
 
   return Object.values(groupData);
 };
 
-export const calculatePaymentObligations = (data, payBy = 'individual') => {
+export const calculatePaymentObligations = (data, payBy = 'individual', roundingMode = 'exact') => {
   if (!data.length) {
     return {
       paymentMatrix: [],
@@ -151,8 +168,8 @@ export const calculatePaymentObligations = (data, payBy = 'individual') => {
   const costPerUnit = calculateCostPerUnit(weightedData);
 
   const paymentMatrix = payBy === 'group'
-    ? calculateGroupObligations(weightedData, costPerUnit)
-    : calculateIndividualObligations(weightedData, costPerUnit);
+    ? calculateGroupObligations(weightedData, costPerUnit, roundingMode)
+    : calculateIndividualObligations(weightedData, costPerUnit, roundingMode);
 
   // Calculate summary statistics
   const totalPaid = paymentMatrix.reduce((sum, p) => sum + p.alreadyPaid, 0);

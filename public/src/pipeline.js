@@ -5,7 +5,7 @@ import { transformDataToNumeric } from './transform/transform.js';
 import { calculatePaymentObligations } from './calculation/calculation.js';
 import { generateCompleteReport } from './reporting/reporting.js';
 
-export const processCsvData = (file, csvContent, parsedData, paymentMode = 'individual') => {
+export const processCsvData = (file, csvContent, parsedData, paymentMode = 'individual', roundingMode = 'exact') => {
   const result = {
     success: false,
     steps: {},
@@ -49,7 +49,7 @@ export const processCsvData = (file, csvContent, parsedData, paymentMode = 'indi
     result.steps.transformation = 'completed';
 
     // Step 4: Cost calculation
-    const calculation = calculatePaymentObligations(transformation.transformedData, paymentMode);
+    const calculation = calculatePaymentObligations(transformation.transformedData, paymentMode, roundingMode);
     result.steps.calculation = 'completed';
 
     // Step 5: Report generation
@@ -70,7 +70,7 @@ export const processCsvData = (file, csvContent, parsedData, paymentMode = 'indi
   }
 };
 
-export const costsplitterPipeline = (file, csvContent, paymentMode = 'individual') => {
+export const costsplitterPipeline = (file, csvContent, paymentMode = 'individual', roundingMode = 'exact') => {
   try {
     // Parse CSV content
     const parseResult = Papa.parse(csvContent, {
@@ -96,7 +96,7 @@ export const costsplitterPipeline = (file, csvContent, paymentMode = 'individual
     }
 
     // Process the parsed data through the pipeline
-    const pipelineResult = processCsvData(file, csvContent, parseResult.data, paymentMode);
+    const pipelineResult = processCsvData(file, csvContent, parseResult.data, paymentMode, roundingMode);
 
     return {
       ...pipelineResult,
