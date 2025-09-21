@@ -4,18 +4,13 @@ export const de = {
   'header.subtitle': 'Faire Kostenaufteilung für Gruppenreisen',
   'header.description': 'Laden Sie Ihre Ausgaben-CSV-Datei hoch, um automatisch zu berechnen, wer wem was schuldet. Unterstützt individuelle Zahlungen und gemeinsame Ausgaben mit anpassbaren Aufteilungsverhältnissen.',
 
-  // CSV Requirements
-  'csvRequirements.title': 'CSV-Datei Anforderungen',
-  'csvRequirements.description': 'Ihre CSV-Datei benötigt diese wesentlichen Spalten zur Berechnung fairer Kostenaufteilungen. Laden Sie Ihre Ausgabendaten hoch und erhalten Sie sofortige Zahlungsberechnungen.',
-  'csvRequirements.required.title': 'Erforderliche Spalte',
-  'csvRequirements.required.description': '<strong>name</strong> - Teilnehmernamen',
-  'csvRequirements.required.example': 'Beispiel: "Alice", "Bob Schmidt"',
-  'csvRequirements.payment.title': 'Zahlungsspalten',
-  'csvRequirements.payment.description': '<strong>pay_[aktivität]</strong> - Gezahlter Betrag',
-  'csvRequirements.payment.example': 'Beispiel: pay_dinner, pay_hotel',
-  'csvRequirements.optional.title': 'Optionale Spalten',
-  'csvRequirements.optional.description': '<strong>cost_[aktivität]</strong> - Anteilsebene',
-  'csvRequirements.optional.example': 'Werte: "full", "half", 0.5, 1.2',
+  // Fair Cost Splitting
+  'fairSplitting.title': 'Warum faire Kostenaufteilung wichtig ist',
+  'fairSplitting.description': 'Einfache gleichmäßige Aufteilungen funktionieren bei grundlegenden Szenarien, aber Gruppenreisen beinhalten oft komplexe Situationen, die einen nuancierteren Ansatz erfordern, um sicherzustellen, dass jeder seinen fairen Anteil zahlt.',
+  'fairSplitting.complex.title': 'Über einfache Aufteilungen hinaus',
+  'fairSplitting.complex.description': 'Wenn Menschen spät dazukommen, früh gehen, unterschiedliche Aktivitätsteilnahme haben oder variierende Konsummuster aufweisen, wird eine faire Berechnung zur Aufrechterhaltung der Gruppenharmonie unerlässlich.',
+  'fairSplitting.smart.title': 'Intelligente Berechnungen',
+  'fairSplitting.smart.description': 'Unser Algorithmus berücksichtigt individuelle Zahlungen, Aktivitätsteilnahme, altersbasierte Konsumgewohnheiten und persönliche Anpassungen, um eine wirklich gerechte Kostenverteilung zu berechnen.',
 
   // Step 1: Upload Your Data
   'step1.title': 'Daten hochladen',

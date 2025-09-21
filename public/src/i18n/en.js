@@ -4,18 +4,13 @@ export const en = {
   'header.subtitle': 'Fair cost division for group travel',
   'header.description': 'Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.',
 
-  // CSV Requirements
-  'csvRequirements.title': 'CSV File Requirements',
-  'csvRequirements.description': 'Your CSV file needs these essential columns to calculate fair cost splits. Upload your expense data and get instant payment calculations.',
-  'csvRequirements.required.title': 'Required Column',
-  'csvRequirements.required.description': '<strong>name</strong> - Participant names',
-  'csvRequirements.required.example': 'Example: "Alice", "Bob Smith"',
-  'csvRequirements.payment.title': 'Payment Columns',
-  'csvRequirements.payment.description': '<strong>pay_[activity]</strong> - Amount paid',
-  'csvRequirements.payment.example': 'Example: pay_dinner, pay_hotel',
-  'csvRequirements.optional.title': 'Optional Columns',
-  'csvRequirements.optional.description': '<strong>cost_[activity]</strong> - Share level',
-  'csvRequirements.optional.example': 'Values: "full", "half", 0.5, 1.2',
+  // Fair Cost Splitting
+  'fairSplitting.title': 'Why Fair Cost Splitting Matters',
+  'fairSplitting.description': 'Simple equal splits work for basic scenarios, but group travel often involves complex situations that require a more nuanced approach to ensure everyone pays their fair share.',
+  'fairSplitting.complex.title': 'Beyond Simple Splits',
+  'fairSplitting.complex.description': 'When people join late, leave early, have different activity participation, or varying consumption patterns, a fair calculation becomes essential for maintaining group harmony.',
+  'fairSplitting.smart.title': 'Smart Calculations',
+  'fairSplitting.smart.description': 'Our algorithm considers individual payments, activity participation levels, age-based consumption, and personal adjustments to calculate truly equitable cost distribution.',
 
   // Step 1: Upload Your Data
   'step1.title': 'Upload Your Data',

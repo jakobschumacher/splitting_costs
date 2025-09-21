@@ -98,28 +98,25 @@
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;" data-i18n="header.description">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
-        <!-- CSV Requirements section -->
-        <section style="margin-bottom: 2rem; text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
-            <div style="max-width: 700px; margin: 0 auto;">
-                <h2 style="font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-bottom: 1rem;" data-i18n="csvRequirements.title">CSV File Requirements</h2>
-                <p style="color: #4b5563; font-size: 0.875rem; line-height: 1.5; margin-bottom: 1.5rem;" data-i18n="csvRequirements.description">
-                    Your CSV file needs these essential columns to calculate fair cost splits. Upload your expense data and get instant payment calculations.
+        <!-- Fair Cost Splitting Explanation -->
+        <section style="margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2 style="font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-bottom: 1rem; text-align: center;" data-i18n="fairSplitting.title">Why Fair Cost Splitting Matters</h2>
+                <p style="color: #4b5563; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1.5rem; text-align: center;" data-i18n="fairSplitting.description">
+                    Simple equal splits work for basic scenarios, but group travel often involves complex situations that require a more nuanced approach to ensure everyone pays their fair share.
                 </p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                    <div style="text-align: left; padding: 1rem; background: white; border-radius: 0.375rem; border: 1px solid #e5e7eb;">
-                        <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" data-i18n="csvRequirements.required.title">Required Column</h3>
-                        <p style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;" data-i18n="csvRequirements.required.description"><strong>name</strong> - Participant names</p>
-                        <p style="font-size: 0.7rem; color: #9ca3af;" data-i18n="csvRequirements.required.example">Example: "Alice", "Bob Smith"</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    <div style="text-align: left;">
+                        <h3 style="font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="fairSplitting.complex.title">Beyond Simple Splits</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280; line-height: 1.5;" data-i18n="fairSplitting.complex.description">
+                            When people join late, leave early, have different activity participation, or varying consumption patterns, a fair calculation becomes essential for maintaining group harmony.
+                        </p>
                     </div>
-                    <div style="text-align: left; padding: 1rem; background: white; border-radius: 0.375rem; border: 1px solid #e5e7eb;">
-                        <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" data-i18n="csvRequirements.payment.title">Payment Columns</h3>
-                        <p style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;" data-i18n="csvRequirements.payment.description"><strong>pay_[activity]</strong> - Amount paid</p>
-                        <p style="font-size: 0.7rem; color: #9ca3af;" data-i18n="csvRequirements.payment.example">Example: pay_dinner, pay_hotel</p>
-                    </div>
-                    <div style="text-align: left; padding: 1rem; background: white; border-radius: 0.375rem; border: 1px solid #e5e7eb;">
-                        <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" data-i18n="csvRequirements.optional.title">Optional Columns</h3>
-                        <p style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;" data-i18n="csvRequirements.optional.description"><strong>cost_[activity]</strong> - Share level</p>
-                        <p style="font-size: 0.7rem; color: #9ca3af;" data-i18n="csvRequirements.optional.example">Values: "full", "half", 0.5, 1.2</p>
+                    <div style="text-align: left;">
+                        <h3 style="font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="fairSplitting.smart.title">Smart Calculations</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280; line-height: 1.5;" data-i18n="fairSplitting.smart.description">
+                            Our algorithm considers individual payments, activity participation levels, age-based consumption, and personal adjustments to calculate truly equitable cost distribution.
+                        </p>
                     </div>
                 </div>
             </div>
