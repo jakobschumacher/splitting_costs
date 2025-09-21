@@ -1,0 +1,5 @@
+name,group,pay_dinner,cost_dinner
+John,Group1,100,full
+Jane,Group1,50,0.5
+Bob,Group2,75,full
+Alice,Group2,0,0.8

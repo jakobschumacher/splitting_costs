@@ -1,0 +1,6 @@
+name,group,cost_lunch,pay_lunch,cost_dinner,pay_dinner,cost_taxi,pay_taxi,cost_conference,pay_conference,adjustment
+Manager,Management,full,120,full,200,full,45,full,500,
+Developer1,Engineering,full,0,full,180,0.5,20,full,0,
+Developer2,Engineering,full,85,full,0,full,35,full,500,
+Designer,Design,full,95,0.8,150,0.3,15,full,500,
+Sales,Sales,full,110,full,220,full,50,full,0,more

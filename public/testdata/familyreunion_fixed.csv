@@ -1,0 +1,11 @@
+name,group,age,cost_dinnerday1,pay_dinnerday1,cost_day1,pay_day1,cost_day2,pay_day2,cost_day3,pay_day3,adjustment
+James Smith,Smith,adult,full,0,full,0,full,0,full,0,
+Olivia Johnson,Johnson,,0.8,100,0.8,0,full,0,full,0,less
+Ethan Brown,Brown,3,full,0,full,0,full,0,full,0,
+Amelia Taylor,Smith,adult,0,400,full,0,full,657,full,0,
+Lucas Wilson,Wilson,adult,full,0,0,0,0,0,full,0,
+Emma Davis,Smith,,0,0,full,800,full,0,full,0,
+Henry Smith,Smith,adult,0,0,reduced,0,reduced,0,reduced,0,less
+Ava Taylor,Taylor,14,reduced,0,reduced,0,reduced,0,reduced,0,
+Benjamin Johnson,Johnson,12,0,0,full,854,full,0,full,0,
+Charlotte Brown,Brown,10,0,0,0.7,0,full,0,full,0,less

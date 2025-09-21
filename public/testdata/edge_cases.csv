@@ -1,0 +1,8 @@
+name,group,age,cost_activity,pay_activity,adjustment
+Empty Payment,Group1,adult,full,,
+Zero Cost,Group1,25,0,50,
+High Adjustment,Group2,kid,full,100,2.5
+Negative Age,Group2,-5,reduced,25,less
+Missing Group,,adult,full,75,
+Special Chars,Grøup3,adult,full,80,möre
+Numbers Only,123,456,0.5,90,1.2

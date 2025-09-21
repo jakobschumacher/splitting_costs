@@ -1,0 +1,6 @@
+name,group,age,cost_dinnerday1,pay_dinnerday1,cost_day1,pay_day1,adjustment
+James Smith,Smith,adult,full,0,full,0,
+Olivia Johnson,Johnson,,0.8,100,full,0,less
+Ethan Brown,Brown,3,full,0,full,0,
+Amelia Taylor,Smith,adult,full,400,full,0,
+Emma Davis,Smith,,full,800,full,0,

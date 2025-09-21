@@ -1,0 +1,16 @@
+name,group,age,cost_dinner,pay_dinner,cost_drinks,pay_drinks,adjustment
+Person01,TeamA,25,full,0,full,30,
+Person02,TeamA,30,full,45,0.5,0,less
+Person03,TeamA,28,0.8,0,full,25,
+Person04,TeamB,35,full,80,full,40,more
+Person05,TeamB,22,reduced,20,0.3,10,
+Person06,TeamB,29,full,60,full,35,
+Person07,TeamC,31,full,0,full,50,less
+Person08,TeamC,26,0.9,40,reduced,15,
+Person09,TeamC,33,full,70,full,45,
+Person10,TeamD,24,reduced,25,0.2,5,
+Person11,TeamD,27,full,55,full,30,more
+Person12,TeamD,32,full,0,0.8,20,
+Person13,TeamE,29,full,65,full,35,
+Person14,TeamE,23,0.7,15,reduced,8,less
+Person15,TeamE,34,full,75,full,40,

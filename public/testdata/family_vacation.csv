@@ -1,0 +1,8 @@
+name,group,age,cost_meals,pay_meals,cost_hotel,pay_hotel,cost_activities,pay_activities,cost_gas,pay_gas,adjustment
+Dad,Parents,45,full,0,full,300,full,100,full,80,
+Mom,Parents,42,full,150,full,0,0.8,50,0.5,0,
+Teenager,Kids,16,0.9,80,0.5,0,full,75,0,0,less
+Child1,Kids,12,0.7,40,0.5,0,reduced,30,0,0,less
+Child2,Kids,8,0.6,25,0.5,0,reduced,20,0,0,less
+Grandma,Grandparents,68,0.8,60,full,200,0.3,15,0,0,less
+Grandpa,Grandparents,70,0.8,70,full,0,0.3,20,0,0,less
