@@ -98,29 +98,26 @@
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;" data-i18n="header.description">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
-        <!-- Fair Cost Splitting Explanation -->
-        <section style="margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
-            <div style="max-width: 800px; margin: 0 auto;">
-                <h2 style="font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-bottom: 1rem; text-align: center;" data-i18n="fairSplitting.title">Why Fair Cost Splitting Matters</h2>
-                <p style="color: #4b5563; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1.5rem; text-align: center;" data-i18n="fairSplitting.description">
-                    Simple equal splits work for basic scenarios, but group travel often involves complex situations that require a more nuanced approach to ensure everyone pays their fair share.
-                </p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-                    <div style="text-align: left;">
-                        <h3 style="font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="fairSplitting.complex.title">Beyond Simple Splits</h3>
-                        <p style="font-size: 0.875rem; color: #6b7280; line-height: 1.5;" data-i18n="fairSplitting.complex.description">
-                            When people join late, leave early, have different activity participation, or varying consumption patterns, a fair calculation becomes essential for maintaining group harmony.
-                        </p>
-                    </div>
-                    <div style="text-align: left;">
-                        <h3 style="font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="fairSplitting.smart.title">Smart Calculations</h3>
-                        <p style="font-size: 0.875rem; color: #6b7280; line-height: 1.5;" data-i18n="fairSplitting.smart.description">
-                            Our algorithm considers individual payments, activity participation levels, age-based consumption, and personal adjustments to calculate truly equitable cost distribution.
-                        </p>
-                    </div>
+        <!-- CSV Help Modal -->
+        <div id="csvHelpModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+            <div style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 0.5rem; max-width: 800px; max-height: 80vh; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #1f2937; margin: 0;" data-i18n="csvHelp.modal.title">CSV File Format</h3>
+                    <button id="closeCsvHelp" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280;">&times;</button>
+                </div>
+                <div data-i18n="csvHelp.modal.content">
+                    <p style="margin-bottom: 1rem; color: #4b5563;">The data should contain the following columns:</p>
+                    <ul style="color: #4b5563; line-height: 1.6; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 1rem;"><strong>The name column.</strong> This column indicates the names of the persons involved. This is a must have column otherwise the package will throw an error. The names must be unique.</li>
+                        <li style="margin-bottom: 1rem;"><strong>The pay_ columns.</strong> These columns hold the amount that somebody paid for one activity. At least one pay_ column must be available. Each pay_column must match with one share_column. This must be done by a corresponding part after the _ e.g. pay_breakfast and share_breakfast. The value should be numeric. All pay_ columns should either start with pay_.</li>
+                        <li style="margin-bottom: 1rem;"><strong>The share_columns.</strong> These columns hold the share that everyone has to pay for the activity. The second part of the name after the _ must correspond to one pay_column. The value can be numeric. It must be between 0 (meaning the person does not have to pay) and 1 (meaning the person does have to pay a full share) or it can have one of the following categorical values full, reduced, half or some. These categorical values will be transformed to numerical values. NA values and empty values will be translated into 0. All share_ columns should either start with share_.</li>
+                        <li style="margin-bottom: 1rem;"><strong>The group column.</strong> Several persons can be put together to form a group. This can be indicated in this column.</li>
+                        <li style="margin-bottom: 1rem;"><strong>The age column.</strong> This column indicates the age of the persons involved. The value should be an integer value between 0 and 120. The value could also be either adult or kid, that will be translated into 1 and 0.5 respectively. NA values and empty values will be translated into 1.</li>
+                        <li style="margin-bottom: 0;"><strong>The adjustment column.</strong> To give a general bonus or malus that will apply the complete amount somebody has to pay you can use the adjustment column. This column can be numeric between 0 (indicating the person does not have to pay) and 100 (indicating 100x times the normal share). The value can also be categorical with more indicating that the person should pay 1.2 times more and less indicating that the person should pay only 0.8 of the usual amount. NA values and empty values will be translated into 1.</li>
+                    </ul>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Step 1: Upload Your Data -->
         <section id="step1" class="step-section">
@@ -187,7 +184,10 @@
                 </div>
 
                 <div style="text-align: center; padding: 1.5rem 1rem; border-top: 1px solid #f3f4f6;">
-                    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="step1.welcome.exampleText">Need an example? Try one of our sample files:</p>
+                    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;">
+                        <a href="#" id="csvFormatHelpLink" style="color: #6b7280; text-decoration: underline; margin-right: 1rem; cursor: pointer; user-select: text;" data-i18n="step1.csvFormatHelp">Klicken Sie hier um zu sehen wie die Datei aufgebaut sein soll</a>
+                        <span data-i18n="step1.welcome.exampleText">Need an example? Try one of our sample files:</span>
+                    </p>
                     <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
                         <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="simple" data-i18n="step1.welcome.examples.simple">Simple Dinner</button>
                         <button class="btn" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;" data-example="family" data-i18n="step1.welcome.examples.family">Family Trip</button>

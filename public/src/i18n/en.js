@@ -2,18 +2,18 @@ export const en = {
   // Header
   'header.title': 'Costsplitter',
   'header.subtitle': 'Fair cost division for group travel',
-  'header.description': 'Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.',
+  'header.description': 'Group travel is great. But the billing can be difficult. This tool helps you with that. Create an expense CSV file. Upload the file here. The app then calculates who owes what to whom. The app offers the possibility to adjust costs: per activity, by age and based on a solidarity range.',
 
-  // Fair Cost Splitting
-  'fairSplitting.title': 'Why Fair Cost Splitting Matters',
-  'fairSplitting.description': 'Simple equal splits work for basic scenarios, but group travel often involves complex situations that require a more nuanced approach to ensure everyone pays their fair share.',
-  'fairSplitting.complex.title': 'Beyond Simple Splits',
-  'fairSplitting.complex.description': 'When people join late, leave early, have different activity participation, or varying consumption patterns, a fair calculation becomes essential for maintaining group harmony.',
-  'fairSplitting.smart.title': 'Smart Calculations',
-  'fairSplitting.smart.description': 'Our algorithm considers individual payments, activity participation levels, age-based consumption, and personal adjustments to calculate truly equitable cost distribution.',
+  // Main Introduction
+  'main.intro': 'Group travel is great. But the billing can be difficult. This tool helps you with that. Create an expense CSV file (?). Upload the file here. The app then calculates who owes what to whom. The app offers the possibility to adjust costs: per activity, by age and based on a solidarity range.',
+
+  // CSV Help Modal
+  'csvHelp.modal.title': 'CSV File Format',
+  'csvHelp.modal.content': 'The data should contain the following columns:\n\n• The name column. This column indicates the names of the persons involved. This is a must have column otherwise the package will throw an error. The names must be unique.\n\n• The pay_ columns. These columns hold the amount that somebody paid for one activity. At least one pay_ column must be available. Each pay_column must match with one share_column. This must be done by a corresponding part after the _ e.g. pay_breakfast and share_breakfast. The value should be numeric. All pay_ columns should either start with pay_.\n\n• The share_columns. These columns hold the share that everyone has to pay for the activity. The second part of the name after the _ must correspond to one pay_column. The value can be numeric. It must be between 0 (meaning the person does not have to pay) and 1 (meaning the person does have to pay a full share) or it can have one of the following categorical values full, reduced, half or some. These categorical values will be transformed to numerical values. NA values and empty values will be translated into 0. All share_ columns should either start with share_.\n\n• The group column. Several persons can be put together to form a group. This can be indicated in this column.\n\n• The age column. This column indicates the age of the persons involved. The value should be an integer value between 0 and 120. The value could also be either adult or kid, that will be translated into 1 and 0.5 respectively. NA values and empty values will be translated into 1.\n\n• The adjustment column. To give a general bonus or malus that will apply the complete amount somebody has to pay you can use the adjustment column. This column can be numeric between 0 (indicating the person does not have to pay) and 100 (indicating 100x times the normal share). The value can also be categorical with more indicating that the person should pay 1.2 times more and less indicating that the person should pay only 0.8 of the usual amount. NA values and empty values will be translated into 1.',
 
   // Step 1: Upload Your Data
   'step1.title': 'Upload Your Data',
+  'step1.csvFormatHelp': 'Click here to see how the file should be structured',
   'step1.upload.title': 'Drop your CSV file here or click to browse',
   'step1.upload.subtitle': 'Supports files up to 10MB',
   'step1.upload.success': 'File uploaded successfully!',

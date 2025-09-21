@@ -99,7 +99,7 @@ class CostsplitterApp {
 
     // Example file buttons
     document.querySelectorAll('[data-example]').forEach(button => {
-      button.addEventListener('click', (e) => this.loadExampleFile(e.target.dataset.example));
+      button.addEventListener('click', (e) => this.downloadExampleFile(e.target.dataset.example));
     });
 
     // PDF download button
@@ -1031,7 +1031,7 @@ class CostsplitterApp {
     }
   }
 
-  async loadExampleFile(exampleType) {
+  async downloadExampleFile(exampleType) {
     try {
       // Map example types to file names
       const fileMap = {
@@ -1049,12 +1049,16 @@ class CostsplitterApp {
 
       const csvContent = await response.text();
 
-      // Create a File object from the CSV content
+      // Create a download link
       const blob = new Blob([csvContent], { type: 'text/csv' });
-      this.selectedFile = new File([blob], fileName, { type: 'text/csv' });
-
-      // Update the display
-      this.updateFileDisplay();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
 
     } catch (error) {
       console.error('Error loading example file:', error);
@@ -1066,10 +1070,56 @@ class CostsplitterApp {
   }
 }
 
+// CSV Help Modal functionality
+function initializeCsvHelpModal() {
+  const csvHelpButton = document.getElementById('csvHelpButton');
+  const csvFormatHelpLink = document.getElementById('csvFormatHelpLink');
+  const csvHelpModal = document.getElementById('csvHelpModal');
+  const closeCsvHelp = document.getElementById('closeCsvHelp');
+
+  if (csvHelpModal && closeCsvHelp) {
+    // Function to open modal
+    const openModal = () => {
+      csvHelpModal.style.display = 'block';
+    };
+
+    // Header CSV help button (if it exists)
+    if (csvHelpButton) {
+      csvHelpButton.addEventListener('click', openModal);
+    }
+
+    // Section 1 CSV format help link
+    if (csvFormatHelpLink) {
+      csvFormatHelpLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Directly show Step 1 help content
+        this.showStepHelp(1);
+      });
+    }
+
+    closeCsvHelp.addEventListener('click', () => {
+      csvHelpModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    csvHelpModal.addEventListener('click', (e) => {
+      if (e.target === csvHelpModal) {
+        csvHelpModal.style.display = 'none';
+      }
+    });
+  }
+}
+
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   // eslint-disable-next-line no-new
-  new CostsplitterApp();
+  const app = new CostsplitterApp();
+
+  // Make app accessible globally for help buttons
+  window.costsplitterApp = app;
+
+  // Initialize CSV help modal
+  initializeCsvHelpModal();
 });
 
 // Export for testing
