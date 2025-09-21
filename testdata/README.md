@@ -43,10 +43,11 @@ This directory contains various CSV test files to demonstrate and test the cost 
 - Multi-day events
 
 ## Usage
-1. Upload any CSV file through the web interface
-2. Select individual or group payment mode
-3. Review calculated payment instructions
-4. Test different scenarios to understand the algorithm
+1. **Configure Options**: Choose payment mode (Individual/Group) and rounding preferences
+2. **Upload CSV**: Drop any CSV file or click to browse through the web interface
+3. **View Results**: Review payment matrix, instructions, and activity breakdown
+4. **Download PDF**: Optional - get a comprehensive report
+5. **Test Scenarios**: Try different files to understand the algorithm behavior
 
 ## File Formats
 All files use standard CSV format with:

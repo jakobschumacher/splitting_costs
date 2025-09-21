@@ -3,10 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Costsplitter - Fair Cost Division</title>
+
+    <!-- Enhanced Title for SEO -->
+    <title>Free Cost Splitter | Group Travel Expense Calculator | Costsplitter</title>
+
+    <!-- Meta Description -->
+    <meta name="description" content="Free online cost splitter for group travel. Upload CSV files to automatically calculate fair payment splits. Supports complex scenarios with partial participation, age adjustments, and family groupings.">
+
+    <!-- Keywords for better search ranking -->
+    <meta name="keywords" content="cost splitter, expense sharing, group travel calculator, bill splitting, travel expenses, CSV upload, payment calculator, fair cost division, expense tracker">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://jakobschumacher.github.io/splitting_costs/">
+
+    <!-- Language alternates -->
+    <link rel="alternate" hreflang="en" href="https://jakobschumacher.github.io/splitting_costs/">
+    <link rel="alternate" hreflang="de" href="https://jakobschumacher.github.io/splitting_costs/">
+    <link rel="alternate" hreflang="x-default" href="https://jakobschumacher.github.io/splitting_costs/">
+
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="Costsplitter - Fair Cost Division for Group Travel">
+    <meta property="og:description" content="Upload your expense CSV and get instant payment calculations. Perfect for family trips, business travel, and group activities.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jakobschumacher.github.io/splitting_costs/">
+    <meta property="og:site_name" content="Costsplitter">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Costsplitter - Fair Cost Division">
+    <meta name="twitter:description" content="Free online tool for splitting group travel expenses fairly">
+
+    <!-- Author and robots -->
+    <meta name="author" content="Jakob Schumacher">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Structured Data for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Costsplitter",
+      "description": "Free online cost splitting calculator for group travel expenses with CSV upload support",
+      "url": "https://jakobschumacher.github.io/splitting_costs/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "Jakob Schumacher"
+      },
+      "featureList": [
+        "CSV file upload",
+        "Automatic payment calculation",
+        "Group and individual payment modes",
+        "Multi-language support",
+        "PDF report generation",
+        "Fair cost division algorithms"
+      ]
+    }
+    </script>
+
+    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- External Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
@@ -27,6 +97,33 @@
             <p data-i18n="header.subtitle">Fair cost division for group travel</p>
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;" data-i18n="header.description">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
+
+        <!-- SEO-friendly introduction section -->
+        <section style="margin-bottom: 2rem; text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+            <div style="max-width: 600px; margin: 0 auto;">
+                <h2 style="font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-bottom: 1rem;">How It Works</h2>
+                <p style="color: #4b5563; font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem;">
+                    Our free cost splitting calculator makes group expense management effortless. Simply upload your expense data as a CSV file, configure your payment preferences, and get instant calculations showing exactly who owes what to whom.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📊</div>
+                        <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.25rem;">Upload CSV</h3>
+                        <p style="font-size: 0.75rem; color: #6b7280;">Upload your expense data</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚙️</div>
+                        <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.25rem;">Configure</h3>
+                        <p style="font-size: 0.75rem; color: #6b7280;">Set payment preferences</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💰</div>
+                        <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.25rem;">Calculate</h3>
+                        <p style="font-size: 0.75rem; color: #6b7280;">Get payment instructions</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Step 1: Upload Your Data -->
         <section id="step1" class="step-section">

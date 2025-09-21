@@ -1,94 +1,90 @@
 # Costsplitter - Fair Cost Division for Group Travel
 
-A JavaScript web application for fairly splitting costs among group travel participants, handling complex scenarios like partial participation, age differences, and income adjustments.
+A modern JavaScript web application for fairly splitting costs among group travel participants. Upload your expense CSV file and get instant payment calculations with a clean, intuitive interface supporting multiple languages.
 
 ## 🎯 Project Goal
-Create a web-based version of the R package `costsplitter` that allows users to upload a CSV file with group travel expenses and automatically calculate fair cost distribution with minimal payment transactions.
+A web-based cost splitting application that calculates fair payment distributions and minimizes the number of transactions needed to settle group expenses.
 
 ## 🌟 Key Features
-- **Complex Participation**: Handle partial participation (joining late/leaving early)
-- **Age-Based Adjustments**: Different consumption rates for adults vs children
-- **Income Fairness**: Optional "more" or "less" payment adjustments
-- **Multiple Activities**: Support different cost categories (meals, tours, accommodation)
-- **Smart Minimization**: Find optimal payment transactions to settle debts
-- **Web Interface**: Easy CSV upload and visual results
+- **💰 Smart Payment Calculation**: Automatically calculates who owes what to whom
+- **📱 Modern Web Interface**: Clean, responsive design with step-by-step process
+- **🌍 Multi-Language Support**: Full internationalization (English/German)
+- **⚙️ Flexible Options**: Individual vs Group payment modes, amount rounding
+- **📊 Visual Results**: Payment matrix, activity breakdown, and summary cards
+- **📄 PDF Export**: Download comprehensive payment reports
+- **🔒 Client-Side Processing**: All calculations done locally, no data sent to servers
 
-## 📁 Input Format
-Upload a CSV file with the following columns:
+## 📁 CSV Input Format
+Upload a CSV file with these columns:
 
 | Column | Description | Example Values |
 |--------|-------------|----------------|
-| `name` | Participant name (required) | "John Smith" |
-| `group` | Optional grouping | "Smith Family" |
-| `age` | Age or category | 25, "adult", "kid" |
-| `cost_[activity]` | Share for activity | 1, 0.5, "full", "reduced" |
-| `pay_[activity]` | Amount already paid | 150.00 |
-| `adjustment` | Payment modifier | "more", "less", 1.2 |
+| `name` | Participant name (required) | "Alice", "Bob Smith" |
+| `group` | Optional grouping | "Smith Family", "Team A" |
+| `pay_[activity]` | Amount paid for activity | 100, 50.75, 0 |
+| `cost_[activity]` | Participation level | "full", "half", 0.5, 1.2 |
+| `age` | Age or category (optional) | 25, "adult", "kid" |
+| `adjustment` | Payment modifier (optional) | "more", "less", 1.2 |
 
 ### Example CSV:
 ```csv
-name,group,age,cost_dinner,pay_dinner,cost_hotel,pay_hotel,adjustment
-Alice Johnson,Johnson,adult,full,,full,300,
-Bob Smith,Smith,12,reduced,,full,,less
-Carol Davis,Davis,adult,full,80,full,,more
+name,group,pay_dinner,cost_dinner,age
+Alice Johnson,Johnson Family,100,full,adult
+Bob Smith,Smith Family,50,0.5,12
+Carol Davis,Davis Family,0,full,adult
 ```
 
 ## 🚀 Quick Start
 
-### Development Environment
-```bash
-resume
-```
+### 🌐 Online Demo
+Try the application instantly: **[https://jakobschumacher.github.io/splitting_costs/](https://jakobschumacher.github.io/splitting_costs/)**
 
-Or manually:
-```bash
-distrobox-enter js-Costsplitter
-```
+### 🎮 How to Use
+1. **Configure Options**: Choose payment mode (Individual/Group) and rounding preferences
+2. **Upload CSV**: Drop your expense file or click to browse
+3. **View Results**: See payment instructions, matrix overview, and activity breakdown
+4. **Download Report**: Get a PDF summary of all calculations
 
-### Run the Application
+### 💻 Local Development
 ```bash
+# Clone and install
+git clone [repository-url]
+cd costsplitter
 npm install
-npm run dev    # Development server
-npm test       # Run test suite
-npm run build  # Production build
+
+# Start development server
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
 ```
 
-### Test Data
-The `testdata/` directory contains various CSV examples to test different scenarios:
+### 📊 Test Data
+The `testdata/` directory contains various CSV examples:
 - `simple_dinner.csv` - Basic 4-person dinner split
 - `family_vacation.csv` - Multi-generational family trip
 - `business_trip.csv` - Corporate travel expenses
 - `large_group.csv` - 15-person group scenario
-- `edge_cases.csv` - Testing error handling
-- And more! See `testdata/README.md` for details
+- `minimal_example.csv` - Simplest possible format
+- See `testdata/README.md` for complete list and descriptions
 
-### Rebuild Environment
-```bash
-curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap
-```
-
-## 🏗️ Development Phases
-1. **Phase 1**: CSV parsing and validation
-2. **Phase 2**: Core calculation algorithms
-3. **Phase 3**: Payment minimization
-4. **Phase 4**: Web interface
-5. **Phase 5**: Export features
-
-## 📊 Algorithm Overview
-1. **Validate** input data (required columns, data types)
-2. **Transform** categorical values to numeric weights
-3. **Calculate** cost per unit and individual obligations
-4. **Minimize** number of payment transactions needed
+## 🔧 Technical Features
+- **Frontend**: Vanilla JavaScript with ES6 modules
+- **Styling**: Custom CSS with responsive design
+- **Internationalization**: Multi-language support (EN/DE)
+- **Testing**: Comprehensive Jest test suite (130+ tests)
+- **PDF Generation**: Client-side report creation
+- **File Processing**: CSV parsing with validation and security checks
 
 ## 🔗 Related Projects
 - Original R package: `/home/jakob/Dokumente/03_Projekte/2024_10_08_Grouptraveller/costsplitter`
 - See `claude.md` for detailed analysis and implementation notes
 
-## 🌐 Live Demo
-Try the application online: [https://jakobschumacher.github.io/splitting_costs/](https://jakobschumacher.github.io/splitting_costs/)
-
 ## 🚀 Deployment
-This application is automatically deployed to GitHub Pages using GitHub Actions. When you push to the master branch:
+This application is automatically deployed to GitHub Pages using GitHub Actions. When you push to the main branch:
 
 1. **Tests** are run to ensure code quality
 2. **Build** creates an optimized production bundle
@@ -96,12 +92,15 @@ This application is automatically deployed to GitHub Pages using GitHub Actions.
 
 ### Manual Deployment
 ```bash
-npm run build:github  # Build for GitHub Pages
+npm run build  # Build for production
 # Commit and push to trigger deployment
 ```
 
 ## 📋 Project Info
-- **Type**: JavaScript Web Application
-- **Container**: js-Costsplitter
+- **Type**: Modern JavaScript Web Application
+- **Framework**: Vanilla JS with ES6 modules
+- **UI**: Responsive CSS with step-by-step interface
+- **Languages**: English, German (i18n support)
+- **Testing**: Jest with 130+ comprehensive tests
 - **Created**: 2025-09-19
-- **Based on**: R package costsplitter v0.5
+- **Based on**: R package costsplitter concepts with modern web implementation

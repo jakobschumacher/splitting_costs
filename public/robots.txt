@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://jakobschumacher.github.io/splitting_costs/sitemap.xml
+
+# Crawl-delay to be respectful
+Crawl-delay: 1
