@@ -107,6 +107,15 @@ class CostsplitterApp {
 
     // Language selector
     this.languageSelector.addEventListener('change', (e) => this.changeLanguage(e.target.value));
+
+    // Section 1 CSV format help link
+    const csvFormatHelpLink = document.getElementById('csvFormatHelpLink');
+    if (csvFormatHelpLink) {
+      csvFormatHelpLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.showStepHelp(1);
+      });
+    }
   }
 
   initializeI18n() {
@@ -1070,56 +1079,11 @@ class CostsplitterApp {
   }
 }
 
-// CSV Help Modal functionality
-function initializeCsvHelpModal() {
-  const csvHelpButton = document.getElementById('csvHelpButton');
-  const csvFormatHelpLink = document.getElementById('csvFormatHelpLink');
-  const csvHelpModal = document.getElementById('csvHelpModal');
-  const closeCsvHelp = document.getElementById('closeCsvHelp');
-
-  if (csvHelpModal && closeCsvHelp) {
-    // Function to open modal
-    const openModal = () => {
-      csvHelpModal.style.display = 'block';
-    };
-
-    // Header CSV help button (if it exists)
-    if (csvHelpButton) {
-      csvHelpButton.addEventListener('click', openModal);
-    }
-
-    // Section 1 CSV format help link
-    if (csvFormatHelpLink) {
-      csvFormatHelpLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Directly show Step 1 help content
-        this.showStepHelp(1);
-      });
-    }
-
-    closeCsvHelp.addEventListener('click', () => {
-      csvHelpModal.style.display = 'none';
-    });
-
-    // Close modal when clicking outside
-    csvHelpModal.addEventListener('click', (e) => {
-      if (e.target === csvHelpModal) {
-        csvHelpModal.style.display = 'none';
-      }
-    });
-  }
-}
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   // eslint-disable-next-line no-new
-  const app = new CostsplitterApp();
-
-  // Make app accessible globally for help buttons
-  window.costsplitterApp = app;
-
-  // Initialize CSV help modal
-  initializeCsvHelpModal();
+  new CostsplitterApp();
 });
 
 // Export for testing

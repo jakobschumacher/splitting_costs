@@ -98,26 +98,6 @@
             <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;" data-i18n="header.description">Upload your expense CSV file to automatically calculate who owes what to whom. Supports individual payments and shared expenses with customizable split ratios.</p>
         </header>
 
-        <!-- CSV Help Modal -->
-        <div id="csvHelpModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-            <div style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 0.5rem; max-width: 800px; max-height: 80vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #1f2937; margin: 0;" data-i18n="csvHelp.modal.title">CSV File Format</h3>
-                    <button id="closeCsvHelp" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280;">&times;</button>
-                </div>
-                <div data-i18n="csvHelp.modal.content">
-                    <p style="margin-bottom: 1rem; color: #4b5563;">The data should contain the following columns:</p>
-                    <ul style="color: #4b5563; line-height: 1.6; padding-left: 1.5rem;">
-                        <li style="margin-bottom: 1rem;"><strong>The name column.</strong> This column indicates the names of the persons involved. This is a must have column otherwise the package will throw an error. The names must be unique.</li>
-                        <li style="margin-bottom: 1rem;"><strong>The pay_ columns.</strong> These columns hold the amount that somebody paid for one activity. At least one pay_ column must be available. Each pay_column must match with one share_column. This must be done by a corresponding part after the _ e.g. pay_breakfast and share_breakfast. The value should be numeric. All pay_ columns should either start with pay_.</li>
-                        <li style="margin-bottom: 1rem;"><strong>The share_columns.</strong> These columns hold the share that everyone has to pay for the activity. The second part of the name after the _ must correspond to one pay_column. The value can be numeric. It must be between 0 (meaning the person does not have to pay) and 1 (meaning the person does have to pay a full share) or it can have one of the following categorical values full, reduced, half or some. These categorical values will be transformed to numerical values. NA values and empty values will be translated into 0. All share_ columns should either start with share_.</li>
-                        <li style="margin-bottom: 1rem;"><strong>The group column.</strong> Several persons can be put together to form a group. This can be indicated in this column.</li>
-                        <li style="margin-bottom: 1rem;"><strong>The age column.</strong> This column indicates the age of the persons involved. The value should be an integer value between 0 and 120. The value could also be either adult or kid, that will be translated into 1 and 0.5 respectively. NA values and empty values will be translated into 1.</li>
-                        <li style="margin-bottom: 0;"><strong>The adjustment column.</strong> To give a general bonus or malus that will apply the complete amount somebody has to pay you can use the adjustment column. This column can be numeric between 0 (indicating the person does not have to pay) and 100 (indicating 100x times the normal share). The value can also be categorical with more indicating that the person should pay 1.2 times more and less indicating that the person should pay only 0.8 of the usual amount. NA values and empty values will be translated into 1.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
         <!-- Step 1: Upload Your Data -->
         <section id="step1" class="step-section">
