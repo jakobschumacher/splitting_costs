@@ -1,6 +1,8 @@
+const ADULT_AGE = 18;
+
 export const calculateWeightedShares = (data) => data.map((row) => {
   const weightedRow = { ...row };
-  const weightFactor = row.age * row.adjustment;
+  const weightFactor = Math.min(row.age, ADULT_AGE) * row.adjustment;
 
   // Apply weight factor to all cost columns
   Object.keys(row).forEach((key) => {
