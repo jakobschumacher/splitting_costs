@@ -4,7 +4,7 @@ import {
   calculateIndividualObligations,
   calculateGroupObligations,
   calculatePaymentObligations
-} from '../src/calculation/calculation.js';
+} from '../public/src/calculation/calculation.js';
 
 describe('Cost Calculation Module', () => {
   const sampleData = [

@@ -6,6 +6,9 @@
     "jest": true,
     "es2022": true
   },
+  "globals": {
+    "Papa": "readonly"
+  },
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module"

@@ -4,10 +4,14 @@
  */
 
 import { TextEncoder, TextDecoder } from 'util';
+import Papa from 'papaparse';
 
 // Polyfills for JSDOM environment
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+
+// public/src/pipeline.js expects Papa as a global (loaded via CDN script tag in production)
+global.Papa = Papa;
 
 // Mock URL.createObjectURL and revokeObjectURL for file handling tests
 global.URL.createObjectURL = jest.fn(() => 'mock-object-url');

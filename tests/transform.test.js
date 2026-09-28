@@ -4,7 +4,7 @@ import {
   transformCostValues,
   addMissingColumns,
   transformDataToNumeric
-} from '../src/transform/transform.js';
+} from '../public/src/transform/transform.js';
 
 describe('Data Transformation Module', () => {
   describe('transformAge', () => {

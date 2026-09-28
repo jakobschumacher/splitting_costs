@@ -370,44 +370,6 @@ class CostsplitterApp {
     CostsplitterApp.displayPaymentMatrix(result.report.paymentMatrix, result.report.instructions);
   }
 
-  static displaySummary(summary) {
-    const summaryEl = document.getElementById('summaryContent');
-    summaryEl.innerHTML = `
-      <div class="summary-card">
-        <div class="summary-label">${i18n.t('summary.participants')}</div>
-        <div class="summary-value">${summary.totalParticipants}</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">${i18n.t('summary.totalPaid')}</div>
-        <div class="summary-value text-green">${i18n.formatCurrency(summary.totalPaid)}</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">${i18n.t('summary.activities')}</div>
-        <div class="summary-value" style="color: #3b82f6;">${summary.activities ? Object.keys(summary.activities).length : 0}</div>
-      </div>
-    `;
-  }
-
-  static displayInstructions(instructions) {
-    const instructionsEl = document.getElementById('instructionsContent');
-    if (instructions.length === 0) {
-      instructionsEl.innerHTML = '<p class="text-green" style="font-weight: 500;">'
-        + '✅ No payments needed - everyone is settled!</p>';
-      return;
-    }
-
-    instructionsEl.innerHTML = `
-      <ul style="list-style: none; padding: 0;">
-        ${instructions.map((instruction) => (
-    `<li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start;">
-              <span style="color: #3b82f6; margin-right: 0.5rem;">•</span>
-              <span>${instruction}</span>
-            </li>`
-  )).join('')}
-      </ul>
-    `;
-  }
-
   static getObligationClass(netObligation) {
     if (netObligation < 0) return 'text-green';
     if (netObligation > 0) return 'text-red';
@@ -510,39 +472,6 @@ class CostsplitterApp {
         `<div style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.5rem; border: 1px solid #bbf7d0;"><p style="margin: 0; color: #059669; font-weight: 500; text-align: center;">✅ ${i18n.t('matrix.noPaymentsNeeded')}</p></div>`
         : ''}
     `;
-  }
-
-  static displayActivities(activities) {
-    const activitiesEl = document.getElementById('activitiesContent');
-
-    if (!activities || Object.keys(activities).length === 0) {
-      activitiesEl.innerHTML = '<div>No activities to display</div>';
-      return;
-    }
-
-    // Convert activities object to array for easier handling
-    const activityList = Object.entries(activities).map(([name, activity]) => ({
-      name,
-      ...activity
-    }));
-
-    activitiesEl.innerHTML = activityList.map((activity) => `
-      <div class="activity-card">
-        <h4 style="font-weight: 500; margin-bottom: 0.5rem;">${activity.name}</h4>
-        <div style="font-size: 0.875rem; color: #6b7280;">
-          <p style="margin-bottom: 0.25rem;">${i18n.t('activity.totalPaid')}: <span style="font-weight: 500;">${i18n.formatCurrency(activity.totalPaid)}</span></p>
-          <p style="margin-bottom: 0.25rem;">${i18n.t('activity.paidBy')}: <span style="font-weight: 500;">${activity.paidBy}</span></p>
-          <div style="margin-top: 0.5rem;">
-            <strong>${i18n.t('activity.charges')}:</strong>
-            <div style="margin-left: 1rem; margin-top: 0.25rem;">
-              ${activity.charges ? activity.charges.map(charge =>
-                `<div>• ${charge.person}: ${i18n.formatCurrency(charge.amount)}</div>`
-              ).join('') : '<div>No specific charges recorded</div>'}
-            </div>
-          </div>
-        </div>
-      </div>
-    `).join('');
   }
 
   displayWarning(warningMessage) {

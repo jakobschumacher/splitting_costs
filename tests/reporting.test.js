@@ -3,7 +3,7 @@ import {
   generateTransactionList,
   generateSummaryReport,
   generateCompleteReport
-} from '../src/reporting/reporting.js';
+} from '../public/src/reporting/reporting.js';
 
 describe('Report Generation Module', () => {
   const samplePaymentMatrix = [

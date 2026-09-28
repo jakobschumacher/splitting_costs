@@ -1,4 +1,4 @@
-import { processCsvData, costsplitterPipeline } from '../src/pipeline.js';
+import { processCsvData, costsplitterPipeline } from '../public/src/pipeline.js';
 
 describe('Pipeline Orchestrator', () => {
   const validCsvData = [

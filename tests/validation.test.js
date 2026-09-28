@@ -3,7 +3,7 @@ import {
   validatePayColumns,
   validateDataTypes,
   validateDataIntegrity
-} from '../src/validation/validation.js';
+} from '../public/src/validation/validation.js';
 
 describe('Data Validation Module', () => {
   describe('validateNameColumn', () => {

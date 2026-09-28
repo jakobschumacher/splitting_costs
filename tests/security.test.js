@@ -1,4 +1,4 @@
-import { checkFileSize, checkCsvInjection, validateSecurityCheck } from '../src/security/security.js';
+import { checkFileSize, checkCsvInjection, validateSecurityCheck } from '../public/src/security/security.js';
 
 describe('Security Module', () => {
   describe('checkFileSize', () => {

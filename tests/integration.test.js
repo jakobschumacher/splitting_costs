@@ -1,4 +1,4 @@
-import { costsplitterPipeline } from '../src/pipeline.js';
+import { costsplitterPipeline } from '../public/src/pipeline.js';
 
 describe('Integration Tests with R Package Examples', () => {
   // Test data based on R package examples (simplified for testing)
