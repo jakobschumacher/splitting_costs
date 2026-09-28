@@ -612,147 +612,193 @@ class CostsplitterApp {
 
   downloadPdf() {
     if (!this.currentResults) {
-      alert('No results to download. Please process a file first.');
+      alert('Keine Ergebnisse zum Herunterladen. Bitte zuerst eine Datei verarbeiten.');
       return;
     }
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
+    const BLUE = [59, 130, 246];
+    const BLUE_LIGHT = [219, 234, 254];
+    const GREEN = [5, 150, 105];
+    const RED = [185, 28, 28];
+    const GRAY = [107, 114, 128];
+    const ROW_STRIPE = [249, 250, 251];
+    const DARK = [17, 24, 39];
+
+    const euro = (value) => `${value.toLocaleString('de-DE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })} €`;
+
     // Get data
     const summary = this.currentResults.report.summary;
     const instructions = this.currentResults.report.instructions;
     const paymentMatrix = this.currentResults.report.paymentMatrix;
     const activities = summary.activities || [];
-    const fileName = this.selectedFile ? this.selectedFile.name : 'expense-data';
+    const fileName = this.selectedFile ? this.selectedFile.name : 'ausgabendaten';
 
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const marginX = 20;
     let yPos = 20;
 
-    // Title and filename
+    const ensureSpace = (needed) => {
+      if (yPos + needed > 280) {
+        doc.addPage();
+        yPos = 20;
+      }
+    };
+
+    const drawSectionHeader = (title) => {
+      ensureSpace(16);
+      doc.setFillColor(...BLUE_LIGHT);
+      doc.rect(marginX, yPos - 6, pageWidth - marginX * 2, 10, 'F');
+      doc.setFontSize(13);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(...BLUE);
+      doc.text(title, marginX + 3, yPos + 1);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(...DARK);
+      yPos += 16;
+    };
+
+    // Title banner
+    doc.setFillColor(...BLUE);
+    doc.rect(0, 0, pageWidth, 28, 'F');
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
-    doc.text('Costsplitter - Expense Report', 20, yPos);
-    yPos += 10;
-    doc.setFontSize(10);
-    doc.text(`Source file: ${fileName}`, 20, yPos);
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 120, yPos);
-    yPos += 20;
+    doc.setFont(undefined, 'bold');
+    doc.text('Costsplitter', marginX, 17);
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'normal');
+    doc.text('Ausgabenbericht', marginX, 24);
+    doc.setTextColor(...DARK);
+    yPos = 40;
+
+    doc.setFontSize(9);
+    doc.setTextColor(...GRAY);
+    doc.text(`Quelldatei: ${fileName}`, marginX, yPos);
+    doc.text(`Erstellt am: ${new Date().toLocaleDateString('de-DE')}`, pageWidth - marginX, yPos, { align: 'right' });
+    doc.setTextColor(...DARK);
+    yPos += 14;
 
     // Summary section
-    doc.setFontSize(16);
-    doc.text('Summary', 20, yPos);
-    yPos += 10;
-    doc.setFontSize(12);
-    doc.text(`Participants: ${summary.totalParticipants}`, 25, yPos);
-    yPos += 8;
-    doc.text(`Total Paid: €${summary.totalPaid.toFixed(2)}`, 25, yPos);
-    yPos += 8;
-    doc.text(`Activities: ${activities.length}`, 25, yPos);
-    yPos += 20;
+    drawSectionHeader('Zusammenfassung');
+    doc.setFontSize(11);
+    doc.text(`Teilnehmer: ${summary.totalParticipants}`, marginX + 5, yPos);
+    yPos += 7;
+    doc.text(`Gesamt bezahlt: ${euro(summary.totalPaid)}`, marginX + 5, yPos);
+    yPos += 7;
+    doc.text(`Aktivitäten: ${activities.length}`, marginX + 5, yPos);
+    yPos += 14;
 
     // Payment Instructions section
-    doc.setFontSize(16);
-    doc.text('Payment Instructions', 20, yPos);
-    yPos += 10;
+    drawSectionHeader('Zahlungsanweisungen');
     doc.setFontSize(10);
 
     if (instructions.length === 0) {
-      doc.text('No payments needed - all settled!', 25, yPos);
-      yPos += 15;
+      doc.setTextColor(...GREEN);
+      doc.text('Keine Zahlungen nötig – alles ausgeglichen!', marginX + 5, yPos);
+      doc.setTextColor(...DARK);
+      yPos += 12;
     } else {
-      instructions.forEach(instruction => {
-        doc.text(`• ${instruction}`, 25, yPos);
+      instructions.forEach((instruction) => {
+        ensureSpace(8);
+        doc.text(`• ${instruction}`, marginX + 5, yPos);
         yPos += 6;
       });
-      yPos += 10;
-    }
-
-    // Check if we need a new page
-    if (yPos > 220) {
-      doc.addPage();
-      yPos = 20;
+      yPos += 8;
     }
 
     // Payment Matrix section
-    doc.setFontSize(16);
-    doc.text('Payment Matrix', 20, yPos);
-    yPos += 15;
+    drawSectionHeader('Zahlungsübersicht');
 
     // Table headers
     doc.setFontSize(10);
     doc.setFont(undefined, 'bold');
-    doc.text('Name', 25, yPos);
-    doc.text('Should Pay', 70, yPos);
-    doc.text('Already Paid', 110, yPos);
-    doc.text('Net Amount', 155, yPos);
-    yPos += 8;
+    doc.text('Name', marginX + 5, yPos);
+    doc.text('Soll zahlen', 80, yPos);
+    doc.text('Bereits bezahlt', 120, yPos);
+    doc.text('Nettobetrag', 165, yPos);
+    yPos += 5;
 
-    // Table separator line
-    doc.line(20, yPos - 2, 190, yPos - 2);
-
-    // Table data
+    doc.setDrawColor(...BLUE);
+    doc.setLineWidth(0.4);
+    doc.line(marginX, yPos, pageWidth - marginX, yPos);
+    yPos += 6;
     doc.setFont(undefined, 'normal');
-    paymentMatrix.forEach(person => {
-      doc.text(person.element, 25, yPos);
-      doc.text(`€${person.shouldPay.toFixed(2)}`, 70, yPos);
-      doc.text(`€${person.alreadyPaid.toFixed(2)}`, 110, yPos);
-      const netColor = person.netObligation < 0 ? [0, 150, 0] : person.netObligation > 0 ? [200, 0, 0] : [0, 0, 0];
+
+    paymentMatrix.forEach((person, index) => {
+      ensureSpace(8);
+      if (index % 2 === 0) {
+        doc.setFillColor(...ROW_STRIPE);
+        doc.rect(marginX, yPos - 4.5, pageWidth - marginX * 2, 6, 'F');
+      }
+      doc.text(person.element, marginX + 5, yPos);
+      doc.text(euro(person.shouldPay), 80, yPos);
+      doc.text(euro(person.alreadyPaid), 120, yPos);
+      const netColor = person.netObligation < 0 ? GREEN : (person.netObligation > 0 ? RED : DARK);
       doc.setTextColor(...netColor);
-      doc.text(`€${person.netObligation.toFixed(2)}`, 155, yPos);
-      doc.setTextColor(0, 0, 0);
+      doc.text(euro(person.netObligation), 165, yPos);
+      doc.setTextColor(...DARK);
       yPos += 6;
     });
-    yPos += 15;
-
-    // Check if we need a new page for activities
-    if (yPos > 200) {
-      doc.addPage();
-      yPos = 20;
-    }
+    yPos += 12;
 
     // Activity Breakdown section
     if (activities.length > 0) {
-      doc.setFontSize(16);
-      doc.text('Activity Breakdown', 20, yPos);
-      yPos += 15;
+      drawSectionHeader('Aktivitätsübersicht');
 
-      activities.forEach(activity => {
-        // Check if we need a new page
-        if (yPos > 240) {
-          doc.addPage();
-          yPos = 20;
-        }
+      activities.forEach((activity) => {
+        ensureSpace(24);
 
-        doc.setFontSize(12);
+        doc.setFontSize(11);
         doc.setFont(undefined, 'bold');
-        doc.text(activity.name, 25, yPos);
-        yPos += 8;
+        doc.setTextColor(...BLUE);
+        doc.text(activity.name, marginX + 5, yPos);
+        doc.setTextColor(...DARK);
+        yPos += 7;
 
-        doc.setFontSize(10);
+        doc.setFontSize(9.5);
         doc.setFont(undefined, 'normal');
-        doc.text(`Total Paid: €${activity.totalPaid.toFixed(2)}`, 30, yPos);
-        yPos += 6;
+        doc.text(`Gesamt bezahlt: ${euro(activity.totalPaid)}`, marginX + 8, yPos);
+        yPos += 5.5;
 
         if (activity.paidBy) {
-          doc.text(`Paid by: ${activity.paidBy}`, 30, yPos);
-          yPos += 6;
+          doc.text(`Bezahlt von: ${activity.paidBy}`, marginX + 8, yPos);
+          yPos += 5.5;
         }
 
         if (activity.charges && activity.charges.length > 0) {
-          doc.text('Individual charges:', 30, yPos);
-          yPos += 6;
-          activity.charges.forEach(charge => {
-            doc.text(`  • ${charge.person}: €${charge.amount.toFixed(2)} (${charge.shares} shares)`, 35, yPos);
+          doc.setTextColor(...GRAY);
+          doc.text('Einzelbeträge:', marginX + 8, yPos);
+          doc.setTextColor(...DARK);
+          yPos += 5.5;
+          activity.charges.forEach((charge) => {
+            ensureSpace(6);
+            doc.text(`• ${charge.person}: ${euro(charge.amount)} (${charge.shares} Anteile)`, marginX + 12, yPos);
             yPos += 5;
           });
         }
-        yPos += 8;
+        yPos += 6;
       });
+    }
+
+    // Footer with page numbers
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i += 1) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(...GRAY);
+      doc.text(`Seite ${i} von ${pageCount}`, pageWidth - marginX, 290, { align: 'right' });
+      doc.setTextColor(...DARK);
     }
 
     // Save the PDF with dynamic filename
     const timestamp = new Date().toISOString().slice(0, 10);
     const baseFileName = fileName.replace('.csv', '');
-    doc.save(`${baseFileName}-report-${timestamp}.pdf`);
+    doc.save(`${baseFileName}-bericht-${timestamp}.pdf`);
   }
 
   reset() {
