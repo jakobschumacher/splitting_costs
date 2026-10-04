@@ -50,6 +50,20 @@ describe('Report Generation Module', () => {
       expect(exactMatches).toHaveLength(2);
     });
 
+    test('carries the recipient IBAN and ibanName onto each transaction', () => {
+      const data = [
+        { element: 'John', netObligation: 20 },
+        {
+          element: 'Jane', netObligation: -20, iban: 'DE12 3456 7890', ibanName: 'Jane Doe',
+        },
+      ];
+
+      const result = minimizePayments(data);
+      expect(result).toHaveLength(1);
+      expect(result[0].iban).toBe('DE12 3456 7890');
+      expect(result[0].ibanName).toBe('Jane Doe');
+    });
+
     test('handles empty obligations', () => {
       const result = minimizePayments([]);
       expect(result).toHaveLength(0);

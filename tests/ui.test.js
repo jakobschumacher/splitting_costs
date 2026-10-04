@@ -13,6 +13,7 @@ const mockHTML = `
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="helpBackdrop" class="help-backdrop hidden"></div>
   <div class="container">
     <select id="languageSelector">
       <option value="en">EN</option>
@@ -35,7 +36,6 @@ const mockHTML = `
       <button class="btn" data-example="simple">Simple Dinner</button>
       <button class="btn" data-example="family">Family Trip</button>
       <button class="btn" data-example="business">Business Travel</button>
-      <a href="#" id="csvFormatHelpLink">CSV help</a>
     </section>
 
     <section id="step2" class="step-section step-disabled">
@@ -45,11 +45,12 @@ const mockHTML = `
         <span id="individualLabel">Individual</span>
         <input type="checkbox" id="paymentModeToggle">
         <span id="groupLabel">Group</span>
-        <p id="paymentModeDescription">Individual: Each person's expenses are tracked separately</p>
         <span id="exactLabel">Exact</span>
         <input type="checkbox" id="roundingToggle">
         <span id="roundToFiveLabel">Round to 5€</span>
-        <p id="roundingDescription">Exact: Keep precise amounts down to cents</p>
+        <span id="linearLabel">Linear</span>
+        <input type="checkbox" id="ageWeightingToggle">
+        <span id="solidarityLabel">Solidarity</span>
         <div id="columnMappingSection" class="hidden">
           <table>
             <tbody id="columnMappingBody"></tbody>
@@ -78,6 +79,7 @@ const mockHTML = `
       <div id="step3Disabled" class="step-disabled-message"></div>
       <div id="resultsContent" class="hidden">
         <div id="matrixContent"></div>
+        <button id="copyAllButton" class="btn hidden">Copy all payments</button>
         <button id="downloadPdfButton" class="btn">Download PDF</button>
       </div>
       <div id="helpContent3" class="step-help-content hidden">
@@ -175,15 +177,17 @@ describe('CostsplitterApp Frontend Tests', () => {
       expect(app.paymentModeToggle).toBeTruthy();
       expect(app.individualLabel).toBeTruthy();
       expect(app.groupLabel).toBeTruthy();
-      expect(app.paymentModeDescription).toBeTruthy();
       expect(app.roundingToggle).toBeTruthy();
       expect(app.exactLabel).toBeTruthy();
       expect(app.roundToFiveLabel).toBeTruthy();
-      expect(app.roundingDescription).toBeTruthy();
+      expect(app.ageWeightingToggle).toBeTruthy();
+      expect(app.linearLabel).toBeTruthy();
+      expect(app.solidarityLabel).toBeTruthy();
       expect(app.processButton).toBeTruthy();
       expect(app.errorDisplay).toBeTruthy();
       expect(app.loadingDisplay).toBeTruthy();
       expect(app.downloadPdfButton).toBeTruthy();
+      expect(app.copyAllButton).toBeTruthy();
       expect(app.resetButton).toBeTruthy();
       expect(app.uploadDefaultState).toBeTruthy();
       expect(app.uploadedState).toBeTruthy();
@@ -448,6 +452,7 @@ describe('CostsplitterApp Frontend Tests', () => {
         'individual',
         'exact',
         null,
+        'linear',
       );
       expect(app.step3.classList.contains('step-disabled')).toBe(false);
     });
@@ -516,12 +521,64 @@ describe('CostsplitterApp Frontend Tests', () => {
           { element: 'John', shouldPay: 25, alreadyPaid: 0, netObligation: 25 },
           { element: 'Alice', shouldPay: 0, alreadyPaid: 25, netObligation: -25 },
         ],
-        ['John pays Alice €25.00'],
+        [{
+          from: 'John', to: 'Alice', amount: 25, iban: '', ibanName: 'Alice',
+        }],
       );
 
       const matrixEl = document.getElementById('matrixContent');
       expect(matrixEl.textContent).toContain('John');
       expect(matrixEl.textContent).toContain('Alice');
+    });
+
+    test('displayPaymentMatrix shows a copy button when the recipient has an IBAN', () => {
+      CostsplitterApp.displayPaymentMatrix(
+        [
+          { element: 'John', shouldPay: 25, alreadyPaid: 0, netObligation: 25 },
+          { element: 'Alice', shouldPay: 0, alreadyPaid: 25, netObligation: -25 },
+        ],
+        [{
+          from: 'John', to: 'Alice', amount: 25, iban: 'DE12345678901234567890', ibanName: 'Alice',
+        }],
+      );
+
+      const matrixEl = document.getElementById('matrixContent');
+      expect(matrixEl.querySelector('.copy-payment-btn')).toBeTruthy();
+    });
+
+    test('displayPaymentMatrix omits the copy button when there is no IBAN', () => {
+      CostsplitterApp.displayPaymentMatrix(
+        [
+          { element: 'John', shouldPay: 25, alreadyPaid: 0, netObligation: 25 },
+          { element: 'Alice', shouldPay: 0, alreadyPaid: 25, netObligation: -25 },
+        ],
+        [{
+          from: 'John', to: 'Alice', amount: 25, iban: '', ibanName: 'Alice',
+        }],
+      );
+
+      const matrixEl = document.getElementById('matrixContent');
+      expect(matrixEl.querySelector('.copy-payment-btn')).toBeNull();
+    });
+
+    test('displayPaymentMatrix shows a share button only when navigator.share exists', () => {
+      const transactions = [{
+        from: 'John', to: 'Alice', amount: 25, iban: 'DE12345678901234567890', ibanName: 'Alice',
+      }];
+      const paymentMatrix = [
+        { element: 'John', shouldPay: 25, alreadyPaid: 0, netObligation: 25 },
+        { element: 'Alice', shouldPay: 0, alreadyPaid: 25, netObligation: -25 },
+      ];
+
+      CostsplitterApp.displayPaymentMatrix(paymentMatrix, transactions);
+      let matrixEl = document.getElementById('matrixContent');
+      expect(matrixEl.querySelector('.share-payment-btn')).toBeNull();
+
+      global.navigator.share = jest.fn();
+      CostsplitterApp.displayPaymentMatrix(paymentMatrix, transactions);
+      matrixEl = document.getElementById('matrixContent');
+      expect(matrixEl.querySelector('.share-payment-btn')).toBeTruthy();
+      delete global.navigator.share;
     });
   });
 });

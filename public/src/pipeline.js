@@ -7,7 +7,10 @@ import { applyColumnMapping } from './transform/columnMapping.js';
 import { calculatePaymentObligations } from './calculation/calculation.js';
 import { generateCompleteReport } from './reporting/reporting.js';
 
-export const processCsvData = (file, csvContent, parsedData, paymentMode = 'individual', roundingMode = 'exact') => {
+export const processCsvData = (
+  file, csvContent, parsedData, paymentMode = 'individual', roundingMode = 'exact',
+  ageWeightingMode = 'linear',
+) => {
   const result = {
     success: false,
     steps: {},
@@ -51,7 +54,9 @@ export const processCsvData = (file, csvContent, parsedData, paymentMode = 'indi
     result.steps.transformation = 'completed';
 
     // Step 4: Cost calculation
-    const calculation = calculatePaymentObligations(transformation.transformedData, paymentMode, roundingMode);
+    const calculation = calculatePaymentObligations(
+      transformation.transformedData, paymentMode, roundingMode, ageWeightingMode,
+    );
     result.steps.calculation = 'completed';
 
     // Step 5: Report generation
@@ -74,6 +79,7 @@ export const processCsvData = (file, csvContent, parsedData, paymentMode = 'indi
 
 export const costsplitterPipeline = (
   file, csvContent, paymentMode = 'individual', roundingMode = 'exact', columnMapping = null,
+  ageWeightingMode = 'linear',
 ) => {
   try {
     // Parse CSV content
@@ -106,7 +112,9 @@ export const costsplitterPipeline = (
       : normalizeCsvData(parseResult.data);
 
     // Process the normalized data through the pipeline
-    const pipelineResult = processCsvData(file, csvContent, normalizedData, paymentMode, roundingMode);
+    const pipelineResult = processCsvData(
+      file, csvContent, normalizedData, paymentMode, roundingMode, ageWeightingMode,
+    );
 
     return {
       ...pipelineResult,

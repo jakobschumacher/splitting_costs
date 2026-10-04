@@ -76,6 +76,12 @@ describe('Data Validation Module', () => {
       const result = validatePayColumns(data);
       expect(result.errors).toHaveLength(0);
     });
+
+    test('accepts German-style comma decimals', () => {
+      const data = [{ name: 'John', pay_dinner: '1110,50' }];
+      const result = validatePayColumns(data);
+      expect(result.errors).toHaveLength(0);
+    });
   });
 
   describe('validateDataTypes', () => {
@@ -113,6 +119,14 @@ describe('Data Validation Module', () => {
       expect(result.errors).toContainEqual({
         row: 3, column: 'cost_dinner', message: 'Invalid cost value'
       });
+    });
+
+    test('accepts German-style comma decimals in age, adjustment and cost', () => {
+      const data = [{
+        name: 'John', age: '17,5', adjustment: '1,2', cost_dinner: '0,5', pay_dinner: '100',
+      }];
+      const result = validateDataTypes(data);
+      expect(result.errors).toHaveLength(0);
     });
   });
 

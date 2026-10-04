@@ -6,7 +6,6 @@ export const de = {
 
   // Step 1: Upload Your Data
   'step1.title': 'Daten hochladen',
-  'step1.csvFormatHelp': 'Klicken Sie hier um zu sehen wie die Datei aufgebaut sein soll',
   'step1.upload.title': 'CSV-Datei hier ablegen oder zum Durchsuchen klicken',
   'step1.upload.subtitle': 'Unterstützt Dateien bis zu 10MB',
   'step1.upload.success': 'Datei erfolgreich hochgeladen!',
@@ -20,17 +19,15 @@ export const de = {
   'step2.title': 'Konfigurieren & Verarbeiten',
   'step2.disabled.title': 'Verarbeitungsoptionen',
   'step2.disabled.message': 'Laden Sie eine CSV-Datei hoch, um Verarbeitungsoptionen zu konfigurieren',
-  'step2.options.title': 'Verarbeitungsoptionen',
   'step2.paymentMode.label': 'Zahlungsmodus',
   'step2.paymentMode.individual': 'Individuell',
   'step2.paymentMode.group': 'Gruppe',
-  'step2.paymentMode.description.individual': 'Individuell: Die Ausgaben jeder Person werden separat erfasst',
-  'step2.paymentMode.description.group': 'Gruppe: Ausgaben werden nach Familie oder Gruppeneinheiten erfasst',
   'step2.rounding.label': 'Betragsrundung',
   'step2.rounding.exact': 'Exakt',
   'step2.rounding.roundToFive': 'Auf 5€ runden',
-  'step2.rounding.description.exact': 'Exakt: Präzise Beträge bis auf Cent beibehalten',
-  'step2.rounding.description.roundToFive': 'Auf 5€ runden: Alle Beträge auf nächste 5 Euro runden',
+  'step2.ageWeighting.label': 'Altersgewichtung',
+  'step2.ageWeighting.linear': 'Linear',
+  'step2.ageWeighting.solidarity': 'Solidarität',
   'step2.processButton': 'Datei verarbeiten',
   'step2.progress.title': 'Datei wird verarbeitet',
   'step2.progress.parsing': 'Analysieren',
@@ -42,7 +39,6 @@ export const de = {
 
   // Column Mapping
   'columnMapping.title': 'Spaltenzuordnung',
-  'columnMapping.description': 'Wir haben erkannt, wofür jede Spalte steht. Prüfen und passen Sie das bei Bedarf an, bevor Sie verarbeiten.',
   'columnMapping.column': 'CSV-Spalte',
   'columnMapping.role': 'Bedeutung',
   'columnMapping.activity': 'Aktivitätsname',
@@ -52,6 +48,8 @@ export const de = {
   'columnMapping.role.adjustment': 'Anpassung',
   'columnMapping.role.pay': 'Zahlung für Aktivität',
   'columnMapping.role.cost': 'Kostenanteil für Aktivität',
+  'columnMapping.role.iban': 'IBAN',
+  'columnMapping.role.iban_name': 'Kontoinhaber',
   'columnMapping.role.ignore': 'Ignorieren',
 
   // CSV Help
@@ -63,6 +61,9 @@ export const de = {
   'csvHelp.columns.cost': 'cost_[aktivität] - Teilnahmelevel (full, half, 0.5, etc.)',
   'csvHelp.columns.age': 'age - optionales Alter oder Kategorie (adult, kid, numerisch)',
   'csvHelp.columns.adjustment': 'adjustment - optionaler Zahlungsmodifikator (more, less, 1.2)',
+  'csvHelp.columns.iban': 'iban - optionale IBAN, um für diesen Empfänger einen Zahlungs-QR-Code und Kopiertext zu erzeugen',
+  'csvHelp.columns.ibanName': 'iban_name - optionaler Kontoinhabername (Standard: name/group)',
+  'csvHelp.flexibility': 'Spaltennamen und Werte können auch auf Deutsch geschrieben werden (z.B. familie, alter, erwachsen, mehr, voll) – sie werden automatisch erkannt, und Sie können die Zuordnung in Schritt 2 feinjustieren. Zahlen mit Komma als Dezimaltrennzeichen (z.B. 15,50) werden ebenfalls verstanden.',
   'csvHelp.example': 'Beispiel:',
   'csvHelp.commonIssues': 'Häufige Probleme:',
   'csvHelp.issue1': '• Fehlende "name" Spalte - diese ist für alle Teilnehmer erforderlich',
@@ -70,26 +71,24 @@ export const de = {
   'csvHelp.issue3': '• Datei als Excel (.xlsx) statt CSV-Format gespeichert',
   'csvHelp.issue4': '• Zusätzliche Kommas oder Anführungszeichen verursachen Parsing-Fehler',
   'csvHelp.examples': 'Benötigen Sie ein Beispiel? Probieren Sie:',
-  'csvHelp.closeHelp': 'Hilfe schließen',
 
   // Step-specific Help
-  'help.step1.title': 'Erste Schritte',
-  'help.step1.description': 'Laden Sie Ihre CSV-Datei mit Ausgabendaten hoch, um mit den Kostenaufteilungsberechnungen zu beginnen.',
   'help.step2.title': 'Verarbeitungsoptionen',
   'help.step2.description': 'Wählen Sie aus, wie Zahlungen und Rundungen behandelt werden sollen, bevor Sie Ihre Daten verarbeiten.',
   'help.step2.paymentModes': 'Zahlungsmodi: Individuell verfolgt jede Person separat, Gruppe kombiniert Familien-/Teameinheiten.',
   'help.step2.rounding': 'Rundung: Exakt behält genaue Beträge bei, Auf 5€ runden vereinfacht Endzahlungen.',
+  'help.step2.ageWeighting': 'Altersgewichtung: Linear berechnet Kindern 1/18 des vollen Preises pro Lebensjahr. Solidarität berechnet Babys bis 2 Jahre nichts, Kindern von 3-12 ein Viertel, von 13-17 die Hälfte, von 18-27 drei Viertel und ab 28 den vollen Preis.',
+  'help.step2.columnMapping': 'Spaltenzuordnung: Wir erkennen automatisch, wofür jede CSV-Spalte steht, auch bei deutschen Namen. Prüfen Sie die Tabelle und ändern Sie die Bedeutung einer Spalte vor dem Verarbeiten, falls etwas nicht stimmt.',
   'help.step3.title': 'Ergebnisse verstehen',
   'help.step3.description': 'Überprüfen Sie, wer wem was schuldet und laden Sie einen detaillierten Zahlungsbericht herunter.',
   'help.step3.matrix': 'Die Zahlungsmatrix zeigt die Verpflichtungen jeder Person und die erforderlichen Aktionen.',
-  'help.step3.pdf': 'Laden Sie den PDF-Bericht für eine detaillierte Aktivitätsaufschlüsselung und umfassende Analyse herunter.',
+  'help.step3.copyShare': 'Kopieren und Teilen: Hat ein Empfänger eine IBAN (siehe Schritt 1), legt "Kopieren" dessen Zahlungsdetails in die Zwischenablage, "Teilen" sendet sie direkt an eine App wie Signal oder Mail.',
+  'help.step3.pdf': 'Laden Sie den PDF-Bericht für eine detaillierte Aktivitätsaufschlüsselung herunter – inklusive scanbarem Zahlungs-QR-Code (GiroCode) für jeden Empfänger mit IBAN.',
 
   // Step 3: Results
   'step3.title': 'Ergebnisse',
   'step3.disabled.title': 'Zahlungsergebnisse',
   'step3.disabled.message': 'Verarbeiten Sie Ihre Datei, um Zahlungsberechnungen und Berichte zu sehen',
-  'step3.paymentInstructions': 'Zahlungsanweisungen',
-  'step3.paymentMatrix': 'Zahlungsübersicht',
   'step3.downloadPdf': 'PDF-Bericht herunterladen',
 
   // Summary Cards
@@ -109,6 +108,14 @@ export const de = {
   'payment.to': 'an',
   'payment.receives': 'Erhält',
   'payment.from': 'von',
+  'payment.copy': 'Kopieren',
+  'payment.copied': 'Kopiert!',
+  'payment.share': 'Teilen',
+  'payment.copyAll': 'Alle Zahlungen kopieren',
+  'payment.copyAllCopied': 'Alle Zahlungen kopiert!',
+  'payment.copyText.recipient': 'Empfänger',
+  'payment.copyText.amount': 'Betrag',
+  'payment.copyText.reference': 'Verwendungszweck',
 
   // Matrix Headers
   'matrix.name': 'Name',

@@ -37,6 +37,12 @@ describe('Data Transformation Module', () => {
       expect(result.value).toBe(18);
       expect(result.log).toBe('Empty age defaulted to 18');
     });
+
+    test('parses German-style comma decimals', () => {
+      const result = transformAge('17,5');
+      expect(result.value).toBeCloseTo(17.5);
+      expect(result.log).toBe('');
+    });
   });
 
   describe('transformAdjustment', () => {
@@ -62,6 +68,12 @@ describe('Data Transformation Module', () => {
       const result = transformAdjustment('');
       expect(result.value).toBe(1);
       expect(result.log).toBe('Empty adjustment defaulted to 1');
+    });
+
+    test('parses German-style comma decimals', () => {
+      const result = transformAdjustment('1,2');
+      expect(result.value).toBeCloseTo(1.2);
+      expect(result.log).toBe('');
     });
   });
 
@@ -94,6 +106,12 @@ describe('Data Transformation Module', () => {
       const result = transformCostValues('');
       expect(result.value).toBe(0);
       expect(result.log).toBe('Empty cost defaulted to 0');
+    });
+
+    test('parses German-style comma decimals', () => {
+      const result = transformCostValues('0,8');
+      expect(result.value).toBeCloseTo(0.8);
+      expect(result.log).toBe('');
     });
   });
 
@@ -175,6 +193,16 @@ describe('Data Transformation Module', () => {
       expect(result.transformedData[1].pay_hotel).toBe(200);
 
       expect(result.transformationLog.length).toBeGreaterThan(0);
+    });
+
+    test('parses German-style comma decimals in pay_ columns', () => {
+      const data = [{
+        name: 'John', age: 'adult', adjustment: 1, pay_dinner: '1.110,50', cost_dinner: 'full',
+      }];
+
+      const result = transformDataToNumeric(data);
+
+      expect(result.transformedData[0].pay_dinner).toBeCloseTo(1110.5);
     });
 
     test('handles missing columns and values', () => {

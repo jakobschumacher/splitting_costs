@@ -1,20 +1,46 @@
 const ADULT_AGE = 18;
 
-export const calculateWeightedShares = (data) => data.map((row) => {
-  const weightedRow = { ...row };
-  const weightFactor = Math.min(row.age, ADULT_AGE) * row.adjustment;
+// Linear: children pay 1/18th of the full price per year of age, capped at 18.
+const linearAgeWeight = (age) => Math.min(age, ADULT_AGE);
 
-  // Apply weight factor to all cost columns
-  Object.keys(row).forEach((key) => {
-    if (key.startsWith('cost_')) {
-      const activity = key.replace('cost_', '');
-      const weightedKey = `weighted_${activity}`;
-      weightedRow[weightedKey] = row[key] * weightFactor;
-    }
+// Solidarity: babies up to 2 pay nothing, then flat shares per age bracket up to 28+.
+const SOLIDARITY_BRACKETS = [
+  { maxAge: 2, share: 0 },
+  { maxAge: 12, share: 0.25 },
+  { maxAge: 17, share: 0.5 },
+  { maxAge: 27, share: 0.75 },
+];
+
+const solidarityAgeWeight = (age) => {
+  const bracket = SOLIDARITY_BRACKETS.find(({ maxAge }) => age <= maxAge);
+  const share = bracket ? bracket.share : 1;
+  return share * ADULT_AGE;
+};
+
+const AGE_WEIGHT_FNS = {
+  linear: linearAgeWeight,
+  solidarity: solidarityAgeWeight,
+};
+
+export const calculateWeightedShares = (data, ageWeightingMode = 'linear') => {
+  const ageWeightFn = AGE_WEIGHT_FNS[ageWeightingMode] || linearAgeWeight;
+
+  return data.map((row) => {
+    const weightedRow = { ...row };
+    const weightFactor = ageWeightFn(row.age) * row.adjustment;
+
+    // Apply weight factor to all cost columns
+    Object.keys(row).forEach((key) => {
+      if (key.startsWith('cost_')) {
+        const activity = key.replace('cost_', '');
+        const weightedKey = `weighted_${activity}`;
+        weightedRow[weightedKey] = row[key] * weightFactor;
+      }
+    });
+
+    return weightedRow;
   });
-
-  return weightedRow;
-});
+};
 
 const roundToFiveEuros = (amount) => {
   return Math.round(amount / 5) * 5;
@@ -87,6 +113,8 @@ export const calculateIndividualObligations = (weightedData, costPerUnit, roundi
       shouldPay: Math.round(roundedShouldPay * 100) / 100,
       alreadyPaid,
       netObligation: Math.round(roundedNetObligation * 100) / 100,
+      iban: row.iban ? row.iban.toString().trim() : '',
+      ibanName: (row.iban_name && row.iban_name.toString().trim()) || row.name,
     };
   }));
 
@@ -103,7 +131,17 @@ export const calculateGroupObligations = (weightedData, costPerUnit, roundingMod
         shouldPay: 0,
         alreadyPaid: 0,
         weightedShares: {},
+        iban: '',
+        ibanName: '',
       };
+    }
+
+    // Use the first IBAN found within the group (e.g. the family's shared account)
+    if (!groupData[groupName].iban && row.iban) {
+      groupData[groupName].iban = row.iban.toString().trim();
+      groupData[groupName].ibanName = (
+        (row.iban_name && row.iban_name.toString().trim()) || groupName
+      );
     }
 
     // Sum up payments
@@ -138,7 +176,9 @@ export const calculateGroupObligations = (weightedData, costPerUnit, roundingMod
   return Object.values(groupData);
 };
 
-export const calculatePaymentObligations = (data, payBy = 'individual', roundingMode = 'exact') => {
+export const calculatePaymentObligations = (
+  data, payBy = 'individual', roundingMode = 'exact', ageWeightingMode = 'linear',
+) => {
   if (!data.length) {
     return {
       paymentMatrix: [],
@@ -166,7 +206,7 @@ export const calculatePaymentObligations = (data, payBy = 'individual', rounding
     }
   }
 
-  const weightedData = calculateWeightedShares(data);
+  const weightedData = calculateWeightedShares(data, ageWeightingMode);
   const costPerUnit = calculateCostPerUnit(weightedData);
 
   const paymentMatrix = payBy === 'group'

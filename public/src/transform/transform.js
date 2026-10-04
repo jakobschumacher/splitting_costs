@@ -1,3 +1,5 @@
+import { parseLocaleNumber } from '../utils/numberParsing.js';
+
 const AGE_MAPPINGS = {
   adult: 18,
   kid: 9,
@@ -27,7 +29,7 @@ export const transformAge = (value) => {
     };
   }
 
-  const numericValue = parseFloat(value);
+  const numericValue = parseLocaleNumber(value);
   if (!Number.isNaN(numericValue)) {
     return { value: numericValue, log: '' };
   }
@@ -48,7 +50,7 @@ export const transformAdjustment = (value) => {
     };
   }
 
-  const numericValue = parseFloat(value);
+  const numericValue = parseLocaleNumber(value);
   if (!Number.isNaN(numericValue)) {
     return { value: numericValue, log: '' };
   }
@@ -69,7 +71,7 @@ export const transformCostValues = (value) => {
     };
   }
 
-  const numericValue = parseFloat(value);
+  const numericValue = parseLocaleNumber(value);
   if (!Number.isNaN(numericValue)) {
     return { value: numericValue, log: '' };
   }
@@ -155,7 +157,7 @@ export const transformDataToNumeric = (data) => {
     Object.keys(row).forEach((key) => {
       if (key.startsWith('pay_')) {
         const value = row[key];
-        const numericValue = (!value || value === '') ? 0 : parseFloat(value);
+        const numericValue = (!value || value === '') ? 0 : parseLocaleNumber(value);
         transformedRow[key] = Number.isNaN(numericValue) ? 0 : numericValue;
       }
     });

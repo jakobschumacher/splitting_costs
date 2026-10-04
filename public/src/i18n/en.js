@@ -6,7 +6,6 @@ export const en = {
 
   // Step 1: Upload Your Data
   'step1.title': 'Upload Your Data',
-  'step1.csvFormatHelp': 'Click here to see how the file should be structured',
   'step1.upload.title': 'Drop your CSV file here or click to browse',
   'step1.upload.subtitle': 'Supports files up to 10MB',
   'step1.upload.success': 'File uploaded successfully!',
@@ -20,17 +19,15 @@ export const en = {
   'step2.title': 'Configure & Process',
   'step2.disabled.title': 'Processing Options',
   'step2.disabled.message': 'Upload a CSV file to configure processing options',
-  'step2.options.title': 'Processing Options',
   'step2.paymentMode.label': 'Payment Mode',
   'step2.paymentMode.individual': 'Individual',
   'step2.paymentMode.group': 'Group',
-  'step2.paymentMode.description.individual': 'Individual: Each person\'s expenses are tracked separately',
-  'step2.paymentMode.description.group': 'Group: Expenses are tracked by family or group units',
   'step2.rounding.label': 'Amount Rounding',
   'step2.rounding.exact': 'Exact',
   'step2.rounding.roundToFive': 'Round to 5€',
-  'step2.rounding.description.exact': 'Exact: Keep precise amounts down to cents',
-  'step2.rounding.description.roundToFive': 'Round to 5€: Round all amounts to nearest 5 Euro',
+  'step2.ageWeighting.label': 'Age Weighting',
+  'step2.ageWeighting.linear': 'Linear',
+  'step2.ageWeighting.solidarity': 'Solidarity',
   'step2.processButton': 'Process File',
   'step2.progress.title': 'Processing Your File',
   'step2.progress.parsing': 'Parsing',
@@ -42,7 +39,6 @@ export const en = {
 
   // Column Mapping
   'columnMapping.title': 'Column Mapping',
-  'columnMapping.description': 'We detected what each column means. Review and adjust if needed before processing.',
   'columnMapping.column': 'CSV Column',
   'columnMapping.role': 'Meaning',
   'columnMapping.activity': 'Activity Name',
@@ -52,6 +48,8 @@ export const en = {
   'columnMapping.role.adjustment': 'Adjustment',
   'columnMapping.role.pay': 'Payment for activity',
   'columnMapping.role.cost': 'Cost share for activity',
+  'columnMapping.role.iban': 'IBAN',
+  'columnMapping.role.iban_name': 'Account holder name',
   'columnMapping.role.ignore': 'Ignore',
 
   // CSV Help
@@ -63,6 +61,9 @@ export const en = {
   'csvHelp.columns.cost': 'cost_[activity] - participation level (full, half, 0.5, etc.)',
   'csvHelp.columns.age': 'age - optional age or category (adult, kid, numeric)',
   'csvHelp.columns.adjustment': 'adjustment - optional payment modifier (more, less, 1.2)',
+  'csvHelp.columns.iban': 'iban - optional IBAN to generate a payment QR code and copy text for this recipient',
+  'csvHelp.columns.ibanName': 'iban_name - optional account holder name (defaults to name/group)',
+  'csvHelp.flexibility': 'Column names and values can also be written in German (e.g. familie, alter, erwachsen, mehr, voll) — they\'re detected automatically, and you can fine-tune the mapping in Step 2. Numbers with a comma decimal separator (e.g. 15,50) are understood too.',
   'csvHelp.example': 'Example:',
   'csvHelp.commonIssues': 'Common Issues:',
   'csvHelp.issue1': '• Missing "name" column - this is required for all participants',
@@ -70,26 +71,24 @@ export const en = {
   'csvHelp.issue3': '• File saved as Excel (.xlsx) instead of CSV format',
   'csvHelp.issue4': '• Extra commas or quotes causing parsing errors',
   'csvHelp.examples': 'Need an example? Try:',
-  'csvHelp.closeHelp': 'Close Help',
 
   // Step-specific Help
-  'help.step1.title': 'Getting Started',
-  'help.step1.description': 'Upload your CSV file with expense data to begin cost splitting calculations.',
   'help.step2.title': 'Processing Options',
   'help.step2.description': 'Choose how to handle payments and rounding before processing your data.',
   'help.step2.paymentModes': 'Payment Modes: Individual tracks each person separately, Group combines family/team units.',
   'help.step2.rounding': 'Rounding: Exact keeps precise amounts, Round to 5€ simplifies final payments.',
+  'help.step2.ageWeighting': 'Age Weighting: Linear charges children 1/18th of the full price per year of age. Solidarity charges babies up to 2 nothing, children 3-12 one quarter, 13-17 one half, 18-27 three quarters, and 28+ the full price.',
+  'help.step2.columnMapping': 'Column Mapping: We detect what each CSV column means automatically, including German names. Review the table and change any column\'s role before processing if something looks wrong.',
   'help.step3.title': 'Understanding Results',
   'help.step3.description': 'Review who owes what to whom and download a detailed payment report.',
   'help.step3.matrix': 'Payment Matrix shows each person\'s obligations and the actions needed.',
-  'help.step3.pdf': 'Download the PDF report for detailed activity breakdown and comprehensive analysis.',
+  'help.step3.copyShare': 'Copy and Share: if a recipient has an IBAN (see Step 1), use Copy to put their payment details on your clipboard, or Share to send them directly to an app like Signal or Mail.',
+  'help.step3.pdf': 'Download the PDF report for a detailed activity breakdown, plus a scannable payment QR code (GiroCode) for every recipient with an IBAN.',
 
   // Step 3: Results
   'step3.title': 'Results',
   'step3.disabled.title': 'Payment Results',
   'step3.disabled.message': 'Process your file to see payment calculations and reports',
-  'step3.paymentInstructions': 'Payment Instructions',
-  'step3.paymentMatrix': 'Payment Overview',
   'step3.downloadPdf': 'Download PDF Report',
 
   // Summary Cards
@@ -109,6 +108,14 @@ export const en = {
   'payment.to': 'to',
   'payment.receives': 'Receives',
   'payment.from': 'from',
+  'payment.copy': 'Copy',
+  'payment.copied': 'Copied!',
+  'payment.share': 'Share',
+  'payment.copyAll': 'Copy all payments',
+  'payment.copyAllCopied': 'All payments copied!',
+  'payment.copyText.recipient': 'Recipient',
+  'payment.copyText.amount': 'Amount',
+  'payment.copyText.reference': 'Reference',
 
   // Matrix Headers
   'matrix.name': 'Name',

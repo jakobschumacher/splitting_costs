@@ -1,20 +1,28 @@
+import { parseLocaleNumber } from '../utils/numberParsing.js';
+
 const VALID_AGE_CATEGORIES = ['adult', 'kid'];
 const VALID_ADJUSTMENT_CATEGORIES = ['more', 'less'];
 const VALID_COST_CATEGORIES = ['full', 'reduced', 'half'];
 
 const isValidNumeric = (value) => {
-  const num = parseFloat(value);
+  const num = parseLocaleNumber(value);
   return !Number.isNaN(num) && Number.isFinite(num);
 };
 
-const isValidAge = (value) => VALID_AGE_CATEGORIES.includes(value.toLowerCase())
-         || (isValidNumeric(value) && parseFloat(value) >= 0 && parseFloat(value) <= 120);
+const isValidAge = (value) => {
+  const num = parseLocaleNumber(value);
+  return VALID_AGE_CATEGORIES.includes(value.toLowerCase())
+    || (isValidNumeric(value) && num >= 0 && num <= 120);
+};
 
 const isValidAdjustment = (value) => VALID_ADJUSTMENT_CATEGORIES.includes(value.toLowerCase())
-         || (isValidNumeric(value) && parseFloat(value) >= 0);
+         || (isValidNumeric(value) && parseLocaleNumber(value) >= 0);
 
-const isValidCost = (value) => VALID_COST_CATEGORIES.includes(value.toLowerCase())
-         || (isValidNumeric(value) && parseFloat(value) >= 0 && parseFloat(value) <= 1);
+const isValidCost = (value) => {
+  const num = parseLocaleNumber(value);
+  return VALID_COST_CATEGORIES.includes(value.toLowerCase())
+    || (isValidNumeric(value) && num >= 0 && num <= 1);
+};
 
 export const validateNameColumn = (data) => {
   const errors = [];

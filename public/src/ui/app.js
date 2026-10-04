@@ -1,5 +1,8 @@
 import { costsplitterPipeline } from '../pipeline.js';
-import { detectColumnMapping } from '../transform/columnMapping.js';
+import { detectColumnMapping, MAPPING_ROLES } from '../transform/columnMapping.js';
+import { buildEpcQrPayload } from '../reporting/epcQr.js';
+import { buildPaymentCopyText } from '../reporting/paymentText.js';
+import { renderQrDataUrl } from '../reporting/qrCanvas.js';
 import {
   classifyError, generateErrorSuggestions, generateHelpResources,
 } from './errorClassification.js';
@@ -11,6 +14,7 @@ class CostsplitterApp {
     this.bindEvents();
     this.paymentMode = 'individual';
     this.roundingMode = 'exact';
+    this.ageWeightingMode = 'linear';
     this.selectedFile = null;
     this.currentResults = null;
     this.columnMapping = [];
@@ -27,18 +31,21 @@ class CostsplitterApp {
     this.paymentModeToggle = document.getElementById('paymentModeToggle');
     this.individualLabel = document.getElementById('individualLabel');
     this.groupLabel = document.getElementById('groupLabel');
-    this.paymentModeDescription = document.getElementById('paymentModeDescription');
     this.roundingToggle = document.getElementById('roundingToggle');
     this.exactLabel = document.getElementById('exactLabel');
     this.roundToFiveLabel = document.getElementById('roundToFiveLabel');
-    this.roundingDescription = document.getElementById('roundingDescription');
+    this.ageWeightingToggle = document.getElementById('ageWeightingToggle');
+    this.linearLabel = document.getElementById('linearLabel');
+    this.solidarityLabel = document.getElementById('solidarityLabel');
     this.processButton = document.getElementById('processButton');
     this.errorDisplay = document.getElementById('errorDisplay');
     this.loadingDisplay = document.getElementById('loadingDisplay');
     this.helpContent1 = document.getElementById('helpContent1');
     this.helpContent2 = document.getElementById('helpContent2');
     this.helpContent3 = document.getElementById('helpContent3');
+    this.helpBackdrop = document.getElementById('helpBackdrop');
     this.downloadPdfButton = document.getElementById('downloadPdfButton');
+    this.copyAllButton = document.getElementById('copyAllButton');
     this.resetButton = document.getElementById('resetButton');
     this.progressSteps = document.getElementById('progressSteps');
     this.uploadDefaultState = document.getElementById('uploadDefaultState');
@@ -79,6 +86,15 @@ class CostsplitterApp {
     // Initialize rounding UI
     this.updateRoundingUI();
 
+    // Age weighting toggle
+    this.ageWeightingToggle.addEventListener('change', (e) => {
+      this.ageWeightingMode = e.target.checked ? 'solidarity' : 'linear';
+      this.updateAgeWeightingUI();
+    });
+
+    // Initialize age weighting UI
+    this.updateAgeWeightingUI();
+
     // Process button
     this.processButton.addEventListener('click', () => this.processFile());
 
@@ -101,6 +117,12 @@ class CostsplitterApp {
       });
     });
 
+    // Close help popup by clicking the backdrop or pressing Escape
+    this.helpBackdrop.addEventListener('click', () => this.closeAllHelp());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closeAllHelp();
+    });
+
     // Example file buttons
     document.querySelectorAll('[data-example]').forEach(button => {
       button.addEventListener('click', (e) => this.downloadExampleFile(e.target.dataset.example));
@@ -111,15 +133,6 @@ class CostsplitterApp {
 
     // Language selector
     this.languageSelector.addEventListener('change', (e) => this.changeLanguage(e.target.value));
-
-    // Section 1 CSV format help link
-    const csvFormatHelpLink = document.getElementById('csvFormatHelpLink');
-    if (csvFormatHelpLink) {
-      csvFormatHelpLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.showStepHelp(1);
-      });
-    }
   }
 
   initializeI18n() {
@@ -130,6 +143,7 @@ class CostsplitterApp {
     i18n.subscribe((language) => {
       this.updatePaymentModeUI();
       this.updateRoundingUI();
+      this.updateAgeWeightingUI();
       this.renderColumnMapping();
       // Update any other dynamic content as needed
     });
@@ -146,6 +160,7 @@ class CostsplitterApp {
       // Re-translate any dynamic content
       this.updatePaymentModeUI();
       this.updateRoundingUI();
+      this.updateAgeWeightingUI();
       this.renderColumnMapping();
 
       // Re-translate results if they exist
@@ -254,7 +269,7 @@ class CostsplitterApp {
         <td><code>${entry.column}</code></td>
         <td>
           <select data-mapping-index="${index}" class="mapping-role-select">
-            ${['name', 'group', 'age', 'adjustment', 'pay', 'cost', 'ignore'].map((role) => `
+            ${MAPPING_ROLES.map((role) => `
               <option value="${role}" ${role === entry.role ? 'selected' : ''}>
                 ${i18n.t(`columnMapping.role.${role}`)}
               </option>
@@ -300,6 +315,7 @@ class CostsplitterApp {
       const mapping = this.columnMapping.length ? this.columnMapping : null;
       const result = costsplitterPipeline(
         this.selectedFile, csvContent, this.paymentMode, this.roundingMode, mapping,
+        this.ageWeightingMode,
       );
 
       if (result.success) {
@@ -438,8 +454,15 @@ class CostsplitterApp {
       return;
     }
 
+    const referenceText = this.selectedFile
+      ? this.selectedFile.name.replace(/\.csv$/i, '')
+      : 'Costsplitter';
+
     // Payment matrix with integrated instructions
-    CostsplitterApp.displayPaymentMatrix(result.report.paymentMatrix, result.report.instructions);
+    CostsplitterApp.displayPaymentMatrix(
+      result.report.paymentMatrix, result.report.transactions, referenceText,
+    );
+    this.setupCopyAllButton(result.report.transactions, referenceText);
   }
 
   static getObligationClass(netObligation) {
@@ -448,31 +471,71 @@ class CostsplitterApp {
     return 'text-gray';
   }
 
-  static displayPaymentMatrix(paymentMatrix, instructions = []) {
+  static getPaymentCopyText(transaction, referenceText) {
+    return buildPaymentCopyText({
+      ibanName: transaction.ibanName,
+      iban: transaction.iban,
+      amountText: i18n.formatCurrency(transaction.amount),
+      reference: referenceText,
+      labels: {
+        recipient: i18n.t('payment.copyText.recipient'),
+        amount: i18n.t('payment.copyText.amount'),
+        reference: i18n.t('payment.copyText.reference'),
+      },
+    });
+  }
+
+  setupCopyAllButton(transactions, referenceText) {
+    const withIban = transactions.filter((t) => t.iban);
+
+    if (withIban.length === 0) {
+      this.copyAllButton.classList.add('hidden');
+      this.copyAllButton.onclick = null;
+      return;
+    }
+
+    this.copyAllButton.classList.remove('hidden');
+    this.copyAllButton.textContent = i18n.t('payment.copyAll');
+    this.copyAllButton.onclick = () => {
+      const text = withIban
+        .map((t) => CostsplitterApp.getPaymentCopyText(t, referenceText))
+        .join('\n\n');
+      navigator.clipboard.writeText(text).then(() => {
+        this.copyAllButton.textContent = i18n.t('payment.copyAllCopied');
+        setTimeout(() => {
+          this.copyAllButton.textContent = i18n.t('payment.copyAll');
+        }, 1500);
+      });
+    };
+  }
+
+  static displayPaymentMatrix(paymentMatrix, transactions = [], referenceText = 'Costsplitter') {
     const matrixEl = document.getElementById('matrixContent');
 
     // Create maps for who pays whom and who receives from whom
-    const payerMap = {};  // Maps payer -> list of payments they need to make
-    const receiverMap = {};  // Maps receiver -> list of payments they will receive
+    const payerMap = {};  // Maps payer -> list of transactions they need to pay
+    const receiverMap = {};  // Maps receiver -> list of transactions they will receive
 
-    if (instructions.length > 0) {
-      instructions.forEach(instruction => {
-        // Parse instructions like "Alice pays Bob €25.50"
-        const match = instruction.match(/^(.+?)\s+pays\s+(.+?)\s+€([\d.]+)$/);
-        if (match) {
-          const [, payer, receiver, amount] = match;
-          const formattedAmount = i18n.formatCurrency(parseFloat(amount));
+    transactions.forEach((t) => {
+      if (!payerMap[t.from]) payerMap[t.from] = [];
+      payerMap[t.from].push(t);
+      if (!receiverMap[t.to]) receiverMap[t.to] = [];
+      receiverMap[t.to].push(t);
+    });
 
-          // Add to payer map
-          if (!payerMap[payer]) payerMap[payer] = [];
-          payerMap[payer].push(`${i18n.t('payment.pays')} ${formattedAmount} ${i18n.t('payment.to')} ${receiver}`);
+    const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
-          // Add to receiver map
-          if (!receiverMap[receiver]) receiverMap[receiver] = [];
-          receiverMap[receiver].push(`${i18n.t('payment.receives')} ${formattedAmount} ${i18n.t('payment.from')} ${payer}`);
-        }
-      });
-    }
+    const buildActionButtons = (t) => {
+      if (!t.iban) return '';
+      const index = transactions.indexOf(t);
+      const copyBtn = `<button type="button" class="btn inline-action-btn copy-payment-btn"
+        data-transaction-index="${index}">${i18n.t('payment.copy')}</button>`;
+      const shareBtn = canShare
+        ? `<button type="button" class="btn inline-action-btn share-payment-btn"
+            data-transaction-index="${index}">${i18n.t('payment.share')}</button>`
+        : '';
+      return copyBtn + shareBtn;
+    };
 
     matrixEl.innerHTML = `
       <table class="table">
@@ -487,8 +550,8 @@ class CostsplitterApp {
         </thead>
         <tbody>
           ${paymentMatrix.map((p) => {
-            const paymentInstructions = payerMap[p.element] || [];
-            const receivingInstructions = receiverMap[p.element] || [];
+            const paymentTransactions = payerMap[p.element] || [];
+            const receivingTransactions = receiverMap[p.element] || [];
             const isSettled = Math.abs(p.netObligation) < 0.01;
 
             let actionContent;
@@ -498,18 +561,27 @@ class CostsplitterApp {
               const allInstructions = [];
 
               // Add payment instructions (what this person needs to pay)
-              if (paymentInstructions.length > 0) {
-                paymentInstructions.forEach(inst => {
-                  allInstructions.push(`<div style="font-size: 0.875rem; color: #dc2626; margin-bottom: 0.25rem; font-weight: 500;">→ ${inst}</div>`);
-                });
-              }
+              paymentTransactions.forEach((t) => {
+                const formattedAmount = i18n.formatCurrency(t.amount);
+                allInstructions.push(`
+                  <div class="payment-row-pay">
+                    → ${i18n.t('payment.pays')} ${formattedAmount} ${i18n.t('payment.to')} ${t.to}
+                    ${buildActionButtons(t)}
+                  </div>
+                `);
+              });
 
               // Add receiving instructions (what this person will receive)
-              if (receivingInstructions.length > 0) {
-                receivingInstructions.forEach(inst => {
-                  allInstructions.push(`<div style="font-size: 0.875rem; color: #059669; margin-bottom: 0.25rem;">← ${inst}</div>`);
-                });
-              }
+              receivingTransactions.forEach((t) => {
+                const formattedAmount = i18n.formatCurrency(t.amount);
+                const receivesLabel = i18n.t('payment.receives');
+                const fromLabel = i18n.t('payment.from');
+                allInstructions.push(`
+                  <div class="payment-row-receive">
+                    ← ${receivesLabel} ${formattedAmount} ${fromLabel} ${t.from}
+                  </div>
+                `);
+              });
 
               // If no specific instructions but has net obligation, show general status
               if (allInstructions.length === 0) {
@@ -532,7 +604,7 @@ class CostsplitterApp {
                      style="font-weight: 500;">
                   ${i18n.formatCurrency(p.netObligation)}
                 </td>
-                <td style="min-width: 200px;">
+                <td style="min-width: 220px;">
                   ${actionContent}
                 </td>
               </tr>
@@ -540,10 +612,30 @@ class CostsplitterApp {
           }).join('')}
         </tbody>
       </table>
-      ${instructions.length === 0 ?
+      ${transactions.length === 0 ?
         `<div style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.5rem; border: 1px solid #bbf7d0;"><p style="margin: 0; color: #059669; font-weight: 500; text-align: center;">✅ ${i18n.t('matrix.noPaymentsNeeded')}</p></div>`
         : ''}
     `;
+
+    matrixEl.querySelectorAll('.copy-payment-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const t = transactions[parseInt(btn.dataset.transactionIndex, 10)];
+        const text = CostsplitterApp.getPaymentCopyText(t, referenceText);
+        navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
+          btn.textContent = i18n.t('payment.copied');
+          setTimeout(() => { btn.textContent = original; }, 1500);
+        });
+      });
+    });
+
+    matrixEl.querySelectorAll('.share-payment-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const t = transactions[parseInt(btn.dataset.transactionIndex, 10)];
+        const text = CostsplitterApp.getPaymentCopyText(t, referenceText);
+        navigator.share({ text });
+      });
+    });
   }
 
   displayWarning(warningMessage) {
@@ -766,6 +858,7 @@ class CostsplitterApp {
     const helpContent = this.getHelpContentElement(stepNumber);
     if (helpContent) {
       helpContent.classList.remove('hidden');
+      this.helpBackdrop.classList.remove('hidden');
     }
   }
 
@@ -774,12 +867,14 @@ class CostsplitterApp {
     if (helpContent) {
       helpContent.classList.add('hidden');
     }
+    this.helpBackdrop.classList.add('hidden');
   }
 
   closeAllHelp() {
     if (this.helpContent1) this.helpContent1.classList.add('hidden');
     if (this.helpContent2) this.helpContent2.classList.add('hidden');
     if (this.helpContent3) this.helpContent3.classList.add('hidden');
+    this.helpBackdrop.classList.add('hidden');
   }
 
   getHelpContentElement(stepNumber) {
@@ -820,9 +915,11 @@ class CostsplitterApp {
     // Get data
     const summary = this.currentResults.report.summary;
     const instructions = this.currentResults.report.instructions;
+    const transactions = this.currentResults.report.transactions;
     const paymentMatrix = this.currentResults.report.paymentMatrix;
     const activities = summary.activities || [];
     const fileName = this.selectedFile ? this.selectedFile.name : 'ausgabendaten';
+    const referenceText = fileName.replace(/\.csv$/i, '');
 
     const pageWidth = doc.internal.pageSize.getWidth();
     const marginX = 20;
@@ -888,10 +985,33 @@ class CostsplitterApp {
       doc.setTextColor(...DARK);
       yPos += 12;
     } else {
-      instructions.forEach((instruction) => {
-        ensureSpace(8);
-        doc.text(`• ${instruction}`, marginX + 5, yPos);
-        yPos += 6;
+      transactions.forEach((t) => {
+        const instructionText = `${t.from} zahlt ${t.to} ${euro(t.amount)}`;
+
+        if (t.iban && window.qrcode) {
+          ensureSpace(26);
+          const qrDataUrl = renderQrDataUrl(window.qrcode, buildEpcQrPayload({
+            name: t.ibanName,
+            iban: t.iban,
+            amount: t.amount,
+            remittanceInfo: `Costsplitter: ${referenceText}`,
+          }));
+          doc.addImage(qrDataUrl, 'PNG', marginX + 5, yPos - 4, 20, 20);
+          doc.setFont(undefined, 'bold');
+          doc.text(instructionText, marginX + 30, yPos + 1);
+          doc.setFont(undefined, 'normal');
+          doc.setFontSize(8.5);
+          doc.setTextColor(...GRAY);
+          doc.text(`IBAN: ${t.iban}`, marginX + 30, yPos + 7);
+          doc.text(`Empfänger: ${t.ibanName}`, marginX + 30, yPos + 12);
+          doc.setTextColor(...DARK);
+          doc.setFontSize(10);
+          yPos += 24;
+        } else {
+          ensureSpace(8);
+          doc.text(`• ${instructionText}`, marginX + 5, yPos);
+          yPos += 6;
+        }
       });
       yPos += 8;
     }
@@ -999,11 +1119,16 @@ class CostsplitterApp {
     this.roundingToggle.checked = false;
     this.roundingMode = 'exact';
     this.updateRoundingUI();
+    this.ageWeightingToggle.checked = false;
+    this.ageWeightingMode = 'linear';
+    this.updateAgeWeightingUI();
     CostsplitterApp.resetProgress();
     this.closeAllHelp();
     this.currentResults = null;
     this.columnMapping = [];
     this.renderColumnMapping();
+    this.copyAllButton.classList.add('hidden');
+    this.copyAllButton.onclick = null;
 
     // Reset upload area to default state
     this.uploadDefaultState.classList.remove('hidden');
@@ -1065,13 +1190,6 @@ class CostsplitterApp {
     // Update label states
     this.individualLabel.classList.toggle('active', !isGroupMode);
     this.groupLabel.classList.toggle('active', isGroupMode);
-
-    // Update description using i18n
-    if (isGroupMode) {
-      this.paymentModeDescription.textContent = i18n.t('step2.paymentMode.description.group');
-    } else {
-      this.paymentModeDescription.textContent = i18n.t('step2.paymentMode.description.individual');
-    }
   }
 
   updateRoundingUI() {
@@ -1080,13 +1198,14 @@ class CostsplitterApp {
     // Update label states
     this.exactLabel.classList.toggle('active', !isRoundToFive);
     this.roundToFiveLabel.classList.toggle('active', isRoundToFive);
+  }
 
-    // Update description using i18n
-    if (isRoundToFive) {
-      this.roundingDescription.textContent = i18n.t('step2.rounding.description.roundToFive');
-    } else {
-      this.roundingDescription.textContent = i18n.t('step2.rounding.description.exact');
-    }
+  updateAgeWeightingUI() {
+    const isSolidarity = this.ageWeightingMode === 'solidarity';
+
+    // Update label states
+    this.linearLabel.classList.toggle('active', !isSolidarity);
+    this.solidarityLabel.classList.toggle('active', isSolidarity);
   }
 
   async downloadExampleFile(exampleType) {

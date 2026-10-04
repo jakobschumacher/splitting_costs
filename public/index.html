@@ -79,8 +79,10 @@
     <!-- External Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 </head>
 <body>
+    <div id="helpBackdrop" class="help-backdrop hidden"></div>
     <div class="container">
         <!-- Header -->
         <header class="text-center mb-8">
@@ -143,7 +145,10 @@
                             <li><strong data-i18n="csvHelp.columns.cost">cost_[activity] - participation level (full, half, 0.5, etc.)</strong></li>
                             <li><strong data-i18n="csvHelp.columns.age">age - optional age or category (adult, kid, numeric)</strong></li>
                             <li><strong data-i18n="csvHelp.columns.adjustment">adjustment - optional payment modifier (more, less, 1.2)</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.iban">iban - optional IBAN to show as a QR code / copy text for this recipient</strong></li>
+                            <li><strong data-i18n="csvHelp.columns.ibanName">iban_name - optional account holder name (defaults to name/group)</strong></li>
                         </ul>
+                        <p style="font-size: 0.875rem; margin-bottom: 1rem; color: #374151;" data-i18n="csvHelp.flexibility">Column names and values can also be written in German (e.g. familie, alter, erwachsen, mehr, voll) — they're detected automatically, and you can fine-tune the mapping in Step 2. Numbers with a comma decimal separator (e.g. 15,50) are understood too.</p>
                         <p style="font-size: 0.875rem; margin-bottom: 1rem;"><span data-i18n="csvHelp.example">Example:</span> <code style="background: #e5e7eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem;">"name,group,pay_dinner,cost_dinner\nAlice,Family A,100,full\nBob,Family B,50,0.5"</code></p>
 
                         <h5 style="margin: 1rem 0 0.5rem 0; color: #047857;" data-i18n="csvHelp.commonIssues">Common Issues:</h5>
@@ -165,7 +170,6 @@
 
                 <div style="text-align: center; padding: 1.5rem 1rem; border-top: 1px solid #f3f4f6;">
                     <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;">
-                        <a href="#" id="csvFormatHelpLink" style="color: #6b7280; text-decoration: underline; margin-right: 1rem; cursor: pointer; user-select: text;" data-i18n="step1.csvFormatHelp">Klicken Sie hier um zu sehen wie die Datei aufgebaut sein soll</a>
                         <span data-i18n="step1.welcome.exampleText">Need an example? Try one of our sample files:</span>
                     </p>
                     <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
@@ -198,7 +202,6 @@
 
                 <!-- Processing Options (hidden initially) -->
                 <div id="processingOptions" class="hidden" style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
-                    <h4 style="margin-top: 0; margin-bottom: 1.5rem; color: #374151;" data-i18n="step2.options.title">Processing Options</h4>
                     <div class="settings-container">
                         <!-- Payment Mode Toggle -->
                         <div class="setting-group">
@@ -211,9 +214,6 @@
                                 </label>
                                 <span class="toggle-label" id="groupLabel" data-i18n="step2.paymentMode.group">Group</span>
                             </div>
-                            <p class="setting-description" id="paymentModeDescription" data-i18n="step2.paymentMode.description.individual">
-                                Individual: Each person's expenses are tracked separately
-                            </p>
                         </div>
 
                         <!-- Rounding Toggle -->
@@ -227,18 +227,25 @@
                                 </label>
                                 <span class="toggle-label" id="roundToFiveLabel" data-i18n="step2.rounding.roundToFive">Round to 5€</span>
                             </div>
-                            <p class="setting-description" id="roundingDescription" data-i18n="step2.rounding.description.exact">
-                                Exact: Keep precise amounts down to cents
-                            </p>
+                        </div>
+
+                        <!-- Age Weighting Toggle -->
+                        <div class="setting-group">
+                            <label class="setting-label" data-i18n="step2.ageWeighting.label">Age Weighting</label>
+                            <div class="toggle-container">
+                                <span class="toggle-label" id="linearLabel" data-i18n="step2.ageWeighting.linear">Linear</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="ageWeightingToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label" id="solidarityLabel" data-i18n="step2.ageWeighting.solidarity">Solidarity</span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Column Mapping (hidden until a file is parsed) -->
                     <div id="columnMappingSection" class="hidden" style="margin-top: 1.5rem;">
                         <label class="setting-label" style="text-align: left;" data-i18n="columnMapping.title">Column Mapping</label>
-                        <p class="setting-description" style="text-align: left;" data-i18n="columnMapping.description">
-                            We detected what each column means. Review and adjust if needed before processing.
-                        </p>
                         <table class="column-mapping-table">
                             <thead>
                                 <tr>
@@ -312,7 +319,9 @@
                     <div id="helpStep2Content">
                         <p style="margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="help.step2.description">Choose how to handle payments and rounding before processing your data.</p>
                         <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step2.paymentModes">Payment Modes: Individual tracks each person separately, Group combines family/team units.</p>
-                        <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step2.rounding">Rounding: Exact keeps precise amounts, Round to 5€ simplifies final payments.</p>
+                        <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step2.rounding">Rounding: Exact keeps precise amounts, Round to 5€ simplifies final payments.</p>
+                        <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step2.ageWeighting">Age Weighting: Linear charges children 1/18th of the full price per year of age. Solidarity charges babies up to 2 nothing, children 3-12 one quarter, 13-17 one half, 18-27 three quarters, and 28+ the full price.</p>
+                        <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step2.columnMapping">Column Mapping: We detect what each CSV column means automatically, including German names. Review the table and change any column's role before processing if something looks wrong.</p>
                     </div>
                 </div>
             </div>
@@ -346,7 +355,8 @@
                             </div>
                         </div>
 
-                    <div style="margin-top: 2rem; text-align: center;">
+                    <div style="margin-top: 2rem; text-align: center; display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                        <button id="copyAllButton" class="btn hidden" data-i18n="payment.copyAll">Copy all payments</button>
                         <button id="downloadPdfButton" class="btn btn-primary" data-i18n="step3.downloadPdf">Download PDF Report</button>
                     </div>
                     </div>
@@ -360,7 +370,8 @@
                         <div id="helpStep3Content">
                             <p style="margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="help.step3.description">Review who owes what to whom and download a detailed payment report.</p>
                             <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step3.matrix">Payment Matrix shows each person's obligations and the actions needed.</p>
-                            <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step3.pdf">Download the PDF report for detailed activity breakdown and comprehensive analysis.</p>
+                            <p style="margin-bottom: 0.5rem; font-size: 0.875rem;" data-i18n="help.step3.copyShare">Copy and Share: if a recipient has an IBAN (see Step 1), use Copy to put their payment details on your clipboard, or Share to send them directly to an app like Signal or Mail.</p>
+                            <p style="margin-bottom: 0; font-size: 0.875rem;" data-i18n="help.step3.pdf">Download the PDF report for a detailed activity breakdown, plus a scannable payment QR code (GiroCode) for every recipient with an IBAN.</p>
                         </div>
                     </div>
                 </div>

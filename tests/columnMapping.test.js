@@ -20,6 +20,14 @@ describe('Column Mapping Module', () => {
       ]);
     });
 
+    test('detects IBAN columns including the German Kontoinhaber alias', () => {
+      const result = detectColumnMapping(['IBAN', 'Kontoinhaber']);
+      expect(result).toEqual([
+        { column: 'IBAN', role: 'iban', activity: '' },
+        { column: 'Kontoinhaber', role: 'iban_name', activity: '' },
+      ]);
+    });
+
     test('marks unrecognized columns as ignore', () => {
       const result = detectColumnMapping(['Zimmer', 'Geburtsdatum']);
       expect(result).toEqual([

@@ -143,5 +143,48 @@ Jane,Smith,kind,,reduced,0`;
       expect(result.report.paymentMatrix).toHaveLength(1);
       expect(result.report.paymentMatrix[0].element).toBe('Smith');
     });
+
+    test('solidarity age weighting charges a child less than linear', () => {
+      const csvContent = `name,age,cost_dinner,pay_dinner
+Adult,30,full,100
+Kid,10,full,0`;
+
+      const linear = costsplitterPipeline(validFile, csvContent, 'individual', 'exact', null, 'linear');
+      const solidarity = costsplitterPipeline(
+        validFile, csvContent, 'individual', 'exact', null, 'solidarity',
+      );
+
+      const linearKid = linear.report.paymentMatrix.find((p) => p.element === 'Kid');
+      const solidarityKid = solidarity.report.paymentMatrix.find((p) => p.element === 'Kid');
+
+      expect(solidarityKid.shouldPay).toBeLessThan(linearKid.shouldPay);
+      expect(solidarityKid.shouldPay).toBeCloseTo(20);
+    });
+
+    test('handles German-style comma decimals end-to-end', () => {
+      // Comma-decimal fields must be quoted in CSV, since comma is the delimiter.
+      const csvContent = `name,age,adjustment,cost_dinner,pay_dinner
+John,"17,5","1,2",1,"1.110,50"
+Jane,adult,1,1,0`;
+
+      const result = costsplitterPipeline(validFile, csvContent, 'individual');
+
+      expect(result.success).toBe(true);
+      const john = result.report.paymentMatrix.find((p) => p.element === 'John');
+      expect(john.alreadyPaid).toBeCloseTo(1110.5);
+    });
+
+    test('carries an IBAN from the CSV through to the payment transactions', () => {
+      const csvContent = `name,pay_dinner,cost_dinner,iban,iban_name
+John,100,full,DE12 3456 7890,John Doe
+Jane,0,full,,`;
+
+      const result = costsplitterPipeline(validFile, csvContent, 'individual');
+
+      expect(result.success).toBe(true);
+      const transaction = result.report.transactions.find((t) => t.to === 'John');
+      expect(transaction.iban).toBe('DE12 3456 7890');
+      expect(transaction.ibanName).toBe('John Doe');
+    });
   });
 });

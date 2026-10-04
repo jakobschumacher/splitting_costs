@@ -7,6 +7,9 @@ export const HEADER_ALIASES = {
   alter: 'age',
   adjustment: 'adjustment',
   anpassung: 'adjustment',
+  iban: 'iban',
+  iban_name: 'iban_name',
+  kontoinhaber: 'iban_name',
 };
 
 const VALUE_ALIASES = {

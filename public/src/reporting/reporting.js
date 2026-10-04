@@ -11,7 +11,9 @@ export const minimizePayments = (paymentMatrix) => {
 
   const receivers = paymentMatrix
     .filter((p) => p.netObligation < 0)
-    .map((p) => ({ element: p.element, amount: Math.abs(p.netObligation) }))
+    .map((p) => ({
+      element: p.element, amount: Math.abs(p.netObligation), iban: p.iban, ibanName: p.ibanName,
+    }))
     .sort((a, b) => a.amount - b.amount);
 
   // Handle exact matches first
@@ -22,6 +24,8 @@ export const minimizePayments = (paymentMatrix) => {
           from: payers[i].element,
           to: receivers[j].element,
           amount: Math.round(payers[i].amount * 100) / 100,
+          iban: receivers[j].iban,
+          ibanName: receivers[j].ibanName,
         });
         payers.splice(i, 1);
         receivers.splice(j, 1);
@@ -43,6 +47,8 @@ export const minimizePayments = (paymentMatrix) => {
       from: payers[payerIndex].element,
       to: receivers[receiverIndex].element,
       amount: Math.round(transferAmount * 100) / 100,
+      iban: receivers[receiverIndex].iban,
+      ibanName: receivers[receiverIndex].ibanName,
     });
 
     payers[payerIndex].amount -= transferAmount;

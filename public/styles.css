@@ -7,7 +7,7 @@
 
 .settings-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2rem;
 }
 
@@ -82,8 +82,8 @@
 }
 
 input:checked + .toggle-slider {
-  background-color: #f3f4f6;
-  border-color: #9ca3af;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
 }
 
 input:checked + .toggle-slider:before {
@@ -104,8 +104,8 @@ input:checked + .toggle-slider:before {
 }
 
 input:checked + .rounding-slider {
-  background-color: #f3f4f6;
-  border-color: #9ca3af;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
 }
 
 /* Responsive settings layout */
@@ -300,6 +300,32 @@ input {
 
 .column-mapping-table td code {
   word-break: break-word;
+}
+
+.inline-action-btn {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  margin-left: 0.5rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.inline-action-btn:hover {
+  background: #e5e7eb;
+}
+
+.payment-row-pay {
+  font-size: 0.875rem;
+  color: #dc2626;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.payment-row-receive {
+  font-size: 0.875rem;
+  color: #059669;
+  margin-bottom: 0.25rem;
 }
 
 label {
@@ -569,17 +595,34 @@ h3 {
   background: #059669;
 }
 
-/* Help System Styles */
+/* Help System Styles (shown as a centered popup, not inline) */
+.help-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.5);
+  z-index: 1000;
+}
+
+.help-backdrop.hidden {
+  display: none;
+}
+
 .step-help-content {
-  margin-top: 1rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  width: min(90vw, 32rem);
+  max-height: 80vh;
+  overflow-y: auto;
   padding: 1.5rem;
   background: #f0fdf4;
   border-radius: 0.5rem;
   border: 1px solid #bbf7d0;
   text-align: left;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: relative;
-  animation: helpFadeIn 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  animation: helpFadeIn 0.2s ease;
 }
 
 .step-help-content.hidden {
@@ -618,11 +661,11 @@ h3 {
 @keyframes helpFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translate(-50%, -50%) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
@@ -649,8 +692,7 @@ h3 {
 
 @media (max-width: 768px) {
   .step-help-content {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
+    width: 92vw;
     border-radius: 0.25rem;
     padding: 1rem;
   }

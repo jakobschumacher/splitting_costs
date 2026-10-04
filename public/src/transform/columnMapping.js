@@ -1,6 +1,8 @@
 import { HEADER_ALIASES, normalizeValues } from './csvAliases.js';
 
-export const MAPPING_ROLES = ['name', 'group', 'age', 'adjustment', 'pay', 'cost', 'ignore'];
+export const MAPPING_ROLES = [
+  'name', 'group', 'age', 'adjustment', 'pay', 'cost', 'iban', 'iban_name', 'ignore',
+];
 
 export const detectColumnMapping = (columns) => columns.map((column) => {
   const lowerColumn = column.toLowerCase();
