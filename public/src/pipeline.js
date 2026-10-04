@@ -2,6 +2,7 @@
 import { validateSecurityCheck } from './security/security.js';
 import { validateDataIntegrity } from './validation/validation.js';
 import { transformDataToNumeric } from './transform/transform.js';
+import { normalizeCsvData } from './transform/csvAliases.js';
 import { calculatePaymentObligations } from './calculation/calculation.js';
 import { generateCompleteReport } from './reporting/reporting.js';
 
@@ -95,16 +96,19 @@ export const costsplitterPipeline = (file, csvContent, paymentMode = 'individual
       };
     }
 
-    // Process the parsed data through the pipeline
-    const pipelineResult = processCsvData(file, csvContent, parseResult.data, paymentMode, roundingMode);
+    // Normalize German/aliased column names and values to the canonical schema
+    const normalizedData = normalizeCsvData(parseResult.data);
+
+    // Process the normalized data through the pipeline
+    const pipelineResult = processCsvData(file, csvContent, normalizedData, paymentMode, roundingMode);
 
     return {
       ...pipelineResult,
-      parsedData: parseResult.data,
+      parsedData: normalizedData,
       metadata: {
         ...pipelineResult.metadata,
-        csvColumns: Object.keys(parseResult.data[0] || {}),
-        originalRows: parseResult.data.length,
+        csvColumns: Object.keys(normalizedData[0] || {}),
+        originalRows: normalizedData.length,
       },
     };
   } catch (error) {

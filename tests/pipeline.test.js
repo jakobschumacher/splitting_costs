@@ -128,5 +128,20 @@ Bob,Johnson,75`;
       expect(result.metadata.paymentMode).toBe('individual');
       expect(result.metadata.participantCount).toBe(2);
     });
+
+    test('supports German headers and values end-to-end', () => {
+      const csvContent = `name,Familie,Alter,Adjustment,cost_dinner,pay_dinner
+John,Smith,erwachsen,mehr,full,100
+Jane,Smith,kind,,reduced,0`;
+
+      const result = costsplitterPipeline(validFile, csvContent, 'group');
+
+      expect(result.success).toBe(true);
+      expect(result.metadata.csvColumns).toEqual(
+        expect.arrayContaining(['group', 'age', 'adjustment']),
+      );
+      expect(result.report.paymentMatrix).toHaveLength(1);
+      expect(result.report.paymentMatrix[0].element).toBe('Smith');
+    });
   });
 });
