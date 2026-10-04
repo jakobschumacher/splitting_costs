@@ -233,6 +233,24 @@
                         </div>
                     </div>
 
+                    <!-- Column Mapping (hidden until a file is parsed) -->
+                    <div id="columnMappingSection" class="hidden" style="margin-top: 1.5rem;">
+                        <label class="setting-label" style="text-align: left;" data-i18n="columnMapping.title">Column Mapping</label>
+                        <p class="setting-description" style="text-align: left;" data-i18n="columnMapping.description">
+                            We detected what each column means. Review and adjust if needed before processing.
+                        </p>
+                        <table class="column-mapping-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="columnMapping.column">CSV Column</th>
+                                    <th data-i18n="columnMapping.role">Meaning</th>
+                                    <th data-i18n="columnMapping.activity">Activity Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="columnMappingBody"></tbody>
+                        </table>
+                    </div>
+
                     <div style="text-align: center; margin-top: 1.5rem;">
                         <button id="processButton" class="btn btn-primary" disabled data-i18n="step2.processButton">
                             Process File

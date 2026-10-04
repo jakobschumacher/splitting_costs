@@ -50,6 +50,11 @@ const mockHTML = `
         <input type="checkbox" id="roundingToggle">
         <span id="roundToFiveLabel">Round to 5€</span>
         <p id="roundingDescription">Exact: Keep precise amounts down to cents</p>
+        <div id="columnMappingSection" class="hidden">
+          <table>
+            <tbody id="columnMappingBody"></tbody>
+          </table>
+        </div>
         <button id="processButton" class="btn btn-primary" disabled>Process File</button>
       </div>
       <div id="progressSteps" class="hidden">
@@ -442,6 +447,7 @@ describe('CostsplitterApp Frontend Tests', () => {
         'test,content',
         'individual',
         'exact',
+        null,
       );
       expect(app.step3.classList.contains('step-disabled')).toBe(false);
     });

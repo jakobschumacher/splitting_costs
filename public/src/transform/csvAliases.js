@@ -1,4 +1,4 @@
-const HEADER_ALIASES = {
+export const HEADER_ALIASES = {
   name: 'name',
   group: 'group',
   gruppe: 'group',

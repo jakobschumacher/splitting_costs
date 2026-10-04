@@ -1,4 +1,5 @@
 import { costsplitterPipeline } from '../pipeline.js';
+import { detectColumnMapping } from '../transform/columnMapping.js';
 import {
   classifyError, generateErrorSuggestions, generateHelpResources,
 } from './errorClassification.js';
@@ -12,6 +13,7 @@ class CostsplitterApp {
     this.roundingMode = 'exact';
     this.selectedFile = null;
     this.currentResults = null;
+    this.columnMapping = [];
     this.initializeI18n();
     this.initializeStepStates(); // Initialize all steps with proper states
   }
@@ -43,6 +45,8 @@ class CostsplitterApp {
     this.uploadedState = document.getElementById('uploadedState');
     this.processingOptions = document.getElementById('processingOptions');
     this.step2Disabled = document.getElementById('step2Disabled');
+    this.columnMappingSection = document.getElementById('columnMappingSection');
+    this.columnMappingBody = document.getElementById('columnMappingBody');
     this.step3Disabled = document.getElementById('step3Disabled');
     this.resultsContent = document.getElementById('resultsContent');
     this.languageSelector = document.getElementById('languageSelector');
@@ -126,6 +130,7 @@ class CostsplitterApp {
     i18n.subscribe((language) => {
       this.updatePaymentModeUI();
       this.updateRoundingUI();
+      this.renderColumnMapping();
       // Update any other dynamic content as needed
     });
 
@@ -141,6 +146,7 @@ class CostsplitterApp {
       // Re-translate any dynamic content
       this.updatePaymentModeUI();
       this.updateRoundingUI();
+      this.renderColumnMapping();
 
       // Re-translate results if they exist
       if (this.currentResults) {
@@ -216,7 +222,70 @@ class CostsplitterApp {
 
       // Enable Step 2 with processing options
       this.enableStep(2);
+      this.detectAndRenderColumnMapping();
     }
+  }
+
+  async detectAndRenderColumnMapping() {
+    try {
+      const csvContent = await CostsplitterApp.readFileContent(this.selectedFile);
+      const parseResult = Papa.parse(csvContent, {
+        header: true,
+        skipEmptyLines: true,
+        transform: (value) => value.trim(),
+      });
+      const columns = Object.keys(parseResult.data[0] || {});
+      this.columnMapping = detectColumnMapping(columns);
+    } catch (error) {
+      this.columnMapping = [];
+    }
+    this.renderColumnMapping();
+  }
+
+  renderColumnMapping() {
+    if (!this.columnMapping.length) {
+      this.columnMappingSection.classList.add('hidden');
+      this.columnMappingBody.innerHTML = '';
+      return;
+    }
+
+    this.columnMappingBody.innerHTML = this.columnMapping.map((entry, index) => `
+      <tr>
+        <td><code>${entry.column}</code></td>
+        <td>
+          <select data-mapping-index="${index}" class="mapping-role-select">
+            ${['name', 'group', 'age', 'adjustment', 'pay', 'cost', 'ignore'].map((role) => `
+              <option value="${role}" ${role === entry.role ? 'selected' : ''}>
+                ${i18n.t(`columnMapping.role.${role}`)}
+              </option>
+            `).join('')}
+          </select>
+        </td>
+        <td>
+          ${(entry.role === 'pay' || entry.role === 'cost')
+    ? `<input type="text" data-mapping-index="${index}" class="mapping-activity-input"
+             value="${entry.activity}">`
+    : ''}
+        </td>
+      </tr>
+    `).join('');
+
+    this.columnMappingBody.querySelectorAll('.mapping-role-select').forEach((select) => {
+      select.addEventListener('change', (e) => {
+        const index = parseInt(e.target.dataset.mappingIndex, 10);
+        this.columnMapping[index].role = e.target.value;
+        this.renderColumnMapping();
+      });
+    });
+
+    this.columnMappingBody.querySelectorAll('.mapping-activity-input').forEach((input) => {
+      input.addEventListener('input', (e) => {
+        const index = parseInt(e.target.dataset.mappingIndex, 10);
+        this.columnMapping[index].activity = e.target.value;
+      });
+    });
+
+    this.columnMappingSection.classList.remove('hidden');
   }
 
   async processFile() {
@@ -228,7 +297,10 @@ class CostsplitterApp {
     try {
       // Process file without showing progress indicators initially
       const csvContent = await CostsplitterApp.readFileContent(this.selectedFile);
-      const result = costsplitterPipeline(this.selectedFile, csvContent, this.paymentMode, this.roundingMode);
+      const mapping = this.columnMapping.length ? this.columnMapping : null;
+      const result = costsplitterPipeline(
+        this.selectedFile, csvContent, this.paymentMode, this.roundingMode, mapping,
+      );
 
       if (result.success) {
         // Success: Show results directly without any progress indicators
@@ -930,6 +1002,8 @@ class CostsplitterApp {
     CostsplitterApp.resetProgress();
     this.closeAllHelp();
     this.currentResults = null;
+    this.columnMapping = [];
+    this.renderColumnMapping();
 
     // Reset upload area to default state
     this.uploadDefaultState.classList.remove('hidden');

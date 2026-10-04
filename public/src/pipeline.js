@@ -3,6 +3,7 @@ import { validateSecurityCheck } from './security/security.js';
 import { validateDataIntegrity } from './validation/validation.js';
 import { transformDataToNumeric } from './transform/transform.js';
 import { normalizeCsvData } from './transform/csvAliases.js';
+import { applyColumnMapping } from './transform/columnMapping.js';
 import { calculatePaymentObligations } from './calculation/calculation.js';
 import { generateCompleteReport } from './reporting/reporting.js';
 
@@ -71,7 +72,9 @@ export const processCsvData = (file, csvContent, parsedData, paymentMode = 'indi
   }
 };
 
-export const costsplitterPipeline = (file, csvContent, paymentMode = 'individual', roundingMode = 'exact') => {
+export const costsplitterPipeline = (
+  file, csvContent, paymentMode = 'individual', roundingMode = 'exact', columnMapping = null,
+) => {
   try {
     // Parse CSV content
     const parseResult = Papa.parse(csvContent, {
@@ -96,8 +99,11 @@ export const costsplitterPipeline = (file, csvContent, paymentMode = 'individual
       };
     }
 
-    // Normalize German/aliased column names and values to the canonical schema
-    const normalizedData = normalizeCsvData(parseResult.data);
+    // Apply the user-confirmed column mapping if provided, otherwise fall back
+    // to automatic normalization of German/aliased column names and values.
+    const normalizedData = columnMapping
+      ? applyColumnMapping(parseResult.data, columnMapping)
+      : normalizeCsvData(parseResult.data);
 
     // Process the normalized data through the pipeline
     const pipelineResult = processCsvData(file, csvContent, normalizedData, paymentMode, roundingMode);

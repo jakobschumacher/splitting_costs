@@ -40,6 +40,20 @@ export const de = {
   'step2.progress.calculation': 'Berechnen',
   'step2.progress.reporting': 'Bericht',
 
+  // Column Mapping
+  'columnMapping.title': 'Spaltenzuordnung',
+  'columnMapping.description': 'Wir haben erkannt, wofür jede Spalte steht. Prüfen und passen Sie das bei Bedarf an, bevor Sie verarbeiten.',
+  'columnMapping.column': 'CSV-Spalte',
+  'columnMapping.role': 'Bedeutung',
+  'columnMapping.activity': 'Aktivitätsname',
+  'columnMapping.role.name': 'Name',
+  'columnMapping.role.group': 'Gruppe',
+  'columnMapping.role.age': 'Alter',
+  'columnMapping.role.adjustment': 'Anpassung',
+  'columnMapping.role.pay': 'Zahlung für Aktivität',
+  'columnMapping.role.cost': 'Kostenanteil für Aktivität',
+  'columnMapping.role.ignore': 'Ignorieren',
+
   // CSV Help
   'csvHelp.title': 'CSV-Dateiformat',
   'csvHelp.description': 'Ihre CSV-Datei sollte die folgenden Spalten enthalten:',
