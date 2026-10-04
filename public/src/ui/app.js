@@ -3,6 +3,7 @@ import { detectColumnMapping, MAPPING_ROLES } from '../transform/columnMapping.j
 import { buildEpcQrPayload } from '../reporting/epcQr.js';
 import { buildPaymentCopyText } from '../reporting/paymentText.js';
 import { renderQrDataUrl } from '../reporting/qrCanvas.js';
+import { LOGO_PNG_BASE64 } from '../reporting/logoImage.js';
 import {
   classifyError, generateErrorSuggestions, generateHelpResources,
 } from './errorClassification.js';
@@ -921,6 +922,10 @@ class CostsplitterApp {
     const fileName = this.selectedFile ? this.selectedFile.name : 'ausgabendaten';
     const referenceText = fileName.replace(/\.csv$/i, '');
 
+    const paymentModeLabel = this.paymentMode === 'group' ? 'Gruppe' : 'Individuell';
+    const roundingLabel = this.roundingMode === 'roundToFive' ? 'Auf 5€ gerundet' : 'Exakt';
+    const ageWeightingLabel = this.ageWeightingMode === 'solidarity' ? 'Solidarität' : 'Linear';
+
     const pageWidth = doc.internal.pageSize.getWidth();
     const marginX = 20;
     let yPos = 20;
@@ -930,6 +935,14 @@ class CostsplitterApp {
         doc.addPage();
         yPos = 20;
       }
+    };
+
+    const drawWrappedText = (text, x, maxWidth, lineHeight = 5) => {
+      doc.splitTextToSize(text, maxWidth).forEach((line) => {
+        ensureSpace(lineHeight + 2);
+        doc.text(line, x, yPos);
+        yPos += lineHeight;
+      });
     };
 
     const drawSectionHeader = (title) => {
@@ -948,13 +961,14 @@ class CostsplitterApp {
     // Title banner
     doc.setFillColor(...BLUE);
     doc.rect(0, 0, pageWidth, 28, 'F');
+    doc.addImage(LOGO_PNG_BASE64, 'PNG', marginX, 6, 16, 16);
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
     doc.setFont(undefined, 'bold');
-    doc.text('Costsplitter', marginX, 17);
+    doc.text('Costsplitter', marginX + 20, 17);
     doc.setFontSize(11);
     doc.setFont(undefined, 'normal');
-    doc.text('Ausgabenbericht', marginX, 24);
+    doc.text('Ausgabenbericht', marginX + 20, 24);
     doc.setTextColor(...DARK);
     yPos = 40;
 
@@ -962,13 +976,32 @@ class CostsplitterApp {
     doc.setTextColor(...GRAY);
     doc.text(`Quelldatei: ${fileName}`, marginX, yPos);
     doc.text(`Erstellt am: ${new Date().toLocaleDateString('de-DE')}`, pageWidth - marginX, yPos, { align: 'right' });
+    yPos += 6;
+    doc.text(
+      `Zahlungsmodus: ${paymentModeLabel}   ·   Rundung: ${roundingLabel}   ·   `
+        + `Altersgewichtung: ${ageWeightingLabel}`,
+      marginX, yPos,
+    );
     doc.setTextColor(...DARK);
-    yPos += 14;
+    yPos += 10;
+
+    // Intro: plain-language explanation for anyone reading the report
+    doc.setFontSize(9.5);
+    drawWrappedText(
+      'Dieser Bericht zeigt, wer wem wie viel bezahlen muss, damit alle Ausgaben der Reise '
+        + 'fair aufgeteilt sind. Die Kosten wurden nach Teilnahme, Alter und individuellen '
+        + 'Anpassungen gewichtet. Die Zahlungsanweisungen unten zeigen die kleinstmögliche '
+        + 'Anzahl an Überweisungen, um alle offenen Beträge auszugleichen. Die Zahlungsübersicht '
+        + 'und Aktivitätsaufschlüsselung weiter unten liefern die Details dazu, falls jemand '
+        + 'nachvollziehen möchte, wie die Beträge zustande kamen.',
+      marginX, pageWidth - marginX * 2, 5,
+    );
+    yPos += 8;
 
     // Summary section
     drawSectionHeader('Zusammenfassung');
     doc.setFontSize(11);
-    doc.text(`Teilnehmer: ${summary.totalParticipants}`, marginX + 5, yPos);
+    doc.text(`Teilnehmer: ${this.currentResults.metadata.participantCount}`, marginX + 5, yPos);
     yPos += 7;
     doc.text(`Gesamt bezahlt: ${euro(summary.totalPaid)}`, marginX + 5, yPos);
     yPos += 7;
@@ -977,6 +1010,14 @@ class CostsplitterApp {
 
     // Payment Instructions section
     drawSectionHeader('Zahlungsanweisungen');
+    doc.setFontSize(9);
+    doc.setTextColor(...GRAY);
+    drawWrappedText(
+      'So gleichen Sie alle Schulden mit der kleinstmöglichen Anzahl an Überweisungen aus:',
+      marginX + 5, pageWidth - marginX * 2 - 5, 4.5,
+    );
+    doc.setTextColor(...DARK);
+    yPos += 3;
     doc.setFontSize(10);
 
     if (instructions.length === 0) {
@@ -1018,6 +1059,15 @@ class CostsplitterApp {
 
     // Payment Matrix section
     drawSectionHeader('Zahlungsübersicht');
+    doc.setFontSize(9);
+    doc.setTextColor(...GRAY);
+    drawWrappedText(
+      'Alle Teilnehmer im Detail. Ein negativer Nettobetrag (grün) bedeutet, die Person bekommt '
+        + 'Geld zurück; ein positiver Betrag (rot) bedeutet, sie muss noch zahlen.',
+      marginX + 5, pageWidth - marginX * 2 - 5, 4.5,
+    );
+    doc.setTextColor(...DARK);
+    yPos += 3;
 
     // Table headers
     doc.setFontSize(10);
@@ -1054,6 +1104,15 @@ class CostsplitterApp {
     // Activity Breakdown section
     if (activities.length > 0) {
       drawSectionHeader('Aktivitätsübersicht');
+      doc.setFontSize(9);
+      doc.setTextColor(...GRAY);
+      drawWrappedText(
+        'Zum Nachvollziehen: Aufschlüsselung der Kosten je Aktivität, wer bezahlt hat und welchen '
+          + 'Anteil jede Person trägt.',
+        marginX + 5, pageWidth - marginX * 2 - 5, 4.5,
+      );
+      doc.setTextColor(...DARK);
+      yPos += 3;
 
       activities.forEach((activity) => {
         ensureSpace(24);
